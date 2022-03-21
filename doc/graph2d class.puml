@@ -1,0 +1,126 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class MainWindow {
+    - Ui::MainWindow * ui
+    - GeometricProbabilityModel * graphModel
+
+    + MainWindow(QWidget * parent = nullptr)
+    + ~MainWindow()
+
+    - void calculateProbability()
+    - void calculateWaitingTime(double probability)
+    - void changeAmountOfPersons(int newAmount)
+    - void showReference()
+    - void showAboutProgram()
+}
+QMainWindow <|-- MainWindow
+hide QMainWindow members
+
+class GeometricProbabilityModel {
+    - Graph * graph
+
+    + GeometricProbabilityModel()
+    + virtual ~GeometricProbabilityModel()
+
+    + double CalculateProbability(Time timeDelta, Time waitingInterval)
+    + Time CalculateWaitingTime(Time deltaTime, double probability)
+
+    + void UpdateGraph(Time timeDelta, Time waitingInterval)
+}
+MainWindow "1" *-- "1" GeometricProbabilityModel
+note right of GeometricProbabilityModel
+    Класс MainWindow не взаимодействует с графиком
+    напрямую - взаимодействие осуществляется через
+    класс GeometricProbabilityModel
+end note
+note left of GeometricProbabilityModel::"graph"
+    на этом месте будет стоять либо двухмерный,
+    либо трехмерный график
+end note
+
+class Graph {
+    - QGraphicsScene * scene
+    - Figure * mainFigure
+    - Figure * boundingFigure
+
+
+    + Graph()
+    + virtual ~Graph()
+
+'    + virtual double GetFigureValue()
+    + virtual void AddItem(QGraphicsItem * item)
+    + virtual void RemoveItem(QGraphicsItem * item)
+}
+GeometricProbabilityModel "1" *-- "1" Graph
+note left of Graph::"mainFigure"
+    основная фигура, характеризующая
+    геометрическую вероятность
+end note
+note left of Graph::"boundingFigure"
+    фигура, ограничивающая основную
+end note
+'note left of Graph::"virtual double GetFigureValue()"
+'    Для двумерной фигуры значением является площадь,
+'    для трехмерной - объем
+'end note
+
+class Graph2D {
+    - Axis * xAxis
+    - Axis * yAxis
+
+    + Graph2D()
+    + virtual ~Graph2D()
+
+    + void AddItem(QGraphicsItem * item)
+}
+Graph <|-- Graph2D : public
+
+/'todo'/
+class Graph3D {
+    + bla bla bla
+    + bla bla bla ()
+}
+Graph <|-- Graph3D : bla bla bla
+note left of Graph3D
+    bla bla bla
+end note
+
+QGraphicsPolygonItem <|-- Polygon : public
+hide QGraphicsPolygonItem members
+
+class Axis {
+    - QGraphicsLineItem * arrowFirstPart
+    - QGraphicsLineItem * arrowSecondPart
+
+    + Axis()
+}
+QGraphicsLineItem <|-- Axis : public
+hide QGraphicsLineItem members
+Graph2D *-- Axis
+
+class Figure {
+'    + virtual double GetFigureValue() = 0
+}
+Graph "1" *-- "2" Figure
+
+class Polygon {
+    + Polygon(QPolygonF polygon)
+'    + virtual double GetFigureValue()
+    + void SetPolygon(QPolygonF polygon)
+
+'    - double getSquare()
+}
+Figure <|-- Polygon : public
+
+/'todo'/
+class Polyhedron {
+    + ну да
+    + тут ты снова сам все будешь делать ()
+}
+Figure <|-- Polyhedron : и тут тоже
+
+
+
+
+@enduml
