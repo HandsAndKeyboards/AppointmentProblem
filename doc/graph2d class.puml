@@ -1,4 +1,5 @@
-@startuml
+@startuml 
+
 'https://plantuml.com/class-diagram
 
 class MainWindow {
@@ -110,6 +111,17 @@ note right of Axis
 end note
 
 
+class NumberOnAxis {
+    - QGraphicLineItem * line
+    - QLabel * number
+
+    + NumberOnAxis(QPointF point)
+    + virtual ~NumberOnAxis()
+}
+IGeometric <|-- NumberOnAxis : public
+IDrawable <|-- NumberOnAxis : public
+Graph2d "1" *-- "*" NumberOnAxis
+
 
 interface IGeometric {
     + virtual void Translate(double dx, double dy) = 0
@@ -118,7 +130,6 @@ interface IGeometric {
     + virtual void Shrink(double delta) = 0
 }
 Graph2d "1" *-- "*" IGeometric
-
 
 
 class Polygon {
