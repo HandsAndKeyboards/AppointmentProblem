@@ -17,11 +17,13 @@ class MainWindow {
 QMainWindow <|-- MainWindow
 hide QMainWindow members
 
+
+
 class GeometricProbabilityModel {
-    - Graph * graph
+    - IGraph * graph
 
     + GeometricProbabilityModel()
-    + virtual ~GeometricProbabilityModel()
+    + ~GeometricProbabilityModel()
 
     + double CalculateProbability(Time timeDelta, Time waitingInterval)
     + Time CalculateWaitingTime(Time deltaTime, double probability)
@@ -29,98 +31,125 @@ class GeometricProbabilityModel {
     + void UpdateGraph(Time timeDelta, Time waitingInterval)
 }
 MainWindow "1" *-- "1" GeometricProbabilityModel
-note right of GeometricProbabilityModel
-    Класс MainWindow не взаимодействует с графиком
-    напрямую - взаимодействие осуществляется через
-    класс GeometricProbabilityModel
-end note
 note left of GeometricProbabilityModel::"graph"
     на этом месте будет стоять либо двухмерный,
     либо трехмерный график
 end note
+note right of GeometricProbabilityModel
+    GeometricProbabilityModel(const GeometricProbabilityModel &) = delete
+    GeometricProbabilityModel(GeometricProbabilityModel &&) = delete
+    GeometricProbabilityModel & operator= (const GeometricProbabilityModel &) = delete
+    GeometricProbabilityModel & operator= (GeometricProbabilityModel &&) = delete
+end note
 
-class Graph {
-    - QGraphicsScene * scene
-    - Figure * mainFigure
-    - Figure * boundingFigure
 
 
-    + Graph()
-    + virtual ~Graph()
-
-'    + virtual double GetFigureValue()
-    + virtual void AddItem(QGraphicsItem * item)
-    + virtual void RemoveItem(QGraphicsItem * item)
+interface IGraph {
+    + virtual void AddItem(shared_ptr<IFigure> item) = 0
+    + virtual void RemoveItem(shared_ptr<IFigure> item) = 0
 }
-GeometricProbabilityModel "1" *-- "1" Graph
-note left of Graph::"mainFigure"
+GeometricProbabilityModel "1" *--- "1" IGraph
+note left of IGraph::"mainFigure"
     основная фигура, характеризующая
     геометрическую вероятность
 end note
-note left of Graph::"boundingFigure"
+note left of IGraph::"boundingFigure"
     фигура, ограничивающая основную
 end note
-'note left of Graph::"virtual double GetFigureValue()"
-'    Для двумерной фигуры значением является площадь,
-'    для трехмерной - объем
-'end note
 
-class Graph2D {
-    - Axis * xAxis
-    - Axis * yAxis
 
-    + Graph2D()
-    + virtual ~Graph2D()
 
-    + void AddItem(QGraphicsItem * item)
+class Graph2d {
+    - Axis xAxis
+    - Axis yAxis
+    - vector< shared_ptr<IGeometric> > items
+
+    + Graph2d()
+    + virtual ~Graph2d()
 }
-Graph <|-- Graph2D : public
+IGraph <|-- Graph2d : public
+IGeometric <|--- Graph2d : public
+IDrawable <|--- Graph2d : public
+note right of Graph2d
+    Graph2d(const Graph2D &) = delete
+    Graph2d(Graph2D &&) = delete
+    Graph2d & operator=(const Graph2D &) = delete
+    Graph2d & operator=(Graph2D &&) = delete
+end note
 
-/'todo'/
-class Graph3D {
+
+
+class Graph3d #white { /' #white окрашивает объект в белый цвет '/
     + bla bla bla
     + bla bla bla ()
 }
-Graph <|-- Graph3D : bla bla bla
-note left of Graph3D
+IGraph <|-- Graph3d : bla bla bla
+note right of Graph3d
     bla bla bla
 end note
 
-QGraphicsPolygonItem <|-- Polygon : public
-hide QGraphicsPolygonItem members
+
 
 class Axis {
+    - QGraphicsLineItem * line
     - QGraphicsLineItem * arrowFirstPart
     - QGraphicsLineItem * arrowSecondPart
 
-    + Axis()
+    + Axis(QPointF from, QPointF to)
+    + virtual ~Axis()
 }
-QGraphicsLineItem <|-- Axis : public
-hide QGraphicsLineItem members
-Graph2D *-- Axis
+IGeometric <|-- Axis : public
+IDrawable <|-- Axis : public
+Graph2d "1" *-- "2" Axis
+note right of Axis
+    Axis(const Axis &) = delete
+    Axis(Axis &&) = delete
+    Axis() = delete
+    Axis & operator=(const Axis &) = delete
+    Axis & operator=(Axis &&) = delete
+end note
 
-class Figure {
-'    + virtual double GetFigureValue() = 0
+
+
+interface IGeometric {
+    + virtual void Translate(double dx, double dy) = 0
+    + virtual void Rotate(double angle) = 0
+    + virtual void Expand(double delta) = 0
+    + virtual void Shrink(double delta) = 0
 }
-Graph "1" *-- "2" Figure
+Graph2d "1" *-- "*" IGeometric
+
+
 
 class Polygon {
-    + Polygon(QPolygonF polygon)
-'    + virtual double GetFigureValue()
-    + void SetPolygon(QPolygonF polygon)
+    - QGraphicsPolygonItem * polygon
 
-'    - double getSquare()
+    + Polygon(QVector<QPointF> points)
 }
-Figure <|-- Polygon : public
+IGeometric <|-- Polygon : public
+IDrawable <|-left- Polygon : public
+note right of Polygon
+    Polygon(const Polygon &) = delete
+    Polygon(Polygon &&) = delete
+    Polygon() = delete
+    Polygon & operator=(const Polygon &) = delete
+    Polygon & operator=(Polygon &&) = delete
+end note
 
-/'todo'/
-class Polyhedron {
+
+
+
+class Polyhedron #white { /' #white окрашивает объект в белый цвет '/
     + ну да
     + тут ты снова сам все будешь делать ()
 }
-Figure <|-- Polyhedron : и тут тоже
+IGeometric <|-- Polyhedron : и тут тоже
 
 
+
+interface IDrawable {
+    + virtual void Draw(QGraphicsScene * scene) = 0
+}
 
 
 @enduml
