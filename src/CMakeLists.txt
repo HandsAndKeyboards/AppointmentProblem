@@ -17,7 +17,10 @@ find_package(Qt6 COMPONENTS
 add_executable(
         src
         main.cpp
-        mainwindow.cpp mainwindow.h mainwindow.ui
+        mainwindow.cpp                      mainwindow.h                    mainwindow.ui
+        IGraph.h
+        IGeometric.h
+        IDrawable.h
 )
 
 target_link_libraries(src
