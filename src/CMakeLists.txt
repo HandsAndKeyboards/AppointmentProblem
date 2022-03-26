@@ -23,6 +23,7 @@ add_executable(
         IDrawable.h
         SegmentPoint.cpp                    SegmentPoint.h
         Axis.cpp                            Axis.h
+        GeometricProbabilityModel.cpp       GeometricProbabilityModel.h
 )
 
 target_link_libraries(src
@@ -32,7 +33,7 @@ target_link_libraries(src
         )
 
 if (WIN32)
-    set(DEBUG_SUFFIX "")
+    set(DEBUG_SUFFIX)
 #    if (CMAKE_BUILD_TYPE MATCHES "Debug")
 #        set(DEBUG_SUFFIX "d")
 #    endif ()
