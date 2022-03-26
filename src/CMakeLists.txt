@@ -21,6 +21,7 @@ add_executable(
         IGraph.h
         IGeometric.h
         IDrawable.h
+        SegmentPoint.cpp                    SegmentPoint.h
 )
 
 target_link_libraries(src
