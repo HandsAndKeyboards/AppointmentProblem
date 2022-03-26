@@ -24,6 +24,7 @@ add_executable(
         SegmentPoint.cpp                    SegmentPoint.h
         Axis.cpp                            Axis.h
         GeometricProbabilityModel.cpp       GeometricProbabilityModel.h
+        Graph2d.cpp                         Graph2d.h
 )
 
 target_link_libraries(src
