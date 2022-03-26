@@ -21,15 +21,15 @@ hide QMainWindow members
 
 
 class GeometricProbabilityModel {
-    - IGraph * graph
+    - shared_ptr<IGraph> graph
 
     + GeometricProbabilityModel()
     + ~GeometricProbabilityModel()
 
-    + double CalculateProbability(Time timeDelta, Time waitingInterval)
-    + Time CalculateWaitingTime(Time deltaTime, double probability)
+    + double CalculateProbability(QTime timeDelta, QTime waitingInterval)
+    + QTime CalculateWaitingQTime(QTime deltaQTime, double probability)
 
-    + void UpdateGraph(Time timeDelta, Time waitingInterval)
+    + void UpdateGraph(QTime timeDelta, QTime waitingInterval)
 }
 MainWindow "1" *-- "1" GeometricProbabilityModel
 note left of GeometricProbabilityModel::"graph"
@@ -46,8 +46,8 @@ end note
 
 
 interface IGraph {
-    + virtual void AddItem(shared_ptr<IFigure> item) = 0
-    + virtual void RemoveItem(shared_ptr<IFigure> item) = 0
+    + virtual void AddItem(shared_ptr<IGeometric> item) = 0
+    + virtual void RemoveItem(shared_ptr<IGeometric> item) = 0
     + virtual ~IGraph() = 0
 }
 GeometricProbabilityModel "1" *--- "1" IGraph
@@ -98,7 +98,7 @@ class Axis {
     - QGraphicsLineItem * line
     - QGraphicsLineItem * arrowFirstPart
     - QGraphicsLineItem * arrowSecondPart
-    - vector<SegmentPoint> * segmentPoints
+    - vector<SegmentPoint> segmentPoints
 
     + Axis(QPointF from, QPointF to)
     + virtual ~Axis()
@@ -145,8 +145,8 @@ end note
 interface IGeometric {
     + virtual void Translate(double dx, double dy) = 0
     + virtual void Rotate(double angle) = 0
-    + virtual void Expand(double delta) = 0
-    + virtual void Shrink(double delta) = 0
+    + virtual void Expand(double coefficient) = 0
+    + virtual void Shrink(double coefficient) = 0
     + virtual ~IGeometric() = 0
 }
 Graph2d "1" *-- "*" IGeometric
@@ -155,7 +155,8 @@ Graph2d "1" *-- "*" IGeometric
 class Polygon {
     - QGraphicsPolygonItem * polygon
 
-    + Polygon(QVector<QPointF> points)
+    + Polygon(const QVector<QPointF> & points)
+    + virtual ~Polygon()
 }
 IGeometric <|-- Polygon : public
 IDrawable <|-left- Polygon : public
