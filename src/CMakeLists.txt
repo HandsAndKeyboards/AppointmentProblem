@@ -25,6 +25,7 @@ add_executable(
         Axis.cpp                            Axis.h
         GeometricProbabilityModel.cpp       GeometricProbabilityModel.h
         Graph2d.cpp                         Graph2d.h
+        Polygon.cpp                         Polygon.h
 )
 
 target_link_libraries(src
