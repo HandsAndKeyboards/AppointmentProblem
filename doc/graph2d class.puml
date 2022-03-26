@@ -48,6 +48,7 @@ end note
 interface IGraph {
     + virtual void AddItem(shared_ptr<IFigure> item) = 0
     + virtual void RemoveItem(shared_ptr<IFigure> item) = 0
+    + virtual ~IGraph() = 0
 }
 GeometricProbabilityModel "1" *--- "1" IGraph
 note left of IGraph::"mainFigure"
@@ -144,6 +145,7 @@ interface IGeometric {
     + virtual void Rotate(double angle) = 0
     + virtual void Expand(double delta) = 0
     + virtual void Shrink(double delta) = 0
+    + virtual ~IGeometric() = 0
 }
 Graph2d "1" *-- "*" IGeometric
 
@@ -175,6 +177,7 @@ IGeometric <|--- Polyhedron : и тут тоже
 
 interface IDrawable {
     + virtual void Draw(QGraphicsScene * scene) = 0
+    + virtual ~IDrawable() = 0
 }
 
 
