@@ -95,6 +95,7 @@ class Axis {
     - QGraphicsLineItem * line
     - QGraphicsLineItem * arrowFirstPart
     - QGraphicsLineItem * arrowSecondPart
+    - vector<SegmentPoint> * segmentPoints
 
     + Axis(QPointF from, QPointF to)
     + virtual ~Axis()
@@ -111,16 +112,31 @@ note right of Axis
 end note
 
 
-class NumberOnAxis {
-    - QGraphicLineItem * line
-    - QLabel * number
 
-    + NumberOnAxis(QPointF point)
-    + virtual ~NumberOnAxis()
+class SegmentPoint {
+    - QGraphicsLineItem * line
+    - QGraphicsTextItem * label
+
+    + SegmentPoint(string label, QPointF pos, double angle)
+    + virtual ~SegmentPoint()
 }
-IGeometric <|-- NumberOnAxis : public
-IDrawable <|-- NumberOnAxis : public
-Graph2d "1" *-- "*" NumberOnAxis
+IDrawable <|-- SegmentPoint : public
+IGeometric <|-- SegmentPoint : public
+Axis "1" *-- "*" SegmentPoint
+note left of SegmentPoint::"SegmentPoint(string label, QPointF pos, double angle)"
+    Деление представлено небольшой черточкой,
+    расположенной под 90 градусов к оси координат.
+    Параметр angle указывает, на какой угол повернута
+    черточка относительно вертикальной оси графической сцены
+end note
+note right of SegmentPoint
+    SegmentPoint(const SegmentPoint &) = delete
+    SegmentPoint(SegmentPoint &&) = delete
+    SegmentPoint() = delete
+    SegmentPoint & operator=(const SegmentPoint &) = delete
+    SegmentPoint & operator=(SegmentPoint &&) = delete
+end note
+
 
 
 interface IGeometric {
@@ -149,12 +165,11 @@ end note
 
 
 
-
 class Polyhedron #white { /' #white окрашивает объект в белый цвет '/
     + ну да
     + тут ты снова сам все будешь делать ()
 }
-IGeometric <|-- Polyhedron : и тут тоже
+IGeometric <|--- Polyhedron : и тут тоже
 
 
 
