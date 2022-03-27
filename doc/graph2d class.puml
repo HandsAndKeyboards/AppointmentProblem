@@ -4,13 +4,13 @@
 
 class MainWindow {
     - Ui::MainWindow * ui
-    - GeometricProbabilityModel * graphModel
+    - shared_ptr<GeometricProbabilityModel> graphModel
 
     + MainWindow(QWidget * parent = nullptr)
     + ~MainWindow()
 
     - void calculateProbability()
-    - void calculateWaitingTime(double probability)
+    - void calculateWaitingTime()
     - void changeAmountOfPersons(int newAmount)
     - void showReference()
     - void showAboutProgram()
@@ -26,8 +26,8 @@ class GeometricProbabilityModel {
     + GeometricProbabilityModel()
     + ~GeometricProbabilityModel()
 
-    + double CalculateProbability(QTime timeDelta, QTime waitingInterval)
-    + QTime CalculateWaitingQTime(QTime deltaQTime, double probability)
+    + double CalculateProbability(QTime timeDelta, int waitingInterval)
+    + int CalculateWaitingTime(QTime deltaTime, double probability)
 
     + void UpdateGraph(QTime timeDelta, QTime waitingInterval)
 }
@@ -62,8 +62,8 @@ end note
 
 
 class Graph2d {
-    - Axis xAxis
-    - Axis yAxis
+    - shared_ptr<Axis> xAxis
+    - shared_ptr<Axis> yAxis
     - vector< shared_ptr<IGeometric> > items
 
     - void addAxes()
