@@ -179,7 +179,7 @@ IGeometric <|--- Polyhedron : и тут тоже
 
 
 interface IDrawable {
-    + virtual void Draw(QGraphicsScene * scene) = 0
+    + virtual QGraphicsItem * Draw(QGraphicsScene * scene) = 0
     + virtual ~IDrawable() = 0
 }
 
