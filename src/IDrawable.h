@@ -8,9 +8,7 @@ class IDrawable
 public:
 	virtual QGraphicsItem * Draw(QGraphicsScene * scene) = 0;
 	
-	virtual ~IDrawable();
+	virtual ~IDrawable() {};
 };
-
-IDrawable::~IDrawable() {}
 
 #endif //SRC_IDRAWABLE_H

@@ -9,9 +9,7 @@ public:
 	virtual void Expand(double coefficient) = 0;
 	virtual void Shrink(double coefficient) = 0;
 	
-	virtual ~IGeometric() = 0;
+	virtual ~IGeometric() {};
 };
-
-IGeometric::~IGeometric() {}
 
 #endif //SRC_IGEOMETRIC_H

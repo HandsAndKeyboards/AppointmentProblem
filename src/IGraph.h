@@ -9,9 +9,7 @@ public:
 	virtual void AddItem(std::shared_ptr<IGeometric> item) = 0;
 	virtual void RemoveItem(std::shared_ptr<IGeometric> item) = 0;
 	
-	virtual ~IGraph() = 0;
+	virtual ~IGraph() {};
 };
-
-IGraph::~IGraph() {}
 
 #endif //SRC_IGRAPH_H
