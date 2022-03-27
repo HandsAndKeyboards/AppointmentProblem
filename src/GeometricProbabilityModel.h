@@ -1,10 +1,6 @@
 #ifndef SRC_GEOMETRICPROBABILITYMODEL_H
 #define SRC_GEOMETRICPROBABILITYMODEL_H
 
-#include <memory>
-
-#include <QTime>
-
 #include "IGraph.h"
 
 class GeometricProbabilityModel final
@@ -13,10 +9,16 @@ class GeometricProbabilityModel final
 	
 public:
 	GeometricProbabilityModel();
-	~GeometricProbabilityModel();
+	~GeometricProbabilityModel() = default;
 	
-	double CalculateProbability(QTime timeDelta, QTime waitingInterval);
-	QTime CalculateWaitingTime(QTime timeDelta, double probability);
+	/**
+	 * вычисление вероятности встречи
+	 * @param timeDelta интервал времени встречи
+	 * @param waitingInterval интервал ожидания
+	 * @return
+	 */
+	static double CalculateProbability(QTime timeDelta, int waitingInterval) noexcept;
+	static int CalculateWaitingTime(QTime timeDelta, double probability) noexcept;
 	void UpdateGraph(QTime timeDelta, QTime waitingInterval);
 };
 

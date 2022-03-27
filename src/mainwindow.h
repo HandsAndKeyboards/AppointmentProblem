@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "GeometricProbabilityModel.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -17,6 +19,7 @@ public:
 
 private:
 	Ui::MainWindow * ui;
+	std::shared_ptr<GeometricProbabilityModel> graphModel;
 
 private slots:
 	/// вычисление вероятности встречи на основе времени встречи и времени ожидания
@@ -26,7 +29,7 @@ private slots:
 	 * вычисление времени ожидания на основе вероятности и времени встречи
 	 * @param probability вероятность (в процентах), на основе которой вычисляется время ожидания
 	 */
-	void calculateWaitingTime(int probability);
+	void calculateWaitingTime();
 
 	/**
 	 * изменение количества персон, участвующих во встрече
