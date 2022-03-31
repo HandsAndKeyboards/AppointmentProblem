@@ -46,11 +46,11 @@ end note
 
 
 interface IGraph {
-    + virtual void AddItem(shared_ptr<IGeometric> item) = 0
-    + virtual void RemoveItem(shared_ptr<IGeometric> item) = 0
+    + virtual void Update(QTime timeDelta, QTime waitingInterval) = 0
     + virtual ~IGraph()
 }
-GeometricProbabilityModel "1" *--- "1" IGraph
+IRenderable <|-- IGraph : public
+GeometricProbabilityModel "1" *-- "1" IGraph
 note left of IGraph::"mainFigure"
     основная фигура, характеризующая
     геометрическую вероятность
@@ -64,7 +64,8 @@ end note
 class Graph2d {
     - shared_ptr<Axis> xAxis
     - shared_ptr<Axis> yAxis
-    - vector< shared_ptr<IGeometric> > items
+'    - vector< shared_ptr<IGeometric> > items
+    - vector< shared_ptr<IRenderable> > items
 
     - void addAxes()
 
@@ -72,8 +73,6 @@ class Graph2d {
     + virtual ~Graph2d()
 }
 IGraph <|-- Graph2d : public
-IGeometric <|--- Graph2d : public
-IDrawable <|--- Graph2d : public
 note right of Graph2d
     Graph2d(const Graph2D &) = delete
     Graph2d(Graph2D &&) = delete
@@ -87,25 +86,24 @@ class Graph3d #white { /' #white окрашивает объект в белый
     + bla bla bla
     + bla bla bla ()
 }
-IGraph <|-- Graph3d : bla bla bla
-note right of Graph3d
-    bla bla bla
-end note
+IGraph <|-- Graph3d
 
 
 
 class Axis {
-    - QGraphicsLineItem * line
-    - QGraphicsLineItem * arrowFirstPart
-    - QGraphicsLineItem * arrowSecondPart
-    - vector<SegmentPoint> segmentPoints
+    - shared_ptr<Line> line
+    - shared_ptr<Line> arrowFirstPart
+    - shared_ptr<Line> arrowSecondPart
+    - vector< shared_ptr<SegmentPoint> > segmentPoints
+    - uint32_t segmentPointsDistance
 
-    + Axis(QPointF from, QPointF to)
-    + virtual ~Axis()
+    - void addSegmentPoints(vector<string> segmentPointLabels)
+
+    + Axis(QVector3D from, QVector3D to, const vector<string> & segmentPointLabels)
+    + ~Axis()
+    + void SetSegmentPointsDistance(uint8_t distance)
 }
-IGeometric <|-- Axis : public
-IDrawable <|-- Axis : public
-Graph2d "1" *-- "2" Axis
+IRenderable <|-- Axis : public
 note right of Axis
     Axis(const Axis &) = delete
     Axis(Axis &&) = delete
@@ -117,21 +115,14 @@ end note
 
 
 class SegmentPoint {
-    - QGraphicsLineItem * line
-    - QGraphicsTextItem * label
+    - shared_ptr<Line> line
+    - shared_ptr<Qt3DCore::QText2DEntity> text
 
-    + SegmentPoint(string label, QPointF pos, double angle)
+    + SegmentPoint(const string & label, QVector3D pos)
     + virtual ~SegmentPoint()
 }
-IDrawable <|-- SegmentPoint : public
-IGeometric <|-- SegmentPoint : public
-Axis "1" *-- "*" SegmentPoint
-note left of SegmentPoint::"SegmentPoint(string label, QPointF pos, double angle)"
-    Деление представлено небольшой черточкой,
-    расположенной под 90 градусов к оси координат.
-    Параметр angle указывает, на какой угол повернута
-    черточка относительно вертикальной оси графической сцены
-end note
+IRenderable <|-- SegmentPoint : public
+Axis "1" *-- "2" SegmentPoint
 note right of SegmentPoint
     SegmentPoint(const SegmentPoint &) = delete
     SegmentPoint(SegmentPoint &&) = delete
@@ -142,24 +133,15 @@ end note
 
 
 
-interface IGeometric {
-    + virtual void Translate(double dx, double dy) = 0
-    + virtual void Rotate(double angle) = 0
-    + virtual void Expand(double coefficient) = 0
-    + virtual void Shrink(double coefficient) = 0
-    + virtual ~IGeometric()
-}
-Graph2d "1" *-- "*" IGeometric
-
-
 class Polygon {
-    - QGraphicsPolygonItem * polygon
+    - vector<QVector3D> polygon
 
-    + Polygon(const QVector<QPointF> & points)
+    - void draw(QColor color, Qt3DCore::QEntity * scene)
+
+    + Polygon(const vector<QVector3D> & vertices)
     + virtual ~Polygon()
 }
-IGeometric <|-- Polygon : public
-IDrawable <|-left- Polygon : public
+IRenderable <|-- Polygon : public
 note right of Polygon
     Polygon(const Polygon &) = delete
     Polygon(Polygon &&) = delete
@@ -174,14 +156,32 @@ class Polyhedron #white { /' #white окрашивает объект в бел�
     + ну да
     + тут ты снова сам все будешь делать ()
 }
-IGeometric <|--- Polyhedron : и тут тоже
+IRenderable <|- Polyhedron
 
 
 
-interface IDrawable {
-    + virtual QGraphicsItem * Draw(QGraphicsScene * scene) = 0
-    + virtual ~IDrawable()
+interface IRenderable {
+    + virtual void Render(Qt3DCore::QNode * scene) = 0
+    + virtual void Remove(Qt3DCore::QNode * scene) = 0
+    + virtual ~IRenderable()
 }
+IGraph "1" *-- "*" IRenderable
 
+class Line {
+    - QVector3D from
+    - QVector3D to
+
+    + Line()
+    + virtual ~Line()
+}
+IRenderable <|-- Line : public
+SegmentPoint "1" *-- "1" Line
+Axis "1" *-- "3" Line
+note right of Line
+    Line(const Line &) = delete
+    Line(Line &&) = delete
+    Line & operator=(const Line &) = delete
+    Line & operator=(Line &&) = delete
+end note
 
 @enduml
