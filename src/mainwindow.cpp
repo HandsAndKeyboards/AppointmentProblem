@@ -4,6 +4,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+/** ******************************************** PRIVATE ********************************************* **/
+
+QTime MainWindow::calculateTimeDelta(const QTime & start, const QTime & finish)
+{
+	return QTime::fromMSecsSinceStartOfDay(start.msecsTo(finish));
+}
+
 /** ********************************************* PUBLIC ********************************************* **/
 
 MainWindow::MainWindow(QWidget * parent)
@@ -11,7 +18,13 @@ MainWindow::MainWindow(QWidget * parent)
 {
 	ui->setupUi(this);
 	
-	graphModel = std::make_shared<GeometricProbabilityModel>(GeometricProbabilityModel());
+	graphModel = std::make_shared<GeometricProbabilityModel>(
+			calculateTimeDelta(
+					ui->meetFromTimeEdit->time(),
+					ui->meetUntilTimeEdit->time()
+			),
+			ui->waitingTimeSpinBox->value()
+	);
 	
 	connect(ui->updateAction, &QAction::triggered, this, &MainWindow::calculateProbability);
 	connect(ui->readReferenceAction, &QAction::triggered, this, &MainWindow::showReference);
@@ -38,9 +51,7 @@ void MainWindow::calculateProbability()
 	// todo исключение, если время окончания встречи меньше времени начала встречи
 	
 	// разница времен начала и окончания встречи
-	QTime timeDelta = QTime::fromMSecsSinceStartOfDay(
-			ui->meetFromTimeEdit->time().msecsTo(ui->meetUntilTimeEdit->time())
-	);
+	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(),ui->meetUntilTimeEdit->time());
 	// вероятность встречи
 	double probability = graphModel->CalculateProbability(timeDelta, ui->waitingTimeSpinBox->value());
 	
@@ -62,9 +73,7 @@ void MainWindow::calculateWaitingTime()
 	// todo исключение, если время окончания встречи меньше времени начала встречи
 	
 	// разница времен начала и окончания встречи
-	QTime timeDelta = QTime::fromMSecsSinceStartOfDay(
-			ui->meetFromTimeEdit->time().msecsTo(ui->meetUntilTimeEdit->time())
-	);
+	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(),ui->meetUntilTimeEdit->time());
 	// время ожидания в минутах
 	int waitingTime = graphModel->CalculateWaitingTime(
 			timeDelta, ui->probabilityPercentageSpinBox->value() / 100.0

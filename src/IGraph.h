@@ -1,15 +1,13 @@
 #ifndef SRC_IGRAPH_H
 #define SRC_IGRAPH_H
 
-#include "IGeometric.h"
+#include "IRenderable.h"
 
-class IGraph
+struct IGraph : public IRenderable
 {
-public:
-	virtual void AddItem(std::shared_ptr<IGeometric> item) = 0;
-	virtual void RemoveItem(std::shared_ptr<IGeometric> item) = 0;
+	virtual void Update(const QTime & timeDelta, int waitingInterval) = 0;
 	
-	virtual ~IGraph() {};
+	virtual ~IGraph() = default;
 };
 
 #endif //SRC_IGRAPH_H

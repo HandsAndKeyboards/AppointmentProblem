@@ -4,28 +4,27 @@
 #include "Axis.h"
 #include "IGraph.h"
 
-class Graph2d final : public IGraph, public IGeometric
+class Graph2d final : public IGraph
 {
-	Axis xAxis;
-	Axis yAxis;
-	std::vector<std::shared_ptr<IGeometric>> items;
+	std::shared_ptr<Axis> xAxis;
+	std::shared_ptr<Axis> yAxis;
+	std::vector<std::shared_ptr<IRenderable>> items;
 	
+	void addAxes();
+
 public:
 	Graph2d(const Graph2d &) = delete;
 	Graph2d(Graph2d &&) = delete;
+	Graph2d() = delete;
 	Graph2d & operator=(const Graph2d &) = delete;
 	Graph2d & operator=(Graph2d &&) = delete;
 	
-	Graph2d();
-	virtual ~Graph2d();
+	Graph2d(const QTime & timeDelta, int waitingInterval);
+	~Graph2d() final;
 	
-	virtual void AddItem(std::shared_ptr<IGeometric> item);
-	virtual void RemoveItem(std::shared_ptr<IGeometric> item);
-	
-	virtual void Translate(double dx, double dy);
-	virtual void Rotate(double angle);
-	virtual void Expand(double coefficient);
-	virtual void Shrink(double coefficient);
+	void Render(Qt3DCore::QNode * scene) override;
+	void Remove(Qt3DCore::QNode * scene) override;
+	void Update(const QTime & timeDelta, int waitingInterval) override;
 };
 
 #endif //SRC_GRAPH2D_H

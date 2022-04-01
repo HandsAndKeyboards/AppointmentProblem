@@ -6,19 +6,32 @@
 class GeometricProbabilityModel final
 {
 	std::shared_ptr<IGraph> graph;
-	
+
 public:
-	GeometricProbabilityModel();
+	GeometricProbabilityModel(const GeometricProbabilityModel &) = delete;
+	GeometricProbabilityModel(GeometricProbabilityModel &&) = delete;
+	GeometricProbabilityModel() = delete;
+	GeometricProbabilityModel & operator=(const GeometricProbabilityModel &) = delete;
+	GeometricProbabilityModel & operator=(GeometricProbabilityModel &&) = delete;
+	
+	GeometricProbabilityModel(const QTime & timeDelta, int waitingInterval);
 	~GeometricProbabilityModel() = default;
 	
 	/**
 	 * вычисление вероятности встречи
 	 * @param timeDelta интервал времени встречи
 	 * @param waitingInterval интервал ожидания
-	 * @return
+	 * @return вычисленная вероятность
 	 */
-	static double CalculateProbability(QTime timeDelta, int waitingInterval) noexcept;
-	static int CalculateWaitingTime(QTime timeDelta, double probability) noexcept;
+	static double CalculateProbability(const QTime & timeDelta, int waitingInterval) noexcept;
+	
+	/**
+	 * вычисление вероятности встречи
+	 * @param timeDelta интервал времени встречи
+	 * @param probability вероятность встречи
+	 * @return вычисленное время ожидания
+	 */
+	static int CalculateWaitingTime(const QTime & timeDelta, double probability) noexcept;
 	void UpdateGraph(QTime timeDelta, QTime waitingInterval);
 };
 

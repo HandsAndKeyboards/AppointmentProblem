@@ -5,12 +5,18 @@
 #include "GeometricProbabilityModel.h"
 #include "Graph2d.h"
 
-GeometricProbabilityModel::GeometricProbabilityModel()
+GeometricProbabilityModel::GeometricProbabilityModel(const QTime & timeDelta, int waitingInterval)
 {
-	graph = std::make_shared<Graph2d>();
+	graph = std::make_shared<Graph2d>(timeDelta, waitingInterval);
 }
 
-double GeometricProbabilityModel::CalculateProbability(QTime timeDelta, int waitingInterval) noexcept
+/**
+ * вычисление вероятности встречи
+ * @param timeDelta интервал времени встречи
+ * @param waitingInterval интервал ожидания
+ * @return вычисленная вероятность
+ */
+double GeometricProbabilityModel::CalculateProbability(const QTime & timeDelta, int waitingInterval) noexcept
 {
 	int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
 	
@@ -22,7 +28,13 @@ double GeometricProbabilityModel::CalculateProbability(QTime timeDelta, int wait
 	return hexagonSquare / fullSquare;
 }
 
-int GeometricProbabilityModel::CalculateWaitingTime(QTime timeDelta, double probability) noexcept
+/**
+ * вычисление вероятности встречи
+ * @param timeDelta интервал времени встречи
+ * @param probability вероятность встречи
+ * @return вычисленное время ожидания
+ */
+int GeometricProbabilityModel::CalculateWaitingTime(const QTime & timeDelta, double probability) noexcept
 {
 	int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
 	

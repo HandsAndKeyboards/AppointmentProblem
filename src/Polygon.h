@@ -1,22 +1,26 @@
 #ifndef SRC_POLYGON_H
 #define SRC_POLYGON_H
 
-#include "IDrawable.h"
-#include "IGeometric.h"
+#include <QVector3D>
 
-class Polygon final : public IDrawable, public IGeometric
+#include "IRenderable.h"
+
+class Polygon final : public IRenderable
 {
-	QGraphicsPolygonItem * polygon;
+	std::vector<QVector3D> polygon;
 	
 public:
-	Polygon(const QVector<QPointF> & points);
-	virtual ~Polygon();
+	Polygon(const Polygon &) = delete;
+	Polygon(Polygon &&) = delete;
+	Polygon() = delete;
+	Polygon & operator=(const Polygon &) = delete;
+	Polygon & operator=(Polygon &&) = delete;
 	
-	virtual void Translate(double dx, double dy);
-	virtual void Rotate(double angle);
-	virtual void Expand(double coefficient);
-	virtual void Shrink(double coefficient);
-	virtual QGraphicsItem * Draw(QGraphicsScene * scene);
+	Polygon(const std::vector<QVector3D> & vertices);
+	~Polygon() final;
+	
+	void Render(Qt3DCore::QNode * scene) override;
+	void Remove(Qt3DCore::QNode * scene) override;
 };
 
 #endif //SRC_POLYGON_H

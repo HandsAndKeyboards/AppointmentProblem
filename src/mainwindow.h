@@ -20,6 +20,8 @@ public:
 private:
 	Ui::MainWindow * ui;
 	std::shared_ptr<GeometricProbabilityModel> graphModel;
+	
+	QTime calculateTimeDelta(const QTime & start, const QTime & finish);
 
 private slots:
 	/// вычисление вероятности встречи на основе времени встречи и времени ожидания

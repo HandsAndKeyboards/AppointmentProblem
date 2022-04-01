@@ -1,16 +1,19 @@
 #ifndef SRC_AXIS_H
 #define SRC_AXIS_H
 
-#include "IGeometric.h"
-#include "IDrawable.h"
+#include "IRenderable.h"
+#include "Line.h"
 #include "SegmentPoint.h"
 
-class Axis final : public IGeometric, public IDrawable
+class Axis final : public IRenderable
 {
-	QGraphicsLineItem * line;
-	QGraphicsLineItem * arrowFirstPart;
-	QGraphicsLineItem * arrowSecondPart;
-	std::vector<SegmentPoint> segmentPoint;
+	std::shared_ptr<Line> line;
+	std::shared_ptr<Line> arrowFirstPart;
+	std::shared_ptr<Line> arrowSecondPart;
+	std::vector<SegmentPoint> segmentPoints;
+	uint32_t segmentPointsDistance;
+	
+	void addSegmentPoints(const std::vector<std::string> & segmentPointsLabels);
 	
 public:
 	Axis(const Axis &) = delete;
@@ -19,14 +22,13 @@ public:
 	Axis & operator=(const Axis &) = delete;
 	Axis & operator=(Axis &&) = delete;
 	
-	Axis(QPointF from, QPointF to);
-	virtual ~Axis();
+	Axis(const QVector3D & from, const QVector3D & to, const std::vector<std::string> & segmentPointsLabels);
+	~Axis() final;
 	
-	virtual void Translate(double dx, double dy);
-	virtual void Rotate(double angle);
-	virtual void Expand(double coefficient);
-	virtual void Shrink(double coefficient);
-	virtual QGraphicsItem * Draw(QGraphicsScene * scene);
+	void SetSegmentPointsDistance(uint32_t distance);
+	
+	void Render(Qt3DCore::QNode * scene) override;
+	void Remove(Qt3DCore::QNode * scene) override;
 };
 
 #endif //SRC_AXIS_H
