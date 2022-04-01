@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <Qt3DExtras/Qt3DWindow>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,9 +15,13 @@ Q_OBJECT
 public:
 	MainWindow(QWidget * parent = nullptr);
 	~MainWindow();
+	
+	/// добавление 3Д окна на форму
+	void Add3DWindow(Qt3DExtras::Qt3DWindow * window, int row = 0, int column = 2, int rowSpan = 5, int columnSpan = 1);
 
 private:
 	Ui::MainWindow * ui;
+	QWidget * container; ///< является контейнером для окна Qt3DWindow
 
 private slots:
 	/// вычисление вероятности встречи на основе времени встречи и времени ожидания
