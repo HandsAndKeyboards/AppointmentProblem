@@ -9,6 +9,8 @@ class MainWindow {
     + MainWindow(QWidget * parent = nullptr)
     + ~MainWindow()
 
+    - QTime calculateTimeDelta(const QTime & start, const QTime & finish)
+
     - void calculateProbability()
     - void calculateWaitingTime()
     - void changeAmountOfPersons(int newAmount)
@@ -46,7 +48,7 @@ end note
 
 
 interface IGraph {
-    + virtual void Update(const QTime & timeDelta, const QTime & waitingInterval) = 0
+    + virtual void Update(const QTime & timeDelta, int waitingInterval) = 0
     + virtual ~IGraph()
 }
 IRenderable <|-- IGraph : public
@@ -68,7 +70,7 @@ class Graph2d {
 
     - void addAxes()
 
-    + Graph2d(const QTime & timeDelta, const QTime & waitingInterval)
+    + Graph2d(const QTime & timeDelta, int waitingInterval)
     + virtual ~Graph2d()
 }
 IGraph <|-- Graph2d : public
