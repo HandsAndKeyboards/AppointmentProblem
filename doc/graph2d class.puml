@@ -8,6 +8,7 @@ class MainWindow {
 
     + MainWindow(QWidget * parent = nullptr)
     + ~MainWindow()
+    + void Add3DWindow(Qt3DExtras::Qt3DWindow * window, int row, int column, int rowSpan, int columnSpan)
 
     - void calculateProbability()
     - void calculateWaitingTime()
