@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <Qt3DExtras/Qt3DWindow>
 
 #include "GeometricProbabilityModel.h"
 
@@ -16,10 +17,14 @@ Q_OBJECT
 public:
 	MainWindow(QWidget * parent = nullptr);
 	~MainWindow();
+	
+	/// добавление 3Д окна на форму
+	void Add3DWindow(Qt3DExtras::Qt3DWindow * window, int row = 0, int column = 2, int rowSpan = 5, int columnSpan = 1);
 
 private:
 	Ui::MainWindow * ui;
 	std::shared_ptr<GeometricProbabilityModel> graphModel;
+	QWidget * container; ///< является контейнером для окна Qt3DWindow
 	
 	QTime calculateTimeDelta(const QTime & start, const QTime & finish);
 
