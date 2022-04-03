@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #edeef0;
+      color: #946d8f;
+    }
+
+    .back {
+      position: relative;
+      width: 350px;
+      height: 50px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      font-size: 0;
+      margin: 27px auto 0;
+    }
+
+    .back a {
+      line-height: 50px;
+      height: 100%;
+      font-size: 15px;
+      display: inline-block;
+      position: relative;
+      z-index: 1;
+      text-decoration: none;
+      text-transform: uppercase;
+      text-align: center;
+      color: #946d8f;
+      cursor: pointer;
+      font-weight: bold;
+      text-align: center;
+    }
+    
+    .back:hover {
+      background-color: #b2d3fa;
+    }
+
+    nav {
+      margin: 27px auto 0;
+
+      position: relative;
+      width: 1400px;
+      height: 50px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      font-size: 0;
+    }
+    nav a {
+      line-height: 50px;
+      height: 100%;
+      font-size: 15px;
+      display: inline-block;
+      position: relative;
+      z-index: 1;
+      text-decoration: none;
+      text-transform: uppercase;
+      text-align: center;
+      color: #946d8f;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    nav .animation {
+      position: absolute;
+      height: 100%;
+      top: 0;
+      z-index: 0;
+      transition: all .5s ease 0s;
+      border-radius: 8px;
+    }
+    a:nth-child(1) {
+      width: 350px;
+    }
+    a:nth-child(2) {
+      width: 350px;
+    }
+    a:nth-child(3) {
+      width: 350px;
+    }
+    a:nth-child(4) {
+      width: 350px;
+    }
+    nav .start-home, a:nth-child(1):hover~.animation {
+      width: 350px;
+      left: 0;
+      background-color: #b2d3fa;
+    }
+    nav .start-about, a:nth-child(2):hover~.animation {
+      width: 350px;
+      left: 350px;
+      background-color: #b2d3fa;
+    }
+    nav .start-blog, a:nth-child(3):hover~.animation {
+      width: 350px;
+      left: 700px;
+      background-color: #b2d3fa;
+    }
+    nav .start-portefolio, a:nth-child(4):hover~.animation {
+      width: 350px;
+      left: 1050px;
+      background-color: #b2d3fa;
+    }
+    nav .start-contact, a:nth-child(5):hover~.animation {
+      width: 120px;
+      left: 470px;
+      background-color: #b2d3fa;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 40px 0 40px;
+      text-align: center;
+      font-size: 30px;
+    }
+
+    .p-back {
+      margin-left: 230px;
+      margin-right: 230px;
+      background-color: #ffffff;
+      border-radius: 8px;
+    }
+
+    p {
+      
+    }
+
+    .hr-line {
+      margin: 20px 0;
+      padding: 0;
+      height: 0;
+      border: none;
+      border-top: 1px solid #946d8f;
+    }
+
+</style>
+</head>
+<body>
+
+<nav id="Navigate">
+    <a href="#Intro">Геометрическая вероятность</a>
+    <a href="#Task">Задача о встрече</a>
+    <a href="#Use">Как пользоваться программой</a>
+    <a href="#About">О программе </a>
+    <div class="animation start-home"></div>
+</nav>
+
+<div style="padding-left:16px" id = "Intro">
+  <h1>Геометрическая вероятность</h1>
+    <div class="p-back">
+      <hr class="hr-line">
+      <p>За окном ранние осенние деньки, и жёлтая листва на деревьях навевает лирическое и немного грустное настроение…. Но впереди ещё целый учебный год и в такие моменты нужно обязательно настроиться на плодотворную работу! Спешу обрадовать всех хандрящих читателей своим фирменным рецептом, позволяющим быстро повысить тонус своего организма. Для этого достаточно немножко вспомнить геометрию… …нет, я согласен, что иногда она усыпляет, но в небольших дозах – исключительно бодрит! И, главное, очень действенно – как только начинаешь принимать живительные порции знаний, так сразу никакой сезонной депрессии!</p>
+    </div>
+    <div class="back">
+        <a href="#Navigate">Вернуться</a>
+    </div>
+</div>
+
+<div style="padding-left:16px" id = "Task">
+  <h1>Задача о встрече</h1>
+  <div class="p-back">
+    <hr class="hr-line">
+    <p>Два лица A и B условились встретиться в определенном месте между 7 и 8 часами вечера, причем тот, кто приходит первым, ждет другого 20 минут, после уходит. Чему равна вероятность их встречи, если моменты их прихода случайны и независимы друг от друга?</p>
+    </div>
+    <div class="back">
+        <a href="#Navigate">Вернуться</a>
+    </div>
+</div>
+
+<div style="padding-left:16px" id = "Use">
+  <h1>Как пользоваться программой</h1>
+    <p>...</p>
+    <div class="back">
+        <a href="#Navigate">Вернуться</a>
+    </div>
+</div>
+
+<div style="padding-left:16px" id = "About">
+  <h1>О программе</h1>
+    <p>...</p>
+    <div class="back">
+        <a href="#Navigate">Вернуться</a>
+    </div>
+</div>
+
+</body>
+</html>
