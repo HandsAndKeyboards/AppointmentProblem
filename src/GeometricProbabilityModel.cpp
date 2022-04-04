@@ -5,9 +5,56 @@
 #include "GeometricProbabilityModel.h"
 #include "Graph2d.h"
 
-GeometricProbabilityModel::GeometricProbabilityModel(const QTime & timeDelta, int waitingInterval)
+/* **************************************************** PUBLIC ****************************************************** */
+
+/// настройка сцены для 2д графика
+void GeometricProbabilityModel::form2dGraphScene()
 {
-	graph = std::make_shared<Graph2d>(timeDelta, waitingInterval);
+	activeScene->SetCameraPerspectiveProjection(
+			90,
+			activeScene->Width() / activeScene->Height(),
+			0.1f,
+			1000.0f
+	);
+	activeScene->SetCameraLinearSpeed(100.0f); // скорость перемещения камеры
+	activeScene->SetCameraLookSpeed(0.0f); // скорость поворота камеры
+	activeScene->SetCameraPosition({0, 0, 20});
+	activeScene->SetCameraViewCenter({0, 0, 0});
+}
+
+/// настройка сцены для 3д графика
+void GeometricProbabilityModel::form3dGraphScene()
+{
+	/*
+	 * todo тут сам подгони параметры
+	 */
+	activeScene->SetCameraPerspectiveProjection(
+			90,
+			activeScene->Width() / activeScene->Height(),
+			0.1f,
+			100.0f
+	);
+	activeScene->SetCameraLinearSpeed(100.0f);
+	activeScene->SetCameraLookSpeed(100.0f);
+	activeScene->SetCameraPosition({0, 0, 20});
+	activeScene->SetCameraViewCenter({0, 0, 0});
+}
+
+GeometricProbabilityModel::GeometricProbabilityModel(
+		const QTime & timeDelta,
+		int waitingInterval,
+		std::shared_ptr<Scene> activeScene,
+		std::shared_ptr<Scene> inactiveScene
+) :
+		activeScene{activeScene},
+		inactiveScene{inactiveScene}
+{
+	activeGraph = std::make_shared<Graph2d>(timeDelta, waitingInterval);
+	form2dGraphScene();
+	activeGraph->Render(this->activeScene->GetScene());
+	
+//	inactiveGraph = std::make_shared<Graph3d>() // todo тут тоже не бахнуть формирование графика и сцены
+//	form3dGraphScene();
 }
 
 /**
@@ -51,7 +98,14 @@ int GeometricProbabilityModel::CalculateWaitingTime(const QTime & timeDelta, dou
 	return waitingTime;
 }
 
-void GeometricProbabilityModel::UpdateGraph(QTime timeDelta, QTime waitingInterval)
+void GeometricProbabilityModel::UpdateGraph(const QTime & timeDelta, int waitingInterval)
 {
+	activeGraph->Update(timeDelta, waitingInterval);
+}
 
+void GeometricProbabilityModel::SwapGraphs()
+{
+	// todo изменение rootEntity для текущего view
+	std::swap(activeGraph, inactiveGraph);
+	std::swap(activeScene, inactiveScene);
 }

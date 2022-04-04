@@ -10,12 +10,12 @@ Polygon::~Polygon()
 
 }
 
-void Polygon::Render(Qt3DCore::QNode * scene)
+void Polygon::Render(Qt3DCore::QEntity * scene)
 {
 
 }
 
-void Polygon::Remove(Qt3DCore::QNode * scene)
+void Polygon::Remove(Qt3DCore::QEntity * scene)
 {
 
 }

@@ -20,12 +20,12 @@ void Axis::SetSegmentPointsDistance(uint32_t distance)
 
 }
 
-void Axis::Render(Qt3DCore::QNode * scene)
+void Axis::Render(Qt3DCore::QEntity * scene)
 {
 
 }
 
-void Axis::Remove(Qt3DCore::QNode * scene)
+void Axis::Remove(Qt3DCore::QEntity * scene)
 {
 
 }

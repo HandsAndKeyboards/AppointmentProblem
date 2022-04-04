@@ -10,12 +10,12 @@ SegmentPoint::~SegmentPoint()
 
 }
 
-void SegmentPoint::Render(Qt3DCore::QNode * scene)
+void SegmentPoint::Render(Qt3DCore::QEntity * scene)
 {
 
 }
 
-void SegmentPoint::Remove(Qt3DCore::QNode * scene)
+void SegmentPoint::Remove(Qt3DCore::QEntity * scene)
 {
 
 }

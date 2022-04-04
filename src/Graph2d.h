@@ -11,6 +11,8 @@ class Graph2d final : public IGraph
 	std::vector<std::shared_ptr<IRenderable>> items;
 	
 	void addAxes();
+	
+	Line * l; // debug
 
 public:
 	Graph2d(const Graph2d &) = delete;
@@ -22,8 +24,8 @@ public:
 	Graph2d(const QTime & timeDelta, int waitingInterval);
 	~Graph2d() final;
 	
-	void Render(Qt3DCore::QNode * scene) override;
-	void Remove(Qt3DCore::QNode * scene) override;
+	void Render(Qt3DCore::QEntity * scene) override;
+	void Remove(Qt3DCore::QEntity * scene) override;
 	void Update(const QTime & timeDelta, int waitingInterval) override;
 };
 

@@ -6,9 +6,24 @@
 
 /** ******************************************** PRIVATE ********************************************* **/
 
-QTime MainWindow::calculateTimeDelta(const QTime & start, const QTime & finish)
+inline QTime MainWindow::calculateTimeDelta(const QTime & start, const QTime & finish)
 {
 	return QTime::fromMSecsSinceStartOfDay(start.msecsTo(finish));
+}
+
+/// добавление 3Д окна на форму
+void MainWindow::add3DWindow(Qt3DExtras::Qt3DWindow * window, int row, int column, int rowSpan, int columnSpan)
+{
+	container = QWidget::createWindowContainer(window, this);
+	/*
+	 * виджет находится в 'row' строке 'column' колонки, занимает 'rowSpan' строк и 'columnSpan' колонку
+	 */
+	ui->gridLayout->addWidget(container, row, column, rowSpan, columnSpan);
+	/*
+	 * horizontal size policy = expanding
+	 * vertical size policy = preferred
+	 */
+	container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 }
 
 /** ********************************************* PUBLIC ********************************************* **/
@@ -18,12 +33,18 @@ MainWindow::MainWindow(QWidget * parent)
 {
 	ui->setupUi(this);
 	
+	auto * view = new Qt3DExtras::Qt3DWindow(); // создаем 3д окно, на которое будут выводиться графики
+	add3DWindow(view); // добавляем окно на форму
+	
 	graphModel = std::make_shared<GeometricProbabilityModel>(
 			calculateTimeDelta(
 					ui->meetFromTimeEdit->time(),
 					ui->meetUntilTimeEdit->time()
 			),
-			ui->waitingTimeSpinBox->value()
+			ui->waitingTimeSpinBox->value(),
+			std::make_shared<Scene>(view),
+			std::make_shared<Scene>(view)
+	
 	);
 	
 	connect(ui->updateAction, &QAction::triggered, this, &MainWindow::calculateProbability);
@@ -41,21 +62,6 @@ MainWindow::MainWindow(QWidget * parent)
 MainWindow::~MainWindow()
 {
 	delete ui;
-}
-
-/// добавление 3Д окна на форму
-void MainWindow::Add3DWindow(Qt3DExtras::Qt3DWindow * window, int row, int column, int rowSpan, int columnSpan)
-{
-	container = QWidget::createWindowContainer(window, this);
-	/*
-	 * виджет находится в 'row' строке 'column' колонки, занимает 'rowSpan' строк и 'columnSpan' колонку
-	 */
-	ui->gridLayout->addWidget(container, row, column, rowSpan, columnSpan);
-	/*
-	 * horizontal size policy = expanding
-	 * vertical size policy = preferred
-	 */
-	container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 }
 
 /** ****************************************** PRIVATE SLOTS ***************************************** **/
@@ -77,6 +83,9 @@ void MainWindow::calculateProbability()
 	ui->probabilityPercentageSpinBox->blockSignals(true);
 	ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
 	ui->probabilityPercentageSpinBox->blockSignals(false);
+	
+	// обновляем график
+	graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
 }
 
 /**
@@ -101,15 +110,19 @@ void MainWindow::calculateWaitingTime()
 	ui->waitingTimeSpinBox->blockSignals(true);
 	ui->waitingTimeSpinBox->setValue(waitingTime);
 	ui->waitingTimeSpinBox->blockSignals(false);
+	
+	// обновляем график
+	graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
 }
 
 /**
- * изменение количества персон, участвующих во встрече
+ * @brief изменение количества персон, участвующих во встрече
+ * @detail обмен местами активного и неактивного графиков
  * @param newAmount новое количество персонажей
  */
-void MainWindow::changeAmountOfPersons(int newAmount)
+void MainWindow::changeAmountOfPersons()
 {
-
+	graphModel->SwapGraphs();
 }
 
 /// вывод справки

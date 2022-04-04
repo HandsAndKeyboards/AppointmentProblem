@@ -19,8 +19,8 @@ public:
 	Polygon(const std::vector<QVector3D> & vertices);
 	~Polygon() final;
 	
-	void Render(Qt3DCore::QNode * scene) override;
-	void Remove(Qt3DCore::QNode * scene) override;
+	void Render(Qt3DCore::QEntity * scene) override;
+	void Remove(Qt3DCore::QEntity * scene) override;
 };
 
 #endif //SRC_POLYGON_H

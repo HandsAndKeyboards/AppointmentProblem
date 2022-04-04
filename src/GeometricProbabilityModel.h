@@ -2,10 +2,20 @@
 #define SRC_GEOMETRICPROBABILITYMODEL_H
 
 #include "IGraph.h"
+#include "Scene.h"
 
 class GeometricProbabilityModel final
 {
-	std::shared_ptr<IGraph> graph;
+	std::shared_ptr<Scene> activeScene; ///< активная сцена, находится на экране
+	std::shared_ptr<Scene> inactiveScene; ///< неактивная сцена
+	
+	std::shared_ptr<IGraph> activeGraph; ///< активный график, находящийся на активной сцене
+	std::shared_ptr<IGraph> inactiveGraph; ///< неактивный график, находится на неактивной сцене
+	
+	/// настройка сцены для 2д графика
+	void form2dGraphScene();
+	/// настройка сцены для 3д графика
+	void form3dGraphScene(); // todo подбери параметры
 
 public:
 	GeometricProbabilityModel(const GeometricProbabilityModel &) = delete;
@@ -14,7 +24,12 @@ public:
 	GeometricProbabilityModel & operator=(const GeometricProbabilityModel &) = delete;
 	GeometricProbabilityModel & operator=(GeometricProbabilityModel &&) = delete;
 	
-	GeometricProbabilityModel(const QTime & timeDelta, int waitingInterval);
+	GeometricProbabilityModel(
+			const QTime & timeDelta,
+			int waitingInterval,
+			std::shared_ptr<Scene> activeScene,
+			std::shared_ptr<Scene> inactiveScene
+	);
 	~GeometricProbabilityModel() = default;
 	
 	/**
@@ -32,7 +47,10 @@ public:
 	 * @return вычисленное время ожидания
 	 */
 	static int CalculateWaitingTime(const QTime & timeDelta, double probability) noexcept;
-	void UpdateGraph(QTime timeDelta, QTime waitingInterval);
+	void UpdateGraph(const QTime & timeDelta, int waitingInterval);
+	
+	/// обмен местами активного и неактивного графиков
+	void SwapGraphs();
 };
 
 #endif //SRC_GEOMETRICPROBABILITYMODEL_H

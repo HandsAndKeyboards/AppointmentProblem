@@ -8,13 +8,13 @@ class MainWindow {
 
     + MainWindow(QWidget * parent = nullptr)
     + ~MainWindow()
-    + void Add3DWindow(Qt3DExtras::Qt3DWindow * window, int row, int column, int rowSpan, int columnSpan)
 
+    - void add3DWindow(Qt3DExtras::Qt3DWindow * window, int row, int column, int rowSpan, int columnSpan)
     - QTime calculateTimeDelta(const QTime & start, const QTime & finish)
 
     - void calculateProbability()
     - void calculateWaitingTime()
-    - void changeAmountOfPersons(int newAmount)
+    - void changeAmountOfPersons()
     - void showReference()
     - void showAboutProgram()
 }
@@ -24,15 +24,22 @@ hide QMainWindow members
 
 
 class GeometricProbabilityModel {
-    - shared_ptr<IGraph> graph
+    - shared_ptr<IGraph> activeGraph
+    - shared_ptr<IGraph> inactiveGraph
 
-    + GeometricProbabilityModel()
+    - shared_ptr<Scene> activeScene
+    - shared_ptr<Scene> inactiveScene
+
+    - void form2dGraphScene()
+    - void form3dGraphScene()
+
+    + GeometricProbabilityModel(const QTime & timeDelta, int waitingInterval, shared_ptr<Scene> activeScene, shared_ptr<Scene> inactiveScene)
     + ~GeometricProbabilityModel()
 
     + double CalculateProbability(const QTime & timeDelta, int waitingInterval)
     + int CalculateWaitingTime(const QTime & deltaTime, double probability)
-
-    + void UpdateGraph(QTime timeDelta, QTime waitingInterval)
+    + void UpdateGraph(const QTime & timeDelta, int waitingInterval)
+    + void SwapGraphs()
 }
 MainWindow "1" *-- "1" GeometricProbabilityModel
 note left of GeometricProbabilityModel::"graph"
@@ -42,6 +49,7 @@ end note
 note right of GeometricProbabilityModel
     GeometricProbabilityModel(const GeometricProbabilityModel &) = delete
     GeometricProbabilityModel(GeometricProbabilityModel &&) = delete
+    GeometricProbabilityModel() = delete
     GeometricProbabilityModel & operator= (const GeometricProbabilityModel &) = delete
     GeometricProbabilityModel & operator= (GeometricProbabilityModel &&) = delete
 end note
@@ -163,8 +171,8 @@ IRenderable <|- Polyhedron
 
 
 interface IRenderable {
-    + virtual void Render(Qt3DCore::QNode * scene) = 0
-    + virtual void Remove(Qt3DCore::QNode * scene) = 0
+    + virtual void Render(Qt3DCore::QEntity * scene) = 0
+    + virtual void Remove(Qt3DCore::QEntity * scene) = 0
     + virtual ~IRenderable()
 }
 IGraph -[hidden]- IRenderable
@@ -187,6 +195,35 @@ note right of Line
     Line() = delete
     Line & operator=(const Line &) = delete
     Line & operator=(Line &&) = delete
+end note
+
+
+
+class Scene {
+	- shared_ptr<Qt3DExtras::Qt3DWindow> view
+	- Qt3DCore::QEntity * scene
+	- Qt3DRender::QCamera * camera
+	- Qt3DExtras::QOrbitCameraController * cameraController
+
+    + Scene(Qt3DExtras::Qt3DWindow * view)
+
+	+ void SetCameraPerspectiveProjection(float fieldOfView, float aspect, float nearPlane, float farPlane)
+	+ void SetCameraPosition(const QVector3D & position)
+	+ void SetCameraViewCenter(const QVector3D & viewCenter)
+	+ void SetCameraLookSpeed(float cameraLookSpeed)
+	+ void SetCameraLinearSpeed(float cameraLinearSpeed)
+
+	+ Qt3DCore::QEntity * GetScene()
+	+ float Width()
+	+ float Height()
+}
+GeometricProbabilityModel "1" *-left- "2" Scene
+note left of Scene
+    Scene(const Scene &) = delete
+    Scene(Scene &&) = delete
+    Scene() = delete
+    Scene & operator=(const Scene &) = delete
+    Scene & operator=(Scene &&) = delete
 end note
 
 @enduml

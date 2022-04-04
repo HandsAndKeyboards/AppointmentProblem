@@ -21,8 +21,8 @@ public:
 	SegmentPoint(const std::string & label, const QVector3D & pos);
 	~SegmentPoint() final;
 	
-	void Render(Qt3DCore::QNode * scene) override;
-	void Remove(Qt3DCore::QNode * scene) override;
+	void Render(Qt3DCore::QEntity * scene) override;
+	void Remove(Qt3DCore::QEntity * scene) override;
 };
 
 #endif //SRC_SEGMENTPOINT_H

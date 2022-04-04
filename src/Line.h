@@ -17,11 +17,11 @@ public:
 	Line & operator=(const Line &) = delete;
 	Line & operator=(Line &&) = delete;
 	
-	Line(const QVector3D & from, const QVector3D & to);
+	Line(const QVector3D & from, const QVector3D & to) : from{from}, to{to} {};
 	~Line() final;
 	
-	void Render(Qt3DCore::QNode * scene) override;
-	void Remove(Qt3DCore::QNode * scene) override;
+	void Render(Qt3DCore::QEntity * scene) override;
+	void Remove(Qt3DCore::QEntity * scene) override;
 };
 
 #endif //SRC_LINE_H
