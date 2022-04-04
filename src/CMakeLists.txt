@@ -1,12 +1,22 @@
 cmake_minimum_required(VERSION 3.21)
-project(src)
+project(AppointmentProblem)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.2.4/mingw_64")
+if (WIN32)
+    set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.2.4/mingw_64")
+else ()
+    #todo разобраться с qt на линухе
+    set(CMAKE_PREFIX_PATH "/home/vany/Qt/6.2.4/gcc_64/lib/cmake")
+#    set(CMAKE_PREFIX_PATH "/home/vany/Qt/6.2.4/gcc_64/lib/cmake/Qt63DCore/Qt63DCoreConfig.cmake")
+
+#    set(Qt6Core_DIR "/home/vany/Qt/6.2.4/gcc_64/lib/cmake/Qt6Core/")
+#    set(Qt6_DIR "/home/vany/Qt/6.2.4/gcc_64/lib/cmake/Qt6/")
+#    set(QT_MAKE_EXECUTABLE "/home/vany/Qt/6.2.4/gcc_64/bin/qmake")
+endif ()
 
 find_package(Qt6 COMPONENTS
         Core
@@ -20,7 +30,7 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 
 add_executable(
-        src
+        AppointmentProblem
         main.cpp
         mainwindow.cpp mainwindow.h mainwindow.ui
         IGraph.h
@@ -29,9 +39,11 @@ add_executable(
         GeometricProbabilityModel.cpp GeometricProbabilityModel.h
         Graph2d.cpp Graph2d.h
         Polygon.cpp Polygon.h
-        Line.cpp Line.h)
+        Line.cpp Line.h
+        Scene.cpp Scene.h
+)
 
-target_link_libraries(src
+target_link_libraries(AppointmentProblem
         Qt::Core
         Qt::Gui
         Qt::Widgets
@@ -50,6 +62,7 @@ if (WIN32)
             set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")
         endif ()
     endif ()
+
     if (EXISTS "${QT_INSTALL_PATH}/plugins/platforms/qwindows.dll")
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E make_directory
