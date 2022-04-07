@@ -7,7 +7,7 @@ void Graph2d::addAxes()
 
 Graph2d::Graph2d(const QTime & timeDelta, int waitingInterval)
 {
-	l = new Line({0, 0, 0}, {30, 30, 0}); // debug
+	l = new Line({0, 0, 0}, {30, 30, 15}, 0.1); // debug
 }
 
 Graph2d::~Graph2d()
