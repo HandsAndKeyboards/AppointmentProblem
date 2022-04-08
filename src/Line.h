@@ -2,10 +2,8 @@
 #define SRC_LINE_H
 
 #include <QVector3D>
+#include <QPointer>
 #include <Qt3DCore/QEntity>
-#include <Qt3DCore/QTransform>
-#include <Qt3DExtras/QGoochMaterial>
-#include <Qt3DExtras/QCylinderMesh>
 
 #include "IRenderable.h"
 
@@ -22,12 +20,12 @@ public:
 	Line & operator=(Line &&) = delete;
 	
 	/**
-	 * конструктор класса
+	 * @brief конструктор класса
 	 * @param from начальные координаты линии
 	 * @param to конечные координаты линии
-	 * @param depth толщина линии
+	 * @param thickness толщина линии
 	 */
-	Line(const QVector3D & from, const QVector3D & to, float depth = 0.1f);
+	Line(const QVector3D & from, const QVector3D & to, QColor color, float thickness = 0.1f);
 	~Line() final;
 	
 	/// рендер объекта на сцене
@@ -37,13 +35,10 @@ public:
 	void Remove(Qt3DCore::QEntity * scene) override;
 	
 private:
-	QVector3D from;
-	QVector3D to;
+	QVector3D from; ///< начальная точка
+	QVector3D to; ///< конечная точка
 	
-	Qt3DCore::QEntity * cylinder;
-	Qt3DExtras::QCylinderMesh * cylinderMesh;
-	Qt3DExtras::QGoochMaterial * cylinderMaterial;
-	Qt3DCore::QTransform * transform;
+	QPointer<Qt3DCore::QEntity> cylinder; ///< основа линии на 3д сцене
 };
 
 #endif //SRC_LINE_H
