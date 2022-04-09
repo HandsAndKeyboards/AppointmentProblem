@@ -6,13 +6,12 @@
 
 class Graph2d final : public IGraph
 {
-	std::shared_ptr<Axis> xAxis;
-	std::shared_ptr<Axis> yAxis;
-	std::vector<std::shared_ptr<IRenderable>> items;
+	std::unique_ptr<Axis> xAxis; ///< ось OX
+	std::unique_ptr<Axis> yAxis; ///< ось OY
+	std::unique_ptr<Axis> zAxis; ///< ось OZ // debug
+	std::vector<std::unique_ptr<IRenderable>> items; ///< прочие элементы графика
 	
-	void addAxes();
-	
-	Line * l; // debug
+	void addAxes(const QTime & timeDelta, int waitingInterval);
 
 public:
 	Graph2d(const Graph2d &) = delete;

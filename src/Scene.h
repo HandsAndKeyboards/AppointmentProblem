@@ -2,18 +2,15 @@
 #define SRC_SCENE_H
 
 #include <QWidget>
+#include <QPointer>
 #include <Qt3DCore/QEntity>
 #include <Qt3DExtras/Qt3DWindow>
 #include <Qt3DExtras/QOrbitCameraController>
 #include <Qt3DRender/QCamera>
 
-class Scene
+class Scene final
 {
-	/*
-	 * предполагается наличие указателя на один экземпляр Qt3DExtras::Qt3DWindow в нескольких экземплярах
-	 * класса Scene, shared_ptr предотвратит множественное очищение памяти по одному указателю
-	 */
-	std::shared_ptr<Qt3DExtras::Qt3DWindow> view; ///< окно просмотра
+	QPointer<Qt3DExtras::Qt3DWindow> view; ///< окно просмотра
 	Qt3DCore::QEntity * scene; ///< корневой объект окна просмотра. выступает в роли сцены
 	Qt3DRender::QCamera * camera; ///< камера
 	Qt3DExtras::QOrbitCameraController * cameraController; ///< контроллер камеры
@@ -26,9 +23,10 @@ public:
 	Scene & operator=(Scene &&) = delete;
 	
 	explicit Scene(Qt3DExtras::Qt3DWindow * view);
+	~Scene();
 	
 	/**
-	 * установка перспективной проекции
+	 * @brief установка перспективной проекции
 	 * @param fieldOfView угол обзора в градусах
 	 * @param aspect соотношение сторон
 	 * @param nearPlane ближняя плоскость обзора

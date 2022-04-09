@@ -33,7 +33,7 @@ public:
 	~GeometricProbabilityModel() = default;
 	
 	/**
-	 * вычисление вероятности встречи
+	 * @brief вычисление вероятности встречи
 	 * @param timeDelta интервал времени встречи
 	 * @param waitingInterval интервал ожидания
 	 * @return вычисленная вероятность
@@ -41,7 +41,7 @@ public:
 	static double CalculateProbability(const QTime & timeDelta, int waitingInterval) noexcept;
 	
 	/**
-	 * вычисление вероятности встречи
+	 * @brief вычисление вероятности встречи
 	 * @param timeDelta интервал времени встречи
 	 * @param probability вероятность встречи
 	 * @return вычисленное время ожидания

@@ -73,11 +73,11 @@ end note
 
 
 class Graph2d {
-    - shared_ptr<Axis> xAxis
-    - shared_ptr<Axis> yAxis
-    - vector< shared_ptr<IRenderable> > items
+    - unique_ptr<Axis> xAxis
+    - unique_ptr<Axis> yAxis
+    - vector< unique_ptr<IRenderable> > items
 
-    - void addAxes()
+    - void addAxes(const QTime & timeDelta, int waitingInterval)
 
     + Graph2d(const QTime & timeDelta, int waitingInterval)
     + virtual ~Graph2d()
@@ -102,17 +102,14 @@ IGraph <|-- Graph3d
 
 
 class Axis {
-    - shared_ptr<Line> line
-    - shared_ptr<Line> arrowFirstPart
-    - shared_ptr<Line> arrowSecondPart
-    - vector< shared_ptr<SegmentPoint> > segmentPoints
-    - uint32_t segmentPointsDistance
+    - unique_ptr<Line> line
+    - unique_ptr<AxisTip> arrow
+    - vector< unique_ptr<SegmentPoint> > segmentPoints
 
-    - void addSegmentPoints(const vector<string> & segmentPointLabels)
+    - void addSegmentPoints(const list<tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
 
-    + Axis(QVector3D from, QVector3D to, const vector<string> & segmentPointsLabels)
-    + ~Axis()
-    + void SetSegmentPointsDistance(uint32_t distance)
+    + Axis(QVector3D from, QVector3D to, QString tipLabel, const list<tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
+    + virtual ~Axis()
 }
 IRenderable <|-- Axis : public
 Graph2d "1" *-- "2" Axis
@@ -127,10 +124,10 @@ end note
 
 
 class SegmentPoint {
-    - shared_ptr<Line> line
-    - shared_ptr<Qt3DExtras::QText2DEntity> label
+    - unique_ptr<Line> line
+    - QPointer<Qt3DExtras::QText2DEntity> label
 
-    + SegmentPoint(const string & label, const QVector3D & pos)
+    + SegmentPoint(const string & label, const QVector3D & labelPos, float length, const QVector3D & pos, const QQuaternion & rotation)
     + virtual ~SegmentPoint()
 }
 IRenderable <|-- SegmentPoint : public
@@ -179,12 +176,14 @@ IGraph -[hidden]- IRenderable
 Graph2d "1" *-- "*" IRenderable
 
 
-class Line {
-    - QVector3D from
-    - QVector3D to
 
-    + Line(const QVector3D & from, const QVector3D & to)
-    + ~Line()
+class Line {
+    - QPointer<Qt3DCore::QEntity> cylinder
+    - void construct(float length, Qt3DCore::QTransform * transform, float thickness, QColor color)
+
+    + Line(const QVector3D & from, const QVector3D & to, QColor color, float thickness)
+    + Line(float length, Qt3DCore::QTransform * transform, QColor color, float thickness)
+    + virtual ~Line()
 }
 IRenderable <|-- Line : public
 SegmentPoint "1" *-- "1" Line
@@ -199,13 +198,33 @@ end note
 
 
 
+class AxisTip {
+    - QPointer<Qt3DCore::QEntity> tip
+    - QPointer<Qt3dExtras::QText2DEntity> label
+
+    + AxisTip(const QVector3D & pos, const QQuaternion & rotation, const QString & label, QColor color, float bottomRadius, float length)
+    + virtual ~AxisTip()
+}
+IRenderable <|-- AxisTip : public
+Axis "1" *-- "1" AxisTip
+note right of AxisTip
+    AxisTip(const AxisTip &) = delete
+    AxisTip(AxisTip &&) = delete
+    AxisTip() = delete
+    AxisTip & operator=(const AxisTip &) = delete
+    AxisTip & operator=(AxisTip &&) = delete
+end note
+
+
+
 class Scene {
-	- shared_ptr<Qt3DExtras::Qt3DWindow> view
+	- QPointer<Qt3DExtras::Qt3DWindow> view
 	- Qt3DCore::QEntity * scene
 	- Qt3DRender::QCamera * camera
 	- Qt3DExtras::QOrbitCameraController * cameraController
 
     + Scene(Qt3DExtras::Qt3DWindow * view)
+    + ~Scene()
 
 	+ void SetCameraPerspectiveProjection(float fieldOfView, float aspect, float nearPlane, float farPlane)
 	+ void SetCameraPosition(const QVector3D & position)

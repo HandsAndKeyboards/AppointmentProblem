@@ -10,8 +10,14 @@ Scene::Scene(Qt3DExtras::Qt3DWindow * view) :
 	view->setRootEntity(scene);
 }
 
+Scene::~Scene()
+{
+	// scene, camera и cameraController уничтожаются при уничтожении view
+	view.clear();
+}
+
 /**
- * установка перспективной проекции
+ * @brief установка перспективной проекции
  * @param fieldOfView угол обзора в градусах
  * @param aspect соотношение сторон
  * @param nearPlane ближняя плоскость обзора

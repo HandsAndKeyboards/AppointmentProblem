@@ -17,7 +17,7 @@ void GeometricProbabilityModel::form2dGraphScene()
 			1000.0f
 	);
 	activeScene->SetCameraLinearSpeed(100.0f); // скорость перемещения камеры
-	activeScene->SetCameraLookSpeed(50.0f); // скорость поворота камеры
+	activeScene->SetCameraLookSpeed(200.0f); // скорость поворота камеры
 	activeScene->SetCameraPosition({0, 0, 20});
 	activeScene->SetCameraViewCenter({0, 0, 0});
 }
@@ -58,7 +58,7 @@ GeometricProbabilityModel::GeometricProbabilityModel(
 }
 
 /**
- * вычисление вероятности встречи
+ * @brief вычисление вероятности встречи
  * @param timeDelta интервал времени встречи
  * @param waitingInterval интервал ожидания
  * @return вычисленная вероятность
@@ -76,7 +76,7 @@ double GeometricProbabilityModel::CalculateProbability(const QTime & timeDelta, 
 }
 
 /**
- * вычисление вероятности встречи
+ * @brief вычисление вероятности встречи
  * @param timeDelta интервал времени встречи
  * @param probability вероятность встречи
  * @return вычисленное время ожидания

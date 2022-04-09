@@ -41,7 +41,8 @@ add_executable(
         Polygon.cpp Polygon.h
         Line.cpp Line.h
         Scene.cpp Scene.h
-        common/geometry.h
+        common/mathematicFuncs.h
+        AxisTip.cpp AxisTip.h
 )
 
 target_link_libraries(AppointmentProblem
