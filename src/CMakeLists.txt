@@ -43,7 +43,11 @@ add_executable(
         Scene.cpp Scene.h
         common/mathematicFuncs.h
         AxisTip.cpp AxisTip.h
-        include/earcut.h)
+        include/earcut.h
+        Graph3d.cpp Graph2d.h
+        Decision.h Decision.cpp
+        Cube.h Cube.cpp
+)
 
 target_link_libraries(AppointmentProblem
         Qt::Core

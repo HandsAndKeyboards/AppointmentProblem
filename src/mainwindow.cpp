@@ -70,22 +70,31 @@ MainWindow::~MainWindow()
 void MainWindow::calculateProbability()
 {
 	// todo исключение, если время окончания встречи меньше времени начала встречи
+
+    // разница времен начала и окончания встречи
+    QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(),ui->meetUntilTimeEdit->time());
+
+    if(!ui->threePersonsCheckBox->isEnabled())
+    {
+        // вероятность встречи
+        double probability = graphModel->CalculateProbability(timeDelta, ui->waitingTimeSpinBox->value());
 	
-	// разница времен начала и окончания встречи
-	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(),ui->meetUntilTimeEdit->time());
-	// вероятность встречи
-	double probability = graphModel->CalculateProbability(timeDelta, ui->waitingTimeSpinBox->value());
+        /*
+         * блокируем отправку сигналов спинбоксом вероятности для того, чтобы изменение его значения
+         * не приводило к вызову метода calculateWaitingTime()
+         */
+        ui->probabilityPercentageSpinBox->blockSignals(true);
+        ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
+        ui->probabilityPercentageSpinBox->blockSignals(false);
 	
-	/*
-	 * блокируем отправку сигналов спинбоксом вероятности для того, чтобы изменение его значения
-	 * не приводило к вызову метода calculateWaitingTime()
-	 */
-	ui->probabilityPercentageSpinBox->blockSignals(true);
-	ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
-	ui->probabilityPercentageSpinBox->blockSignals(false);
-	
-	// обновляем график
-	graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
+        // обновляем график
+        graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
+    }
+    else
+    {
+
+        graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
+    }
 }
 
 /**
@@ -95,24 +104,32 @@ void MainWindow::calculateProbability()
 void MainWindow::calculateWaitingTime()
 {
 	// todo исключение, если время окончания встречи меньше времени начала встречи
+
+    // разница времен начала и окончания встречи
+    QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(),ui->meetUntilTimeEdit->time());
 	
-	// разница времен начала и окончания встречи
-	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(),ui->meetUntilTimeEdit->time());
-	// время ожидания в минутах
-	int waitingTime = graphModel->CalculateWaitingTime(
-			timeDelta, ui->probabilityPercentageSpinBox->value() / 100.0
-	);
+    if (!ui->threePersonsCheckBox->isEnabled())
+    {
+        // время ожидания в минутах
+        int waitingTime = graphModel->CalculateWaitingTime(
+                timeDelta, ui->probabilityPercentageSpinBox->value() / 100.0
+        );
 	
-	/*
-	* блокируем отправку сигналов спинбоксом времени ожидания для того, чтобы изменение его значения
-	* не приводило к вызову метода calculateProbability()
-	*/
-	ui->waitingTimeSpinBox->blockSignals(true);
-	ui->waitingTimeSpinBox->setValue(waitingTime);
-	ui->waitingTimeSpinBox->blockSignals(false);
+        /*
+        * блокируем отправку сигналов спинбоксом времени ожидания для того, чтобы изменение его значения
+        * не приводило к вызову метода calculateProbability()
+        */
+        ui->waitingTimeSpinBox->blockSignals(true);
+        ui->waitingTimeSpinBox->setValue(waitingTime);
+        ui->waitingTimeSpinBox->blockSignals(false);
 	
-	// обновляем график
-	graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
+        // обновляем график
+        graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
+    }
+    else
+    {
+        graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
+    }
 }
 
 /**

@@ -1,0 +1,13 @@
+debug/Axis.o
+debug/AxisTip.o
+debug/Cube.o
+debug/Decision.o
+debug/GeometricProbabilityModel.o
+debug/Graph2d.o
+debug/Graph3d.o
+debug/Line.o
+debug/Scene.o
+debug/SegmentPoint.o
+debug/main.o
+debug/mainwindow.o
+debug/moc_mainwindow.o
