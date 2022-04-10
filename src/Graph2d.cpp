@@ -31,7 +31,7 @@ void Graph2d::addAxes(const QTime & timeDelta, int waitingInterval)
 					QQuaternion()
 			),
 			std::make_tuple(
-					QString::number(60 - waitingInterval),
+					QString::number(timeDeltaNum - waitingInterval),
 					QVector3D(60 - waitingInterval / minutesPerUnit - 5, -8, 0),
 					QVector3D(60 - waitingInterval / minutesPerUnit, 0, 0),
 					QQuaternion()
@@ -158,7 +158,7 @@ void Graph2d::Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEn
 					QQuaternion()
 			),
 			std::make_tuple(
-					QString::number(60 - waitingInterval),
+					QString::number(timeDeltaNum - waitingInterval),
 					QVector3D(60 - waitingInterval / minutesPerUnit - 5, -8, 0),
 					QVector3D(60 - waitingInterval / minutesPerUnit, 0, 0),
 					QQuaternion()
@@ -181,7 +181,7 @@ void Graph2d::Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEn
 					yRotation
 			),
 			std::make_tuple(
-					QString::number(60 - waitingInterval),
+					QString::number(timeDeltaNum - waitingInterval),
 					QVector3D(-10, 57.5f - waitingInterval / minutesPerUnit, 0),
 					QVector3D(0, 60 - waitingInterval / minutesPerUnit, 0),
 					yRotation
