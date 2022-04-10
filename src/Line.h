@@ -24,7 +24,7 @@ public:
 	 * @param color цвет линии
 	 * @param thickness толщина линии
 	 */
-	Line(const QVector3D & from, const QVector3D & to, QColor color, float thickness = 0.1f);
+	Line(const QVector3D & from, const QVector3D & to, QColor color, float thickness = 0.3f);
 	 /**
 	  * @brief конструктор класса
 	  * @param pos позиция центра линии

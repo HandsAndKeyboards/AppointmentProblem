@@ -1,22 +1,6 @@
 #include "Axis.h"
 #include "common/mathematicFuncs.h"
 
-void Axis::addSegmentPoints(const std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
-{
-	for (auto point: segmentPoints)
-	{
-		this->segmentPoints.emplace_back(
-				std::make_unique<SegmentPoint>(
-						std::get<0>(point),
-				        std::get<1>(point),
-				        1,
-						std::get<2>(point),
-						std::get<3>(point)
-				)
-		);
-	}
-}
-
 /**
  * @brief ось координат
  * @param from начальная координата
@@ -31,15 +15,32 @@ Axis::Axis(
 		const std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints
 )
 {
-	line = std::make_unique<Line>(from, to, 0.1);
+	line = std::make_unique<Line>(from, to, 0.3f);
 	arrow = std::make_unique<AxisTip>(to, findRotation(from, to), tipLabel, Qt::black);
 	
-	addSegmentPoints(segmentPoints);
+	ResetSegmentPoints(segmentPoints);
 }
 
-Axis::~Axis()
+/**
+ * @brief переустановка делений на осях координат
+ * @param segmentPoints массив четверок: метка, позиция метки, позиция деления, вращение деления
+ */
+void Axis::ResetSegmentPoints(const std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
 {
-
+	for (auto & point : this->segmentPoints) { point.reset(); }
+	
+	for (auto point: segmentPoints)
+	{
+		this->segmentPoints.emplace_back(
+				std::make_unique<SegmentPoint>(
+						std::get<0>(point),
+						std::get<1>(point),
+						5,
+						std::get<2>(point),
+						std::get<3>(point)
+				)
+		);
+	}
 }
 
 void Axis::Render(Qt3DCore::QEntity * scene)

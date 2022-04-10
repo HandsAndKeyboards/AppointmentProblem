@@ -17,9 +17,9 @@ void GeometricProbabilityModel::form2dGraphScene()
 			1000.0f
 	);
 	activeScene->SetCameraLinearSpeed(100.0f); // скорость перемещения камеры
-	activeScene->SetCameraLookSpeed(200.0f); // скорость поворота камеры
-	activeScene->SetCameraPosition({0, 0, 20});
-	activeScene->SetCameraViewCenter({0, 0, 0});
+	activeScene->SetCameraLookSpeed(0.0f); // скорость поворота камеры
+	activeScene->SetCameraPosition({30, 30, 75});
+	activeScene->SetCameraViewCenter({30, 30, 0});
 }
 
 /// настройка сцены для 3д графика

@@ -18,7 +18,7 @@ SegmentPoint::SegmentPoint(
 	auto * transform = new Qt3DCore::QTransform();
 	transform->setTranslation(pos);
 	transform->setRotation(rotation);
-	line = std::make_unique<Line>(length, transform, Qt::black, 0.1f);
+	line = std::make_unique<Line>(length, transform, Qt::black, 0.3f);
 	
 	auto * labelTransform = new Qt3DCore::QTransform();
 	labelTransform->setTranslation(labelPos);
@@ -27,7 +27,7 @@ SegmentPoint::SegmentPoint(
 	this->label->setHeight(5);
 	this->label->setText(label);
 	this->label->setColor(Qt::black);
-	this->label->setFont(QFont("Verdana", 1, QFont::ExtraLight));
+	this->label->setFont(QFont("Verdana", 3, QFont::ExtraLight));
 	this->label->addComponent(labelTransform);
 }
 

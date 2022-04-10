@@ -51,7 +51,7 @@ AxisTip::AxisTip(
 	/*
 	 * сам не совсем понимаю, почему текст с позицией ниже конца оси координат показывается выше
 	 */
-	labelTransform->setTranslation(pos + QVector3D(0, -3, 0));
+	labelTransform->setTranslation(pos + QVector3D(1, 0, 0));
 	
 	// метка наконечника
 	this->label = new Qt3DExtras::QText2DEntity();
@@ -59,7 +59,7 @@ AxisTip::AxisTip(
 	this->label->setHeight(5);
 	this->label->setText(label);
 	this->label->setColor(Qt::black);
-	this->label->setFont(QFont("Verdana", 1, QFont::ExtraLight));
+	this->label->setFont(QFont("Verdana", 3, QFont::ExtraLight));
 	this->label->addComponent(labelTransform);
 }
 

@@ -29,8 +29,8 @@ public:
 			const QQuaternion & rotation,
 			const QString & label,
 			QColor color,
-	        float bottomRadius = 0.3f,
-			float length = 0.8f);
+	        float bottomRadius = 1.0f,
+			float length = 2.5f);
 	~AxisTip() final;
 	
 	/// рендер объекта на сцене

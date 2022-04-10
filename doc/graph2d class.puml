@@ -106,10 +106,9 @@ class Axis {
     - unique_ptr<AxisTip> arrow
     - vector< unique_ptr<SegmentPoint> > segmentPoints
 
-    - void addSegmentPoints(const list<tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
-
     + Axis(QVector3D from, QVector3D to, QString tipLabel, const list<tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
     + virtual ~Axis()
+    + ResetSegmentPoints(const list<tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
 }
 IRenderable <|-- Axis : public
 Graph2d "1" *-- "2" Axis

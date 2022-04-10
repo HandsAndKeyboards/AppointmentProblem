@@ -28,7 +28,13 @@ public:
 	     const QVector3D & to,
 	     const QString & tipLabel,
 	     const std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints);
-	~Axis() final;
+	~Axis() final = default;
+	
+	/**
+	 * @brief переустановка делений на осях координат
+	 * @param segmentPoints массив четверок: метка, позиция метки, позиция деления, вращение деления
+	 */
+	void ResetSegmentPoints(const std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints);
 	
 	void Render(Qt3DCore::QEntity * scene) override;
 	void Remove(Qt3DCore::QEntity * scene) override;
@@ -38,7 +44,6 @@ private:
 	std::unique_ptr<AxisTip> arrow; ///< кончик оси
 	std::vector< std::unique_ptr<SegmentPoint> > segmentPoints; ///< деления
 	
-	void addSegmentPoints(const std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints);
 };
 
 #endif //SRC_AXIS_H
