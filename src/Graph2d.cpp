@@ -9,8 +9,8 @@ void Graph2d::addAxes(const QTime & timeDelta, int waitingInterval)
 	const QString timeDeltaStr = timeDelta.toString("hh:mm");
 	
 	std::list< std::tuple<QString, QVector3D, QVector3D, QQuaternion> > xAxisSegmentPoints {
-		std::make_tuple("00:00", QVector3D{-3, -6, 0}, QVector3D{0, 0, 0}, QQuaternion::fromAxisAndAngle(0, 0, 1, -45)),
-		std::make_tuple(timeDeltaStr, QVector3D{8, -6, 0}, QVector3D{10, 0, 0}, QQuaternion())
+        std::make_tuple("00:00", QVector3D{-5, -8, 0}, QVector3D{0, 0, 0}, QQuaternion::fromAxisAndAngle(0, 0, 1, -45)),
+        std::make_tuple(timeDeltaStr, QVector3D{58, -8, 0}, QVector3D{60, 0, 0}, QQuaternion())
 	};
 	xAxis = std::make_unique<Axis>(
 			QVector3D{0, 0, 0},
@@ -21,7 +21,7 @@ void Graph2d::addAxes(const QTime & timeDelta, int waitingInterval)
 	
 	QQuaternion yRotation = QQuaternion::fromAxisAndAngle(0, 0, 1, 90);
 	std::list< std::tuple<QString, QVector3D, QVector3D, QQuaternion> > yAxisSegmentPoints {
-		std::make_tuple(timeDeltaStr, QVector3D{-5, 6, 0}, QVector3D{0, 10, 0}, yRotation)
+        std::make_tuple(timeDeltaStr, QVector3D{-5, 6, 0}, QVector3D{0, 10, 0}, yRotation)
 	};
 	yAxis = std::make_unique<Axis>(
 			QVector3D{0, 0, 0},
@@ -93,7 +93,7 @@ void Graph2d::Remove(Qt3DCore::QEntity * scene)
 	for (auto & item : items) { item->Remove(scene); }
 }
 
-void Graph2d::Update(const QTime & timeDelta, int waitingInterval)
+void Graph2d::Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEntity *scene)
 {
 
 }

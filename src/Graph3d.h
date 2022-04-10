@@ -7,13 +7,16 @@
 
 class Graph3d final : public IGraph
 {
-    std::unique_ptr<Axis> xAxis; ///< ось OX
-    std::unique_ptr<Axis> yAxis; ///< ось OY
-    std::unique_ptr<Axis> zAxis; ///< ось OZ // debug
+    std::unique_ptr<Axis> xAxis; // ось OX
+    std::unique_ptr<Axis> yAxis; // ось OY
+    std::unique_ptr<Axis> zAxis; // ось OZ
     std::vector<std::unique_ptr<IRenderable>> items; // Прочие элементы графика
 
-    // Добавляет оси на сцену
+    // Создает оси на сцене
     void createAxes(const QTime & timeDelta, int waitingInterval);
+
+    // Создает куб на сцене
+    void createItems(const QTime & timeDelta, int waitingInterval);
 
 public:
     Graph3d() = delete;
@@ -27,7 +30,7 @@ public:
 
     void Render(Qt3DCore::QEntity * scene) override;
     void Remove(Qt3DCore::QEntity * scene) override;
-    void Update(const QTime & timeDelta, int waitingInterval) override;
+    void Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEntity *scene) override;
 };
 
 #endif // GRAPH3D_H
