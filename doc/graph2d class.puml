@@ -233,6 +233,7 @@ class Scene {
 	+ void SetCameraLinearSpeed(float cameraLinearSpeed)
 
 	+ Qt3DCore::QEntity * GetScene()
+	+ QPointer<Qt3DExtras::Qt3DWindow> GetView()
 	+ float Width()
 	+ float Height()
 }

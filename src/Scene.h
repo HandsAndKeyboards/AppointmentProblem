@@ -47,6 +47,7 @@ public:
 	void SetCameraLinearSpeed(float cameraLinearSpeed);
 	
 	Qt3DCore::QEntity * GetScene() { return scene; }
+	QPointer<Qt3DExtras::Qt3DWindow> GetView() { return view; }
 	float Width() { return view->width(); }
 	float Height() { return view->height(); }
 };

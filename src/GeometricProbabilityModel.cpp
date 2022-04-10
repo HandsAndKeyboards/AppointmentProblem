@@ -105,7 +105,7 @@ void GeometricProbabilityModel::UpdateGraph(const QTime & timeDelta, int waiting
 
 void GeometricProbabilityModel::SwapGraphs()
 {
-	// todo изменение rootEntity для текущего view
 	std::swap(activeGraph, inactiveGraph);
 	std::swap(activeScene, inactiveScene);
+	activeScene->GetView()->setRootEntity(activeScene->GetScene());
 }
