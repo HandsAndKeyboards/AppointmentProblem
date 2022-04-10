@@ -74,7 +74,7 @@ void MainWindow::calculateProbability()
     // разница времен начала и окончания встречи
     QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(),ui->meetUntilTimeEdit->time());
 
-    if(!ui->threePersonsCheckBox->isEnabled())
+    if(!ui->threePersonsCheckBox->isChecked())
     {
         // вероятность встречи
         double probability = graphModel->CalculateProbability(timeDelta, ui->waitingTimeSpinBox->value());
@@ -108,7 +108,7 @@ void MainWindow::calculateWaitingTime()
     // разница времен начала и окончания встречи
     QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(),ui->meetUntilTimeEdit->time());
 	
-    if (!ui->threePersonsCheckBox->isEnabled())
+    if (!ui->threePersonsCheckBox->isChecked())
     {
         // время ожидания в минутах
         int waitingTime = graphModel->CalculateWaitingTime(
