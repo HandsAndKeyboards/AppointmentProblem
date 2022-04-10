@@ -43,7 +43,7 @@ add_executable(
         Scene.cpp Scene.h
         common/mathematicFuncs.h
         AxisTip.cpp AxisTip.h
-)
+        include/earcut.h)
 
 target_link_libraries(AppointmentProblem
         Qt::Core

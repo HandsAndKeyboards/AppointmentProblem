@@ -27,7 +27,8 @@ Axis::Axis(
  */
 void Axis::ResetSegmentPoints(const std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
 {
-	for (auto & point : this->segmentPoints) { point.reset(); }
+	for (auto & point : this->segmentPoints) { point->Remove(nullptr); }
+	this->segmentPoints.clear();
 	
 	for (auto point: segmentPoints)
 	{

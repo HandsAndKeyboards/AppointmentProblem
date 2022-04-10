@@ -100,7 +100,7 @@ int GeometricProbabilityModel::CalculateWaitingTime(const QTime & timeDelta, dou
 
 void GeometricProbabilityModel::UpdateGraph(const QTime & timeDelta, int waitingInterval)
 {
-	activeGraph->Update(timeDelta, waitingInterval);
+	activeGraph->Update(timeDelta, waitingInterval, activeScene->GetScene());
 }
 
 void GeometricProbabilityModel::SwapGraphs()

@@ -8,8 +8,7 @@ class Graph2d final : public IGraph
 {
 	std::unique_ptr<Axis> xAxis; ///< ось OX
 	std::unique_ptr<Axis> yAxis; ///< ось OY
-	std::unique_ptr<Axis> zAxis; ///< ось OZ // debug
-	std::vector<std::unique_ptr<IRenderable>> items; ///< прочие элементы графика
+ 	std::vector<std::unique_ptr<IRenderable>> items; ///< прочие элементы графика
 	
 	void addAxes(const QTime & timeDelta, int waitingInterval);
 
@@ -21,11 +20,11 @@ public:
 	Graph2d & operator=(Graph2d &&) = delete;
 	
 	Graph2d(const QTime & timeDelta, int waitingInterval);
-	~Graph2d() final;
+	~Graph2d() final = default;
 	
 	void Render(Qt3DCore::QEntity * scene) override;
 	void Remove(Qt3DCore::QEntity * scene) override;
-	void Update(const QTime & timeDelta, int waitingInterval) override;
+	void Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEntity * scene) override;
 };
 
 #endif //SRC_GRAPH2D_H
