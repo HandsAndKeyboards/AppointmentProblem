@@ -34,7 +34,7 @@ void GeometricProbabilityModel::form3dGraphScene()
     );
     activeScene->SetCameraLinearSpeed(100.0f);
     activeScene->SetCameraLookSpeed(100.0f);
-    activeScene->SetCameraPosition({30, 30, 75});
+    activeScene->SetCameraPosition({30, 30, 125});
     activeScene->SetCameraViewCenter({30, 30, 0});
 }
 
