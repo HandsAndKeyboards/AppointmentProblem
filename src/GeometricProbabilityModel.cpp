@@ -4,6 +4,7 @@
 
 #include "GeometricProbabilityModel.h"
 #include "Graph2d.h"
+#include "Graph3d.h"
 
 /* **************************************************** PUBLIC ****************************************************** */
 
