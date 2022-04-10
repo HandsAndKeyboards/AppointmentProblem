@@ -4,6 +4,7 @@
 
 #include "GeometricProbabilityModel.h"
 #include "Graph2d.h"
+#include "Graph3d.h"
 
 /* **************************************************** PUBLIC ****************************************************** */
 
@@ -49,7 +50,7 @@ GeometricProbabilityModel::GeometricProbabilityModel(
 		activeScene{activeScene},
 		inactiveScene{inactiveScene}
 {
-	activeGraph = std::make_shared<Graph2d>(timeDelta, waitingInterval);
+    activeGraph = std::make_shared<Graph2d>(timeDelta, waitingInterval);
 	form2dGraphScene();
 	activeGraph->Render(this->activeScene->GetScene());
 	
@@ -108,4 +109,6 @@ void GeometricProbabilityModel::SwapGraphs()
 	// todo изменение rootEntity для текущего view
 	std::swap(activeGraph, inactiveGraph);
 	std::swap(activeScene, inactiveScene);
+
+
 }

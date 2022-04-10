@@ -23,8 +23,8 @@ public:
 	Graph2d(const QTime & timeDelta, int waitingInterval);
 	~Graph2d() final;
 	
-	void Render(Qt3DCore::QEntity * scene) override;
-	void Remove(Qt3DCore::QEntity * scene) override;
+    void Render(Qt3DCore::QEntity * scene) override;
+    void Remove(Qt3DCore::QEntity * scene) override;
 	void Update(const QTime & timeDelta, int waitingInterval) override;
 };
 

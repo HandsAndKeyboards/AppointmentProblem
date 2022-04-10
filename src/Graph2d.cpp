@@ -43,8 +43,8 @@ void Graph2d::addAxes(const QTime & timeDelta, int waitingInterval)
 
 Graph2d::Graph2d(const QTime & timeDelta, int waitingInterval)
 {
-	addAxes(timeDelta, waitingInterval);
-	
+    addAxes(timeDelta, waitingInterval);
+
 	QVector3D p1(0, 0, 0);
 	QVector3D p2(10, 0, 0);
 	QVector3D p3(10, 10, 0);
@@ -64,7 +64,7 @@ Graph2d::Graph2d(const QTime & timeDelta, int waitingInterval)
 	items.push_back(std::make_unique<Line>(p1, p5, Qt::black));
 	items.push_back(std::make_unique<Line>(p2, p6, Qt::black));
 	items.push_back(std::make_unique<Line>(p3, p7, Qt::black));
-	items.push_back(std::make_unique<Line>(p4, p8, Qt::black));
+    items.push_back(std::make_unique<Line>(p4, p8, Qt::black));
 }
 
 Graph2d::~Graph2d()
