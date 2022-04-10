@@ -1,4 +1,4 @@
-QT       += core gui 3dcore 3dextras 3dlogic 3dinput
+QT       += core gui 3dcore 3dextras 3dlogic 3dinput 3drender
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,6 +17,7 @@ SOURCES += \
     Graph2d.cpp \
     Graph3d.cpp \
     Line.cpp \
+    Polygon.cpp \
     Scene.cpp \
     SegmentPoint.cpp \
     main.cpp \
