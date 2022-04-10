@@ -1,33 +1,59 @@
 cmake_minimum_required(VERSION 3.21)
-project(src)
+project(AppointmentProblem)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.2.4/mingw_64")
+if (WIN32)
+    set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.2.4/mingw_64")
+else ()
+    #todo разобраться с qt на линухе
+    set(CMAKE_PREFIX_PATH "/home/vany/Qt/6.2.4/gcc_64/lib/cmake")
+#    set(CMAKE_PREFIX_PATH "/home/vany/Qt/6.2.4/gcc_64/lib/cmake/Qt63DCore/Qt63DCoreConfig.cmake")
+
+#    set(Qt6Core_DIR "/home/vany/Qt/6.2.4/gcc_64/lib/cmake/Qt6Core/")
+#    set(Qt6_DIR "/home/vany/Qt/6.2.4/gcc_64/lib/cmake/Qt6/")
+#    set(QT_MAKE_EXECUTABLE "/home/vany/Qt/6.2.4/gcc_64/bin/qmake")
+endif ()
 
 find_package(Qt6 COMPONENTS
         Core
         Gui
         Widgets
         3DCore
+        3DLogic
         3DExtras
+        3DInput
+        3DRender
         REQUIRED)
 
 add_executable(
-        src
+        AppointmentProblem
         main.cpp
         mainwindow.cpp mainwindow.h mainwindow.ui
-)
+        IGraph.h
+        SegmentPoint.cpp SegmentPoint.h
+        Axis.cpp Axis.h
+        GeometricProbabilityModel.cpp GeometricProbabilityModel.h
+        Graph2d.cpp Graph2d.h
+        Polygon.cpp Polygon.h
+        Line.cpp Line.h
+        Scene.cpp Scene.h
+        common/mathematicFuncs.h
+        AxisTip.cpp AxisTip.h
+        include/earcut.h)
 
-target_link_libraries(src
+target_link_libraries(AppointmentProblem
         Qt::Core
         Qt::Gui
         Qt::Widgets
         Qt::3DCore
+        Qt::3DLogic
         Qt::3DExtras
+        Qt::3DInput
+        Qt::3DRender
         )
 
 if (WIN32)
@@ -64,10 +90,10 @@ if (WIN32)
             Gui
             Widgets
             3DCore
-            3DExtras
-            3DRender
             3DLogic
+            3DExtras
             3DInput
+            3DRender
             Network
             Concurrent
             OpenGL
