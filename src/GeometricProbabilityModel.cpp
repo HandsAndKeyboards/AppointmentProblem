@@ -23,28 +23,13 @@ void GeometricProbabilityModel::form2dGraphScene()
 /// настройка сцены для 3д графика
 void GeometricProbabilityModel::form3dGraphScene()
 {
-<<<<<<<<< Temporary merge branch 1
-    activeScene->SetCameraPerspectiveProjection(
-            90,
-            activeScene->Width() / activeScene->Height(),
-            0.1f,
-            1000.0f
-    );
-    activeScene->SetCameraLinearSpeed(100.0f);
-    activeScene->SetCameraLookSpeed(100.0f);
-    activeScene->SetCameraPosition({30, 30, 125});
-    activeScene->SetCameraViewCenter({30, 30, 0});
-=========
-	/*
-	 * todo тут сам подгони параметры
-	 */
 	inactiveScene->SetCameraPerspectiveProjection(
 			90,
 			inactiveScene->Width() / inactiveScene->Height(),
 			0.1f,
-			100.0f
+			1000.0f
 	);
-	inactiveSceneCameraSettings = std::make_tuple(100.0f, 100.0f, QVector3D{0, 0, 20}, QVector3D{0, 0, 0});
+	inactiveSceneCameraSettings = std::make_tuple(100.0f, 100.0f, QVector3D{30, 30,125}, QVector3D{30, 30, 0});
 }
 
 /// установка параметров активной камеры
@@ -54,7 +39,6 @@ void GeometricProbabilityModel::setActiveCameraSettings()
 	activeScene->SetCameraLookSpeed(std::get<1>(activeSceneCameraSettings));
 	activeScene->SetCameraPosition(std::get<2>(activeSceneCameraSettings));
 	activeScene->SetCameraViewCenter(std::get<3>(activeSceneCameraSettings));
->>>>>>>>> Temporary merge branch 2
 }
 
 GeometricProbabilityModel::GeometricProbabilityModel(
@@ -73,6 +57,8 @@ GeometricProbabilityModel::GeometricProbabilityModel(
     inactiveGraph = std::make_shared<Graph3d>(timeDelta, waitingInterval);
     form3dGraphScene();
     inactiveGraph->Render(this->inactiveScene->GetScene());
+	
+	setActiveCameraSettings();
 }
 
 /**
