@@ -54,6 +54,6 @@ void Axis::Render(Qt3DCore::QEntity * scene)
 void Axis::Remove(Qt3DCore::QEntity * scene)
 {
 	line->Remove(scene);
-	arrow->Render(scene);
+	arrow->Remove(scene);
 	for (auto & point: segmentPoints) { point->Remove(scene); }
 }
