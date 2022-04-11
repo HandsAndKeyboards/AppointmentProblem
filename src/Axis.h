@@ -37,7 +37,7 @@ public:
 	void ResetSegmentPoints(const std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints);
 	
 	void Render(Qt3DCore::QEntity * scene) override;
-	void Remove(Qt3DCore::QEntity * scene) override;
+	void Remove() override;
 	
 private:
 	std::unique_ptr<Line> line; ///< ось

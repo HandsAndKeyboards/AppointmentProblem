@@ -42,8 +42,8 @@ void SegmentPoint::Render(Qt3DCore::QEntity * scene)
 	label->setParent(scene);
 }
 
-void SegmentPoint::Remove(Qt3DCore::QEntity * scene)
+void SegmentPoint::Remove()
 {
-	line->Remove(scene);
+	line->Remove();
 	label->setParent(static_cast<Qt3DCore::QNode *>(nullptr));
 }

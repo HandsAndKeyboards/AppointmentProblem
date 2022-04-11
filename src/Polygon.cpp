@@ -98,7 +98,7 @@ void Polygon::Render(Qt3DCore::QEntity * scene)
 	lineEntity->setParent(scene);
 }
 
-void Polygon::Remove(Qt3DCore::QEntity * scene)
+void Polygon::Remove()
 {
 	lineEntity->setParent(static_cast<Qt3DCore::QNode *>(nullptr));
 }

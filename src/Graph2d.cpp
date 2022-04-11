@@ -122,20 +122,20 @@ void Graph2d::Render(Qt3DCore::QEntity * scene)
 	for (auto & item: items) { item->Render(scene); }
 }
 
-void Graph2d::Remove(Qt3DCore::QEntity * scene)
+void Graph2d::Remove()
 {
 	// удаляем со сцены оси координат
-	xAxis->Remove(scene);
-	yAxis->Remove(scene);
+	xAxis->Remove();
+	yAxis->Remove();
 	
 	// удаляем со сцены остальные элементы графика
-	for (auto & item: items) { item->Remove(scene); }
+	for (auto & item: items) { item->Remove(); }
 }
 
 void Graph2d::Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEntity * scene)
 {
 	// очищаем сцену
-	Remove(scene);
+	Remove();
 	items.clear();
 	
 	/*

@@ -27,7 +27,7 @@ Axis::Axis(
  */
 void Axis::ResetSegmentPoints(const std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
 {
-	for (auto & point : this->segmentPoints) { point->Remove(nullptr); }
+	for (auto & point : this->segmentPoints) { point->Remove(); }
 	this->segmentPoints.clear();
 	
 	for (auto point: segmentPoints)
@@ -51,9 +51,9 @@ void Axis::Render(Qt3DCore::QEntity * scene)
 	for (auto & point: segmentPoints) { point->Render(scene); }
 }
 
-void Axis::Remove(Qt3DCore::QEntity * scene)
+void Axis::Remove()
 {
-	line->Remove(scene);
-	arrow->Remove(scene);
-	for (auto & point: segmentPoints) { point->Remove(scene); }
+	line->Remove();
+	arrow->Remove();
+	for (auto & point: segmentPoints) { point->Remove(); }
 }

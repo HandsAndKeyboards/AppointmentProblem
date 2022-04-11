@@ -76,7 +76,7 @@ void AxisTip::Render(Qt3DCore::QEntity * scene)
 }
 
 /// удаление объекта со сцены
-void AxisTip::Remove(Qt3DCore::QEntity * scene)
+void AxisTip::Remove()
 {
 	tip->setParent(static_cast<Qt3DCore::QNode *>(nullptr));
 	label->setParent(static_cast<Qt3DCore::QNode *>(nullptr));

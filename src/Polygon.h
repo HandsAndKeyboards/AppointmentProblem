@@ -37,7 +37,7 @@ public:
 	static std::vector<QVector3D> Triangulate(const std::vector<QVector3D> & polygon);
 	
 	void Render(Qt3DCore::QEntity * scene) override;
-	void Remove(Qt3DCore::QEntity * scene) override;
+	void Remove() override;
 };
 
 #endif //SRC_POLYGON_H

@@ -63,7 +63,7 @@ void Line::Render(Qt3DCore::QEntity * scene)
 }
 
 /// удаление объекта со сцены
-void Line::Remove(Qt3DCore::QEntity * scene)
+void Line::Remove()
 {
 	cylinder->setParent(static_cast<Qt3DCore::QNode *>(nullptr));
 }
