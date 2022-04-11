@@ -16,34 +16,31 @@ public:
 	MainWindow(QWidget * parent = nullptr);
 	~MainWindow();
 	
-	/// добавление 3Д окна на форму
-	void Add3DWindow(Qt3DExtras::Qt3DWindow * window, int row = 0, int column = 2, int rowSpan = 5, int columnSpan = 1);
-
 private:
 	Ui::MainWindow * ui;
 	QWidget * container; ///< является контейнером для окна Qt3DWindow
-
+	
+	/// добавление 3Д окна на форму
+	void add3DWindow(Qt3DExtras::Qt3DWindow * window, int row = 0, int column = 2, int rowSpan = 5, int columnSpan = 1);
+	
 private slots:
 	/// вычисление вероятности встречи на основе времени встречи и времени ожидания
 	void calculateProbability();
 
-	/**
-	 * вычисление времени ожидания на основе вероятности и времени встречи
-	 * @param probability вероятность (в процентах), на основе которой вычисляется время ожидания
-	 */
-	void calculateWaitingTime(int probability);
+	/// вычисление времени ожидания на основе вероятности и времени встречи
+	void calculateWaitingTime();
 
-	/**
-	 * изменение количества персон, участвующих во встрече
-	 * @param newAmount новое количество персонажей
-	 */
-	void changeAmountOfPersons(int newAmount);
+	/// изменение количества персон, участвующих во встрече
+	void changeAmountOfPersons();
 	
 	/// вывод справки
 	void showReference();
 	
 	/// вывод окна "о программе"
 	void showAboutProgram();
+	
+	/// вывод библиотеки примеров
+	void showExamplesLibrary();
 };
 
 #endif // MAINWINDOW_H
