@@ -31,8 +31,12 @@ class GeometricProbabilityModel {
     - shared_ptr<Scene> activeScene
     - shared_ptr<Scene> inactiveScene
 
+    - tuple<float, float, QVector3D, QVector3D> activeSceneCameraSettings
+    - tuple<float, float, QVector3D, QVector3D> inactiveSceneCameraSettings
+
     - void form2dGraphScene()
     - void form3dGraphScene()
+    - void setActiveCameraSettings()
 
     + GeometricProbabilityModel(const QTime & timeDelta, int waitingInterval, shared_ptr<Scene> activeScene, shared_ptr<Scene> inactiveScene)
     + ~GeometricProbabilityModel()
