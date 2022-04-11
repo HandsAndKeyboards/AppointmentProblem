@@ -18,7 +18,7 @@ SegmentPoint::SegmentPoint(
 	auto * transform = new Qt3DCore::QTransform();
 	transform->setTranslation(pos);
 	transform->setRotation(rotation);
-	line = std::make_unique<Line>(length, transform, Qt::black, 0.3f);
+	line = std::make_unique<Line>(length, transform);
 	
 	auto * labelTransform = new Qt3DCore::QTransform();
 	labelTransform->setTranslation(labelPos);

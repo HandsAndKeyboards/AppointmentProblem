@@ -16,7 +16,7 @@ Axis::Axis(
 )
 {
 	line = std::make_unique<Line>(from, to, 0.3f);
-	arrow = std::make_unique<AxisTip>(to, findRotation(from, to), tipLabel, Qt::black);
+	arrow = std::make_unique<AxisTip>(to, findRotation(from, to), tipLabel);
 	
 	ResetSegmentPoints(segmentPoints);
 }

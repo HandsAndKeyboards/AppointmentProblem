@@ -2,6 +2,7 @@
 #define SRC_LINE_H
 
 #include <QVector3D>
+#include <QColor>
 #include <QPointer>
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QTransform>
@@ -24,7 +25,7 @@ public:
 	 * @param color цвет линии
 	 * @param thickness толщина линии
 	 */
-	Line(const QVector3D & from, const QVector3D & to, QColor color, float thickness = 0.3f);
+	Line(const QVector3D & from, const QVector3D & to, QColor color = Qt::black, float thickness = 0.3f);
 	 /**
 	  * @brief конструктор класса
 	  * @param pos позиция центра линии
@@ -32,7 +33,7 @@ public:
 	  * @param color цвет линии
 	  * @param thickness толщина линии
 	  */
-	 Line(float length, Qt3DCore::QTransform * transform, QColor color, float thickness);
+	 Line(float length, Qt3DCore::QTransform * transform, QColor color = Qt::black, float thickness = 0.3f);
 	~Line() final;
 	
 	/// рендер объекта на сцене

@@ -77,10 +77,13 @@ end note
 
 
 class Graph2d {
+    - const int NUMBER_OF_UNITS
     - unique_ptr<Axis> xAxis
     - unique_ptr<Axis> yAxis
     - vector< unique_ptr<IRenderable> > items
 
+	- list<tuple<QString, QVector3D, QVector3D, QQuaternion> > xAxisFormPoints(const QTime & timeDelta, int waitingInterval)
+	- list<tuple<QString, QVector3D, QVector3D, QQuaternion> > yAxisFormPoints(const QTime & timeDelta, int waitingInterval)
     - void addAxes(const QTime & timeDelta, int waitingInterval)
 
     + Graph2d(const QTime & timeDelta, int waitingInterval)
@@ -144,20 +147,43 @@ note right of SegmentPoint
 end note
 
 
-
-class Polygon {
-    - vector<QVector3D> polygon
-
-    + Polygon(const vector<QVector3D> & vertices)
-    + virtual ~Polygon()
+interface IPolygon {
+    vector<QVector3D> Triangulate(const vector<QVector3D> & polygon)
 }
-IRenderable <|-- Polygon : public
-note right of Polygon
-    Polygon(const Polygon &) = delete
-    Polygon(Polygon &&) = delete
-    Polygon() = delete
-    Polygon & operator=(const Polygon &) = delete
-    Polygon & operator=(Polygon &&) = delete
+IRenderable <|-- IPolygon : public
+
+
+
+class ColoredPolygon {
+    - vector<Qt3DCore::QEntity> lineEntity
+
+    + ColoredPolygon(const vector<QVector3D> & vertices, QColor color)
+    + virtual ~ColoredPolygon()
+}
+IPolygon <|-- ColoredPolygon : public
+note right of ColoredPolygon
+    ColoredPolygon(const ColoredPolygon &) = delete
+    ColoredPolygon(ColoredPolygon &&) = delete
+    ColoredPolygon() = delete
+    ColoredPolygon & operator=(const ColoredPolygon &) = delete
+    ColoredPolygon & operator=(ColoredPolygon &&) = delete
+end note
+
+
+
+class UncoloredPolygon {
+    - vector< unique_ptr<Line> > borders
+
+    + UncoloredPolygon(const vector<QVector3D> & vertices, float bordersThickness, QColor bordersColor)
+    + virtual ~UncoloredPolygon()
+}
+IRenderable <|-- UncoloredPolygon : public
+note right of UncoloredPolygon
+    UncoloredPolygon(const UncoloredPolygon &) = delete
+    UncoloredPolygon(UncoloredPolygon &&) = delete
+    UncoloredPolygon() = delete
+    UncoloredPolygon & operator=(const UncoloredPolygon &) = delete
+    UncoloredPolygon & operator=(UncoloredPolygon &&) = delete
 end note
 
 

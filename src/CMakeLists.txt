@@ -38,12 +38,15 @@ add_executable(
         Axis.cpp Axis.h
         GeometricProbabilityModel.cpp GeometricProbabilityModel.h
         Graph2d.cpp Graph2d.h
-        Polygon.cpp Polygon.h
+        ColoredPolygon.cpp ColoredPolygon.h
         Line.cpp Line.h
         Scene.cpp Scene.h
         common/mathematicFuncs.h
         AxisTip.cpp AxisTip.h
-        include/earcut.h)
+        include/earcut.h
+        IPolygon.h
+        UncoloredPolygon.cpp UncoloredPolygon.h
+)
 
 target_link_libraries(AppointmentProblem
         Qt::Core

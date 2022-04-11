@@ -14,9 +14,10 @@ SOURCES += \
     GeometricProbabilityModel.cpp \
     Graph2d.cpp \
     Line.cpp \
-    Polygon.cpp \
+    ColoredPolygon.cpp \
     Scene.cpp \
     SegmentPoint.cpp \
+    UncoloredPolygon.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -26,11 +27,13 @@ HEADERS += \
     GeometricProbabilityModel.h \
     Graph2d.h \
     IGraph.h \
+    IPolygon.h \
     IRenderable.h \
     Line.h \
-    Polygon.h \
+    ColoredPolygon.h \
     Scene.h \
     SegmentPoint.h \
+    UncoloredPolygon.h \
     mainwindow.h
 
 FORMS += \

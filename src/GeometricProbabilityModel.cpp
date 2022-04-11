@@ -113,6 +113,6 @@ void GeometricProbabilityModel::SwapGraphs()
 	std::swap(activeGraph, inactiveGraph);
 	std::swap(activeScene, inactiveScene);
 	std::swap(activeSceneCameraSettings, inactiveSceneCameraSettings);
-	activeScene->GetView()->setRootEntity(activeScene->GetScene());
 	setActiveCameraSettings();
+	activeScene->GetView()->setRootEntity(activeScene->GetScene());
 }

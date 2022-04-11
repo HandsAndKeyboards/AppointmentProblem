@@ -1,10 +1,15 @@
 #include <Qt3DExtras/QPhongMaterial>
 #include <Qt3DRender/QRenderStateSet>
 
-#include "Polygon.h"
-#include "include/earcut.h"
+#include "ColoredPolygon.h"
 
-Polygon::Polygon(const std::vector<QVector3D> & vertices, QColor color , float borderThickness)
+/**
+ * @brief конструирует закрашенный многоугольник.
+ * @details многоугольник должен быть триангулирован
+ * @param vertices список вершин
+ * @param color цвет
+ */
+ColoredPolygon::ColoredPolygon(const std::vector<QVector3D> & vertices, QColor color)
 {
 	unsigned int numOfVertices = vertices.size();
 	auto * geometry = new Qt3DCore::QGeometry();
@@ -53,6 +58,8 @@ Polygon::Polygon(const std::vector<QVector3D> & vertices, QColor color , float b
 	Qt3DRender::QGeometryRenderer * poly = new Qt3DRender::QGeometryRenderer();
 	poly->setGeometry(geometry);
 	poly->setPrimitiveType(Qt3DRender::QGeometryRenderer::Triangles);
+	
+	// material
 	auto * material = new Qt3DExtras::QPhongMaterial();
 	material->setAmbient(color);
 	
@@ -62,43 +69,17 @@ Polygon::Polygon(const std::vector<QVector3D> & vertices, QColor color , float b
 	lineEntity->addComponent(material);
 }
 
-Polygon::~Polygon()
+ColoredPolygon::~ColoredPolygon()
 {
 	lineEntity.clear();
 }
 
-std::vector<QVector3D> Polygon::Triangulate(const std::vector<QVector3D> & polygon)
-{
-	// Create array
-	using Point = std::array<double, 2>;
-	std::vector<std::vector<Point>> vecVecPolygon;
-	std::vector<Point> vecPolygon;
-	
-	for (auto point: polygon) { vecPolygon.push_back({point.x(), point.y()}); }
-	
-	vecVecPolygon.push_back(vecPolygon);
-	
-	std::vector<uint32_t> indices = mapbox::earcut<uint32_t>(vecVecPolygon);
-	std::vector<QVector3D> resPolygon;
-	
-	for (unsigned int i = 0; i < indices.size(); ++i)
-	{
-		resPolygon.emplace_back(
-				(vecPolygon[indices[i]])[0],
-				(vecPolygon[indices[i]])[1],
-				0
-		);
-	}
-	
-	return resPolygon;
-}
-
-void Polygon::Render(Qt3DCore::QEntity * scene)
+void ColoredPolygon::Render(Qt3DCore::QEntity * scene)
 {
 	lineEntity->setParent(scene);
 }
 
-void Polygon::Remove()
+void ColoredPolygon::Remove()
 {
 	lineEntity->setParent(static_cast<Qt3DCore::QNode *>(nullptr));
 }
