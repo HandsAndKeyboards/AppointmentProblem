@@ -1,11 +1,13 @@
 #include <memory>
+#include <cmath>
 
 #include <QTime>
 
 #include "GeometricProbabilityModel.h"
 #include "Graph2d.h"
+#include "common/mathematicFuncs.h"
 
-/* **************************************************** PUBLIC ****************************************************** */
+/** *************************************************** PRIVATE ***************************************************** **/
 
 /// настройка сцены для 2д графика
 void GeometricProbabilityModel::form2dGraphScene()
@@ -43,16 +45,27 @@ void GeometricProbabilityModel::setActiveCameraSettings()
 	activeScene->SetCameraViewCenter(std::get<3>(activeSceneCameraSettings));
 }
 
+/** *************************************************** PUBLIC ***************************************************** **/
+
+/**
+ * @brief конструирование модели
+ * @param timeDelta интервал встречи
+ * @param firstWaitingInterval интервал ожидания первой персоны
+ * @param secondWaitingInterval интервал ожидания второй персоны
+ * @param activeScene активная сцена
+ * @param inactiveScene неактивная сцена
+ */
 GeometricProbabilityModel::GeometricProbabilityModel(
 		const QTime & timeDelta,
-		int waitingInterval,
+		int firstWaitingInterval,
+		int secondWaitingInterval,
 		std::shared_ptr<Scene> activeScene,
 		std::shared_ptr<Scene> inactiveScene
 ) :
 		activeScene{activeScene},
 		inactiveScene{inactiveScene}
 {
-	activeGraph = std::make_shared<Graph2d>(timeDelta, waitingInterval);
+	activeGraph = std::make_shared<Graph2d>(timeDelta, firstWaitingInterval, secondWaitingInterval);
 	form2dGraphScene();
 	activeGraph->Render(this->activeScene->GetScene());
 	
@@ -65,47 +78,63 @@ GeometricProbabilityModel::GeometricProbabilityModel(
 /**
  * @brief вычисление вероятности встречи
  * @param timeDelta интервал времени встречи
- * @param waitingInterval интервал ожидания
+ * @param firstWaitingInterval интервал ожидания первой персоны
+ * @param secondWaitingInterval интервал ожидания второй персоны
  * @return вычисленная вероятность
  */
-double GeometricProbabilityModel::CalculateProbability(const QTime & timeDelta, int waitingInterval) noexcept
+double GeometricProbabilityModel::CalculateProbability(
+		const QTime & timeDelta,
+		int firstWaitingInterval,
+		int secondWaitingInterval
+) noexcept
 {
-	int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
+	double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
+	double workingAreaSquare = timeDeltaMinutes * timeDeltaMinutes; // площадь квадрата рабочей зоны
 	
-	// площадь "закрашенного" шестиугольника на графе
-	double hexagonSquare = (2 * timeDeltaMinutes - waitingInterval) * waitingInterval;
-	// площадь всего квадрата на графике
-	double fullSquare = timeDeltaMinutes * timeDeltaMinutes;
+	// прибавляем первую трапецию
+	double hexagonArea = workingAreaSquare / 2 - pow(timeDeltaMinutes - firstWaitingInterval, 2) / 2;
+	// прибавляем вторую трапецию
+	hexagonArea += workingAreaSquare / 2 - pow(timeDeltaMinutes - secondWaitingInterval, 2) / 2;
 	
-	return hexagonSquare / fullSquare;
+	return hexagonArea / workingAreaSquare;
 }
 
 /**
- * @brief вычисление вероятности встречи
+ * @brief вычисление неизвестного времени ожидания в привязке с известным
  * @param timeDelta интервал времени встречи
  * @param probability вероятность встречи
+ * @param fixedWaitingInterval известное время ожидания
  * @return вычисленное время ожидания
  */
-int GeometricProbabilityModel::CalculateWaitingTime(const QTime & timeDelta, double probability) noexcept
+int GeometricProbabilityModel::CalculateWaitingTime(
+		const QTime & timeDelta,
+		double probability,
+		int fixedWaitingInterval
+) noexcept
 {
-	int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
-	
-	// площадь шестиугольника на графике
-	double hexagonSquare = timeDeltaMinutes * timeDeltaMinutes * probability;
-	
+	double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
+
+	double workingAreaSquare = timeDeltaMinutes * timeDeltaMinutes; // площадь квадрата рабочей зоны
+	double hexagonArea = workingAreaSquare * probability; // площадь шестиугольника
 	/*
-	 * далее решаем квадратное уравнение:
-	 * waitingTime^2 - 2 * timeDeltaMinutes * waitingTime + hexagonSquare = 0
+	 * площадь трапеции с зафиксированной боковой стороной
+	 * pow() для красоты
 	 */
-	double d = pow(2 * timeDeltaMinutes, 2) - 4 * hexagonSquare; // pow() для красоты
-	double waitingTime = (2 * timeDeltaMinutes - sqrt(d)) / 2;
+	double fixedTrapezeArea = workingAreaSquare / 2 - pow(timeDeltaMinutes - fixedWaitingInterval, 2) / 2;
+	double unfixedTrapezeArea = hexagonArea - fixedTrapezeArea; // площадь трапеции с незафиксированной боковой стороной
+	// решаем получившееся квадратное уравнение
+	std::pair<double, double> solution = solveQuadratic(1, -2 * timeDeltaMinutes, 2 * unfixedTrapezeArea);
 	
-	return waitingTime;
+	return round(solution.first); // нас интересует первый корень полученного решения, округляем его для удаления погрешности
 }
 
-void GeometricProbabilityModel::UpdateGraph(const QTime & timeDelta, int waitingInterval)
+void GeometricProbabilityModel::UpdateGraph(
+		const QTime & timeDelta,
+		int firstWaitingInterval,
+		int secondWaitingInterval
+)
 {
-	activeGraph->Update(timeDelta, waitingInterval, activeScene->GetScene());
+	activeGraph->Update(timeDelta, firstWaitingInterval, secondWaitingInterval, activeScene->GetScene());
 }
 
 void GeometricProbabilityModel::SwapGraphs()

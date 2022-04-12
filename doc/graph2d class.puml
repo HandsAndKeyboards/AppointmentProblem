@@ -5,6 +5,7 @@
 class MainWindow {
     - Ui::MainWindow * ui
     - shared_ptr<GeometricProbabilityModel> graphModel
+    - QWidget * container
 
     + MainWindow(QWidget * parent = nullptr)
     + ~MainWindow()
@@ -17,6 +18,7 @@ class MainWindow {
     - void changeAmountOfPersons()
     - void showReference()
     - void showAboutProgram()
+    - void showExamplesLibrary()
 }
 QMainWindow <|-- MainWindow
 hide QMainWindow members
@@ -37,12 +39,12 @@ class GeometricProbabilityModel {
     - void form3dGraphScene()
     - void setActiveCameraSettings()
 
-    + GeometricProbabilityModel(const QTime & timeDelta, int waitingInterval, shared_ptr<Scene> activeScene, shared_ptr<Scene> inactiveScene)
+    + GeometricProbabilityModel(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, shared_ptr<Scene> activeScene, shared_ptr<Scene> inactiveScene)
     + ~GeometricProbabilityModel()
 
-    + double CalculateProbability(const QTime & timeDelta, int waitingInterval)
-    + int CalculateWaitingTime(const QTime & deltaTime, double probability)
-    + void UpdateGraph(const QTime & timeDelta, int waitingInterval)
+    + double CalculateProbability(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
+    + int CalculateWaitingTime(const QTime & deltaTime, double probability, int knownWaitingInterval)
+    + void UpdateGraph(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
     + void SwapGraphs()
 }
 MainWindow "1" *-- "1" GeometricProbabilityModel
@@ -61,7 +63,7 @@ end note
 
 
 interface IGraph {
-    + virtual void Update(const QTime & timeDelta, int waitingInterval) = 0
+    + virtual void Update(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, Qt3DCore::QEntity * scene) = 0
     + virtual ~IGraph()
 }
 IRenderable <|-- IGraph : public
@@ -84,9 +86,9 @@ class Graph2d {
 
 	- list<tuple<QString, QVector3D, QVector3D, QQuaternion> > xAxisFormPoints(const QTime & timeDelta, int waitingInterval)
 	- list<tuple<QString, QVector3D, QVector3D, QQuaternion> > yAxisFormPoints(const QTime & timeDelta, int waitingInterval)
-    - void addAxes(const QTime & timeDelta, int waitingInterval)
+    - void addAxes(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
 
-    + Graph2d(const QTime & timeDelta, int waitingInterval)
+    + Graph2d(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
     + virtual ~Graph2d()
 }
 IGraph <|-- Graph2d : public
@@ -177,7 +179,7 @@ class UncoloredPolygon {
     + UncoloredPolygon(const vector<QVector3D> & vertices, float bordersThickness, QColor bordersColor)
     + virtual ~UncoloredPolygon()
 }
-IRenderable <|-- UncoloredPolygon : public
+IPolygon <|-- UncoloredPolygon : public
 note right of UncoloredPolygon
     UncoloredPolygon(const UncoloredPolygon &) = delete
     UncoloredPolygon(UncoloredPolygon &&) = delete

@@ -1,9 +1,11 @@
 #include <QColor>
 #include <Qt3DCore/QTransform>
-#include <Qt3DExtras/QGoochMaterial>
+#include <Qt3DExtras/QPhongMaterial>
 #include <Qt3DExtras//QConeMesh>
 
 #include "AxisTip.h"
+
+/** *************************************************** PUBLIC ***************************************************** **/
 
 /**
  * @brief конструктор объекта
@@ -30,8 +32,8 @@ AxisTip::AxisTip(
 	coneMesh->setSlices(15);
 	
 	// материал конуса
-	auto * coneMaterial = new Qt3DExtras::QGoochMaterial();
-	coneMaterial->setSpecular(color);
+	auto * coneMaterial = new Qt3DExtras::QPhongMaterial();
+	coneMaterial->setAmbient(color);
 	coneMaterial->setShininess(5);
 	
 	// трансформация конуса

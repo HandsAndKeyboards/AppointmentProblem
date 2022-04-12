@@ -5,7 +5,10 @@
 
 struct IGraph : public IRenderable
 {
-	virtual void Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEntity * scene) = 0;
+	virtual void Update(const QTime & timeDelta,
+						int firstWaitingInterval,
+						int secondWaitingInterval,
+						Qt3DCore::QEntity * scene) = 0;
 	
 	virtual ~IGraph() = default;
 };

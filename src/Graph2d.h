@@ -14,13 +14,15 @@ class Graph2d final : public IGraph
 	/**
 	* @brief формирование осей координат
 	* @param timeDelta временной интервал встречи
-	* @param waitingInterval интервал ожидания
+	* @param firstWaitingInterval интервал ожидания
 	*/
-	void addAxes(const QTime & timeDelta, int waitingInterval);
+	void addAxes(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval);
 	/// создание массива с делениями на OX
-	std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion> > xAxisFormPoints(const QTime & timeDelta, int waitingInterval);
+	std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion> >
+	xAxisFormPoints(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval);
 	/// создание массива с делениями на OY
-	std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion> > yAxisFormPoints(const QTime & timeDelta, int waitingInterval);
+	std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion> >
+	yAxisFormPoints(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval);
 
 public:
 	Graph2d(const Graph2d &) = delete;
@@ -32,9 +34,9 @@ public:
 	/**
 	 * @brief конструирование 2д графика
 	 * @param timeDelta временной интервал встречи
-	 * @param waitingInterval интервал ожидания в минутах
+	 * @param firstWaitingInterval интервал ожидания в минутах
 	 */
-	Graph2d(const QTime & timeDelta, int waitingInterval);
+	Graph2d(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval);
 	~Graph2d() final = default;
 	
 	/// рендер графика на 3д сцене
@@ -42,7 +44,10 @@ public:
 	/// удаление графика со сцены
 	void Remove() override;
 	/// обновление графика
-	void Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEntity * scene) override;
+	void Update(const QTime & timeDelta,
+				int firstWaitingInterval,
+				int secondWaitingInterval,
+	            Qt3DCore::QEntity * scene) override;
 };
 
 #endif //SRC_GRAPH2D_H

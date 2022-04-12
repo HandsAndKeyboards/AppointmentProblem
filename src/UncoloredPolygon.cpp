@@ -2,6 +2,8 @@
 
 #include "UncoloredPolygon.h"
 
+/** *************************************************** PUBLIC ***************************************************** **/
+
 UncoloredPolygon::UncoloredPolygon(const std::vector<QVector3D> & vertices, float bordersThickness, QColor bordersColor)
 {
 	for (size_t i = 0, size = vertices.size(); i < size; ++i)

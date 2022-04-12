@@ -6,17 +6,19 @@
 #include "ColoredPolygon.h"
 #include "UncoloredPolygon.h"
 
+/** ************************************************** PRIVATE ***************************************************** **/
+
 /**
  * @brief формирование осей координат
  * @param timeDelta временной интервал встречи
- * @param waitingInterval интервал ожидания
+ * @param firstWaitingInterval интервал ожидания
  */
-void Graph2d::addAxes(const QTime & timeDelta, int waitingInterval)
+void Graph2d::addAxes(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
 {
 	// длина осей координат
 	static const float AXIS_LEN = NUMBER_OF_UNITS * 1.5;
 	
-	auto xAxisSegmentPoints = xAxisFormPoints(timeDelta, waitingInterval);
+	auto xAxisSegmentPoints = xAxisFormPoints(timeDelta, firstWaitingInterval, 0);
 	xAxis = std::make_unique<Axis>(
 			QVector3D{0, 0, 0},
 			QVector3D{AXIS_LEN, 0, 0},
@@ -24,7 +26,7 @@ void Graph2d::addAxes(const QTime & timeDelta, int waitingInterval)
 			xAxisSegmentPoints
 	);
 	
-	auto yAxisSegmentPoints = yAxisFormPoints(timeDelta, waitingInterval);
+	auto yAxisSegmentPoints = yAxisFormPoints(timeDelta, secondWaitingInterval, 0);
 	yAxis = std::make_unique<Axis>(
 			QVector3D{0, 0, 0},
 			QVector3D{0, AXIS_LEN, 0},
@@ -35,7 +37,7 @@ void Graph2d::addAxes(const QTime & timeDelta, int waitingInterval)
 
 /// создание массива с делениями на OX
 std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion> >
-Graph2d::xAxisFormPoints(const QTime & timeDelta, int waitingInterval)
+Graph2d::xAxisFormPoints(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
 {
 	float timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
 	float minutesPerUnit = timeDeltaMinutes / NUMBER_OF_UNITS; // количество минут в единице координат
@@ -49,15 +51,15 @@ Graph2d::xAxisFormPoints(const QTime & timeDelta, int waitingInterval)
 					QQuaternion::fromAxisAndAngle(0, 0, 1, -45)
 			),
 			std::make_tuple(
-					QString::number(waitingInterval),
-					QVector3D(waitingInterval / minutesPerUnit - 5, -8, 0),
-					QVector3D(waitingInterval / minutesPerUnit, 0, 0),
+					QString::number(firstWaitingInterval),
+					QVector3D(firstWaitingInterval / minutesPerUnit - 5, -8, 0),
+					QVector3D(firstWaitingInterval / minutesPerUnit, 0, 0),
 					QQuaternion()
 			),
 			std::make_tuple(
-					QString::number(timeDeltaMinutes - waitingInterval),
-					QVector3D(NUMBER_OF_UNITS - waitingInterval / minutesPerUnit - 5, -8, 0),
-					QVector3D(NUMBER_OF_UNITS - waitingInterval / minutesPerUnit, 0, 0),
+					QString::number(timeDeltaMinutes - secondWaitingInterval),
+					QVector3D(NUMBER_OF_UNITS - secondWaitingInterval / minutesPerUnit - 5, -8, 0),
+					QVector3D(NUMBER_OF_UNITS - secondWaitingInterval / minutesPerUnit, 0, 0),
 					QQuaternion()
 			),
 			std::make_tuple(
@@ -73,7 +75,7 @@ Graph2d::xAxisFormPoints(const QTime & timeDelta, int waitingInterval)
 
 /// создание массива с делениями на OY
 std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion> >
-Graph2d::yAxisFormPoints(const QTime & timeDelta, int waitingInterval)
+Graph2d::yAxisFormPoints(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
 {
 	float timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
 	float minutesPerUnit = timeDeltaMinutes / NUMBER_OF_UNITS; // количество минут в единице координат
@@ -82,15 +84,15 @@ Graph2d::yAxisFormPoints(const QTime & timeDelta, int waitingInterval)
 	QQuaternion yRotation = QQuaternion::fromAxisAndAngle(0, 0, 1, 90);
 	std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion> > yAxisPoints{
 			std::make_tuple(
-					QString::number(waitingInterval),
-					QVector3D(-10, waitingInterval / minutesPerUnit - 2.5f, 0),
-					QVector3D(0, waitingInterval / minutesPerUnit, 0),
+					QString::number(secondWaitingInterval),
+					QVector3D(-10, secondWaitingInterval / minutesPerUnit - 2.5f, 0),
+					QVector3D(0, secondWaitingInterval / minutesPerUnit, 0),
 					yRotation
 			),
 			std::make_tuple(
-					QString::number(NUMBER_OF_UNITS - waitingInterval),
-					QVector3D(-10, NUMBER_OF_UNITS - 2.5f - waitingInterval / minutesPerUnit, 0),
-					QVector3D(0, NUMBER_OF_UNITS - waitingInterval / minutesPerUnit, 0),
+					QString::number(timeDeltaMinutes - firstWaitingInterval),
+					QVector3D(-10, NUMBER_OF_UNITS - 2.5f - firstWaitingInterval / minutesPerUnit, 0),
+					QVector3D(0, NUMBER_OF_UNITS - firstWaitingInterval / minutesPerUnit, 0),
 					yRotation
 			),
 			std::make_tuple(
@@ -104,22 +106,26 @@ Graph2d::yAxisFormPoints(const QTime & timeDelta, int waitingInterval)
 	return yAxisPoints;
 }
 
+/** *************************************************** PUBLIC ***************************************************** **/
+
 /**
  * @brief конструирование 2д графика
  * @param timeDelta временной интервал встречи
- * @param waitingInterval интервал ожидания в минутах
+ * @param firstWaitingInterval интервал ожидания в минутах
  */
-Graph2d::Graph2d(const QTime & timeDelta, int waitingInterval)
+Graph2d::Graph2d(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
 {
-	addAxes(timeDelta, waitingInterval);
+	addAxes(timeDelta, firstWaitingInterval, secondWaitingInterval);
 	
+	const float timeDeltaNum = timeDelta.hour() * 60 + timeDelta.minute();
+	float minutesPerUnit = timeDeltaNum / NUMBER_OF_UNITS; // количество минут в единице координат
 	std::vector<QVector3D> hexagonVertices{
 			QVector3D(0, 0, 0),
-			QVector3D(0, waitingInterval, 0),
-			QVector3D(NUMBER_OF_UNITS - waitingInterval, NUMBER_OF_UNITS, 0),
+			QVector3D(0, secondWaitingInterval / minutesPerUnit, 0),
+			QVector3D(NUMBER_OF_UNITS - secondWaitingInterval / minutesPerUnit, NUMBER_OF_UNITS, 0),
 			QVector3D(NUMBER_OF_UNITS, NUMBER_OF_UNITS, 0),
-			QVector3D(NUMBER_OF_UNITS, NUMBER_OF_UNITS - waitingInterval, 0),
-			QVector3D(waitingInterval, 0, 0),
+			QVector3D(NUMBER_OF_UNITS, NUMBER_OF_UNITS - firstWaitingInterval / minutesPerUnit, 0),
+			QVector3D(firstWaitingInterval / minutesPerUnit, 0, 0),
 	};
 	items.emplace_back(std::make_unique<ColoredPolygon>(IPolygon::Triangulate(hexagonVertices), Qt::cyan));
 	
@@ -155,7 +161,8 @@ void Graph2d::Remove()
 }
 
 /// обновление графика
-void Graph2d::Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEntity * scene)
+void
+Graph2d::Update(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, Qt3DCore::QEntity * scene)
 {
 	// очищаем сцену
 	Remove();
@@ -167,11 +174,10 @@ void Graph2d::Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEn
 	const float timeDeltaNum = timeDelta.hour() * 60 + timeDelta.minute();
 	float minutesPerUnit = timeDeltaNum / NUMBER_OF_UNITS; // количество минут в единице координат
 	
-	auto xAxisSegmentPoints = xAxisFormPoints(timeDelta, waitingInterval);
+	auto xAxisSegmentPoints = xAxisFormPoints(timeDelta, firstWaitingInterval, secondWaitingInterval);
 	xAxis->ResetSegmentPoints(xAxisSegmentPoints);
 	
-	QQuaternion yRotation = QQuaternion::fromAxisAndAngle(0, 0, 1, 90);
-	auto yAxisSegmentPoints = yAxisFormPoints(timeDelta, waitingInterval);
+	auto yAxisSegmentPoints = yAxisFormPoints(timeDelta, firstWaitingInterval, secondWaitingInterval);
 	yAxis->ResetSegmentPoints(yAxisSegmentPoints);
 	
 	/*
@@ -179,11 +185,11 @@ void Graph2d::Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEn
 	 */
 	std::vector<QVector3D> hexagonVertices{
 			QVector3D(0, 0, 0),
-			QVector3D(0, waitingInterval / minutesPerUnit, 0),
-			QVector3D(NUMBER_OF_UNITS - waitingInterval / minutesPerUnit, NUMBER_OF_UNITS, 0),
+			QVector3D(0, secondWaitingInterval / minutesPerUnit, 0),
+			QVector3D(NUMBER_OF_UNITS - secondWaitingInterval / minutesPerUnit, NUMBER_OF_UNITS, 0),
 			QVector3D(NUMBER_OF_UNITS, NUMBER_OF_UNITS, 0),
-			QVector3D(NUMBER_OF_UNITS, NUMBER_OF_UNITS - waitingInterval / minutesPerUnit, 0),
-			QVector3D(waitingInterval / minutesPerUnit, 0, 0),
+			QVector3D(NUMBER_OF_UNITS, NUMBER_OF_UNITS - firstWaitingInterval / minutesPerUnit, 0),
+			QVector3D(firstWaitingInterval / minutesPerUnit, 0, 0),
 	};
 	items.emplace_back(std::make_unique<ColoredPolygon>(ColoredPolygon::Triangulate(hexagonVertices)));
 	

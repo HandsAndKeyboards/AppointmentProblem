@@ -1,8 +1,10 @@
 #include <Qt3DExtras/QCylinderMesh>
-#include <Qt3DExtras/QGoochMaterial>
+#include <Qt3DExtras/QPhongMaterial>
 
 #include "Line.h"
 #include "common/mathematicFuncs.h"
+
+/** *************************************************** PUBLIC ***************************************************** **/
 
 /**
  * @brief конструктор класса
@@ -68,6 +70,8 @@ void Line::Remove()
 	cylinder->setParent(static_cast<Qt3DCore::QNode *>(nullptr));
 }
 
+/** ************************************************** PRIVATE ***************************************************** **/
+
 /**
  * @brief конструирование объекта
  * @details здесь предполагался вызов делегирующего конструктора, но из-за невозможности вызвать один
@@ -87,8 +91,8 @@ void Line::construct(float length, Qt3DCore::QTransform * transform, float thick
 	cylinderMesh->setSlices(20);
 	
 	// материал цилиндра
-	auto * cylinderMaterial = new Qt3DExtras::QGoochMaterial();
-	cylinderMaterial->setSpecular(color);
+	auto * cylinderMaterial = new Qt3DExtras::QPhongMaterial();
+	cylinderMaterial->setAmbient(color);
 	cylinderMaterial->setShininess(5);
 	
 	// формирование самой линии
