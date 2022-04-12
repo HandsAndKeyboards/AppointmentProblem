@@ -17,7 +17,7 @@ Q_OBJECT
 public:
 	MainWindow(QWidget * parent = nullptr);
 	~MainWindow();
-
+	
 private:
 	Ui::MainWindow * ui;
 	std::shared_ptr<GeometricProbabilityModel> graphModel;
@@ -32,16 +32,10 @@ private slots:
 	/// вычисление вероятности встречи на основе времени встречи и времени ожидания
 	void calculateProbability();
 
-	/**
-	 * вычисление времени ожидания на основе вероятности и времени встречи
-	 * @param probability вероятность (в процентах), на основе которой вычисляется время ожидания
-	 */
+	/// вычисление времени ожидания на основе вероятности и времени встречи
 	void calculateWaitingTime();
 
-	/**
-	 * изменение количества персон, участвующих во встрече
-	 * @param newAmount новое количество персонажей
-	 */
+	/// изменение количества персон, участвующих во встрече
 	void changeAmountOfPersons();
 	
 	/// вывод справки
@@ -49,6 +43,9 @@ private slots:
 	
 	/// вывод окна "о программе"
 	void showAboutProgram();
+	
+	/// вывод библиотеки примеров
+	void showExamplesLibrary();
 };
 
 #endif // MAINWINDOW_H

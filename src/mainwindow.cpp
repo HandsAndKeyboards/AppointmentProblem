@@ -1,8 +1,5 @@
-#include <memory>
-#include <cmath>
-
-#include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "mainwindow.h"
 
 /** ******************************************** PRIVATE ********************************************* **/
 
@@ -47,14 +44,26 @@ MainWindow::MainWindow(QWidget * parent)
 	
 	);
 	
+	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
+	ui->waitingTimeLine->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixFirstRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixSecondRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabel->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeSpinBox->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabelMinutes->setVisible(!ui->threePersonsRadioButton->isChecked());
+	
 	connect(ui->updateAction, &QAction::triggered, this, &MainWindow::calculateProbability);
 	connect(ui->readReferenceAction, &QAction::triggered, this, &MainWindow::showReference);
+	connect(ui->showExamplesAction, &QAction::triggered, this, &MainWindow::showExamplesLibrary);
 	connect(ui->readAboutProgramAction, &QAction::triggered, this, &MainWindow::showAboutProgram);
 	connect(ui->meetFromTimeEdit, &QTimeEdit::timeChanged, this, &MainWindow::calculateProbability);
 	connect(ui->meetUntilTimeEdit, &QTimeEdit::timeChanged, this, &MainWindow::calculateProbability);
-	connect(ui->waitingTimeSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateProbability);
-	connect(ui->threePersonsCheckBox, &QCheckBox::stateChanged, this, &MainWindow::changeAmountOfPersons);
+	connect(ui->firstWaitingTimeSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateProbability);
+	connect(ui->secondWaitingTimeSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateProbability);
+	connect(ui->twoPersonsRadioButton, &QRadioButton::clicked, this, &MainWindow::changeAmountOfPersons);
+	connect(ui->threePersonsRadioButton, &QRadioButton::clicked, this, &MainWindow::changeAmountOfPersons);
 	connect(ui->probabilityPercentageSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateWaitingTime);
+//	connect(ui->planeDisplayCheckBox, QCheckBox::stateChanged, this, ); // todo связать с чем-то
 	
 	calculateProbability(); // вычисляем вероятность для первоначальных данных
 }
@@ -88,10 +97,7 @@ void MainWindow::calculateProbability()
 	graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
 }
 
-/**
- * вычисление времени ожидания на основе вероятности и времени встречи
- * @param probability вероятность (в процентах), на основе которой вычисляется время ожидания
- */
+/// вычисление времени ожидания на основе вероятности и времени встречи
 void MainWindow::calculateWaitingTime()
 {
 	// todo исключение, если время окончания встречи меньше времени начала встречи
@@ -115,14 +121,18 @@ void MainWindow::calculateWaitingTime()
 	graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
 }
 
-/**
- * @brief изменение количества персон, участвующих во встрече
- * @detail обмен местами активного и неактивного графиков
- * @param newAmount новое количество персонажей
- */
+/// изменение количества персон, участвующих во встрече
 void MainWindow::changeAmountOfPersons()
 {
 	graphModel->SwapGraphs();
+	
+	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
+	ui->waitingTimeLine->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixFirstRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixSecondRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabel->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeSpinBox->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabelMinutes->setVisible(!ui->threePersonsRadioButton->isChecked());
 }
 
 /// вывод справки
@@ -133,6 +143,12 @@ void MainWindow::showReference()
 
 /// вывод окна "о программе"
 void MainWindow::showAboutProgram()
+{
+
+}
+
+/// вывод библиотеки примеров
+void MainWindow::showExamplesLibrary()
 {
 
 }
