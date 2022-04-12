@@ -1,5 +1,5 @@
-#include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "mainwindow.h"
 
 /** ******************************************** PRIVATE ********************************************* **/
 
@@ -26,10 +26,12 @@ MainWindow::MainWindow(QWidget * parent)
 	ui->setupUi(this);
 	
 	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
-	ui->secondWaitingTimeLabel->setVisible(ui->threePersonsRadioButton->isChecked());
-	ui->secondWaitingTimeSpinBox->setVisible(ui->threePersonsRadioButton->isChecked());
-	ui->secondWaitingTimeLabelMinutes->setVisible(ui->threePersonsRadioButton->isChecked());
-	ui->fixSecondRadioButton->setVisible(ui->threePersonsRadioButton->isChecked());
+	ui->waitingTimeLine->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixFirstRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixSecondRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabel->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeSpinBox->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabelMinutes->setVisible(!ui->threePersonsRadioButton->isChecked());
 	
 	connect(ui->updateAction, &QAction::triggered, this, &MainWindow::calculateProbability);
 	connect(ui->readReferenceAction, &QAction::triggered, this, &MainWindow::showReference);
@@ -68,10 +70,12 @@ void MainWindow::calculateWaitingTime()
 void MainWindow::changeAmountOfPersons()
 {
 	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
-	ui->secondWaitingTimeLabel->setVisible(ui->threePersonsRadioButton->isChecked());
-	ui->secondWaitingTimeSpinBox->setVisible(ui->threePersonsRadioButton->isChecked());
-	ui->secondWaitingTimeLabelMinutes->setVisible(ui->threePersonsRadioButton->isChecked());
-	ui->fixSecondRadioButton->setVisible(ui->threePersonsRadioButton->isChecked());
+	ui->waitingTimeLine->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixFirstRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixSecondRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabel->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeSpinBox->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabelMinutes->setVisible(!ui->threePersonsRadioButton->isChecked());
 }
 
 /// вывод справки
