@@ -12,10 +12,15 @@ class GeometricProbabilityModel final
 	std::shared_ptr<IGraph> activeGraph; ///< активный график, находящийся на активной сцене
 	std::shared_ptr<IGraph> inactiveGraph; ///< неактивный график, находится на неактивной сцене
 	
+	std::tuple<float, float, QVector3D, QVector3D> activeSceneCameraSettings; ///< параметры камеры активной сцены: cameraLinearSpeed, cameraLookSpeed, cameraPosition, cameraViewCenter
+	std::tuple<float, float, QVector3D, QVector3D> inactiveSceneCameraSettings; ///< параметры камеры неактивной сцены: cameraLinearSpeed, cameraLookSpeed, cameraPosition, cameraViewCenter
+	
 	/// настройка сцены для 2д графика
 	void form2dGraphScene();
 	/// настройка сцены для 3д графика
-    void form3dGraphScene();
+	void form3dGraphScene(); // todo подбери параметры
+	/// установка параметров активной камеры
+	void setActiveCameraSettings();
 
 public:
 	GeometricProbabilityModel(const GeometricProbabilityModel &) = delete;
@@ -24,30 +29,40 @@ public:
 	GeometricProbabilityModel & operator=(const GeometricProbabilityModel &) = delete;
 	GeometricProbabilityModel & operator=(GeometricProbabilityModel &&) = delete;
 	
-	GeometricProbabilityModel(
-			const QTime & timeDelta,
-			int waitingInterval,
-			std::shared_ptr<Scene> activeScene,
-			std::shared_ptr<Scene> inactiveScene
-	);
+	/**
+	 * @brief конструирование модели
+	 * @param timeDelta интервал встречи
+	 * @param firstWaitingInterval интервал ожидания первой персоны
+	 * @param secondWaitingInterval интервал ожидания второй персоны
+	 * @param activeScene активная сцена
+	 * @param inactiveScene неактивная сцена
+	 */
+	GeometricProbabilityModel(const QTime & timeDelta,
+	                          int firstWaitingInterval,
+	                          int secondWaitingInterval,
+	                          std::shared_ptr<Scene> activeScene,
+	                          std::shared_ptr<Scene> inactiveScene);
 	~GeometricProbabilityModel() = default;
 	
 	/**
 	 * @brief вычисление вероятности встречи
 	 * @param timeDelta интервал времени встречи
-	 * @param waitingInterval интервал ожидания
+	 * @param firstWaitingInterval интервал ожидания первой персоны
+	 * @param secondWaitingInterval интервал ожидания второй персоны
 	 * @return вычисленная вероятность
 	 */
-	static double CalculateProbability(const QTime & timeDelta, int waitingInterval) noexcept;
+	static double
+	CalculateProbability(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval) noexcept;
 	
 	/**
-	 * @brief вычисление вероятности встречи
+	 * @brief вычисление неизвестного времени ожидания в привязке с известным
 	 * @param timeDelta интервал времени встречи
 	 * @param probability вероятность встречи
+	 * @param fixedWaitingInterval известное время ожидания
 	 * @return вычисленное время ожидания
 	 */
-	static int CalculateWaitingTime(const QTime & timeDelta, double probability) noexcept;
-	void UpdateGraph(const QTime & timeDelta, int waitingInterval);
+	static int CalculateWaitingTime(const QTime & timeDelta, double probability, int fixedWaitingInterval) noexcept;
+	void UpdateGraph(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval);
 	
 	/// обмен местами активного и неактивного графиков
 	void SwapGraphs();

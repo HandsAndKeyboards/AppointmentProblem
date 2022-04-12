@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+/** *************************************************** PUBLIC ***************************************************** **/
+
 Scene::Scene(Qt3DExtras::Qt3DWindow * view) :
 		view{view},
 		scene{new Qt3DCore::QEntity()},

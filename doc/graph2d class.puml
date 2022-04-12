@@ -5,6 +5,7 @@
 class MainWindow {
     - Ui::MainWindow * ui
     - shared_ptr<GeometricProbabilityModel> graphModel
+    - QWidget * container
 
     + MainWindow(QWidget * parent = nullptr)
     + ~MainWindow()
@@ -17,6 +18,7 @@ class MainWindow {
     - void changeAmountOfPersons()
     - void showReference()
     - void showAboutProgram()
+    - void showExamplesLibrary()
 }
 QMainWindow <|-- MainWindow
 hide QMainWindow members
@@ -30,15 +32,19 @@ class GeometricProbabilityModel {
     - shared_ptr<Scene> activeScene
     - shared_ptr<Scene> inactiveScene
 
+    - tuple<float, float, QVector3D, QVector3D> activeSceneCameraSettings
+    - tuple<float, float, QVector3D, QVector3D> inactiveSceneCameraSettings
+
     - void form2dGraphScene()
     - void form3dGraphScene()
+    - void setActiveCameraSettings()
 
-    + GeometricProbabilityModel(const QTime & timeDelta, int waitingInterval, shared_ptr<Scene> activeScene, shared_ptr<Scene> inactiveScene)
+    + GeometricProbabilityModel(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, shared_ptr<Scene> activeScene, shared_ptr<Scene> inactiveScene)
     + ~GeometricProbabilityModel()
 
-    + double CalculateProbability(const QTime & timeDelta, int waitingInterval)
-    + int CalculateWaitingTime(const QTime & deltaTime, double probability)
-    + void UpdateGraph(const QTime & timeDelta, int waitingInterval)
+    + double CalculateProbability(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
+    + int CalculateWaitingTime(const QTime & deltaTime, double probability, int knownWaitingInterval)
+    + void UpdateGraph(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
     + void SwapGraphs()
 }
 MainWindow "1" *-- "1" GeometricProbabilityModel
@@ -57,7 +63,7 @@ end note
 
 
 interface IGraph {
-    + virtual void Update(const QTime & timeDelta, int waitingInterval) = 0
+    + virtual void Update(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, Qt3DCore::QEntity * scene) = 0
     + virtual ~IGraph()
 }
 IRenderable <|-- IGraph : public
@@ -73,13 +79,16 @@ end note
 
 
 class Graph2d {
+    - const int NUMBER_OF_UNITS
     - unique_ptr<Axis> xAxis
     - unique_ptr<Axis> yAxis
     - vector< unique_ptr<IRenderable> > items
 
-    - void addAxes(const QTime & timeDelta, int waitingInterval)
+	- list<tuple<QString, QVector3D, QVector3D, QQuaternion> > xAxisFormPoints(const QTime & timeDelta, int waitingInterval)
+	- list<tuple<QString, QVector3D, QVector3D, QQuaternion> > yAxisFormPoints(const QTime & timeDelta, int waitingInterval)
+    - void addAxes(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
 
-    + Graph2d(const QTime & timeDelta, int waitingInterval)
+    + Graph2d(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
     + virtual ~Graph2d()
 }
 IGraph <|-- Graph2d : public
@@ -106,10 +115,9 @@ class Axis {
     - unique_ptr<AxisTip> arrow
     - vector< unique_ptr<SegmentPoint> > segmentPoints
 
-    - void addSegmentPoints(const list<tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
-
     + Axis(QVector3D from, QVector3D to, QString tipLabel, const list<tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
     + virtual ~Axis()
+    + ResetSegmentPoints(const list<tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
 }
 IRenderable <|-- Axis : public
 Graph2d "1" *-- "2" Axis
@@ -141,20 +149,43 @@ note right of SegmentPoint
 end note
 
 
-
-class Polygon {
-    - vector<QVector3D> polygon
-
-    + Polygon(const vector<QVector3D> & vertices)
-    + virtual ~Polygon()
+interface IPolygon {
+    vector<QVector3D> Triangulate(const vector<QVector3D> & polygon)
 }
-IRenderable <|-- Polygon : public
-note right of Polygon
-    Polygon(const Polygon &) = delete
-    Polygon(Polygon &&) = delete
-    Polygon() = delete
-    Polygon & operator=(const Polygon &) = delete
-    Polygon & operator=(Polygon &&) = delete
+IRenderable <|-- IPolygon : public
+
+
+
+class ColoredPolygon {
+    - vector<Qt3DCore::QEntity> lineEntity
+
+    + ColoredPolygon(const vector<QVector3D> & vertices, QColor color)
+    + virtual ~ColoredPolygon()
+}
+IPolygon <|-- ColoredPolygon : public
+note right of ColoredPolygon
+    ColoredPolygon(const ColoredPolygon &) = delete
+    ColoredPolygon(ColoredPolygon &&) = delete
+    ColoredPolygon() = delete
+    ColoredPolygon & operator=(const ColoredPolygon &) = delete
+    ColoredPolygon & operator=(ColoredPolygon &&) = delete
+end note
+
+
+
+class UncoloredPolygon {
+    - vector< unique_ptr<Line> > borders
+
+    + UncoloredPolygon(const vector<QVector3D> & vertices, float bordersThickness, QColor bordersColor)
+    + virtual ~UncoloredPolygon()
+}
+IPolygon <|-- UncoloredPolygon : public
+note right of UncoloredPolygon
+    UncoloredPolygon(const UncoloredPolygon &) = delete
+    UncoloredPolygon(UncoloredPolygon &&) = delete
+    UncoloredPolygon() = delete
+    UncoloredPolygon & operator=(const UncoloredPolygon &) = delete
+    UncoloredPolygon & operator=(UncoloredPolygon &&) = delete
 end note
 
 
@@ -169,7 +200,7 @@ IRenderable <|- Polyhedron
 
 interface IRenderable {
     + virtual void Render(Qt3DCore::QEntity * scene) = 0
-    + virtual void Remove(Qt3DCore::QEntity * scene) = 0
+    + virtual void Remove() = 0
     + virtual ~IRenderable()
 }
 IGraph -[hidden]- IRenderable
@@ -233,6 +264,7 @@ class Scene {
 	+ void SetCameraLinearSpeed(float cameraLinearSpeed)
 
 	+ Qt3DCore::QEntity * GetScene()
+	+ QPointer<Qt3DExtras::Qt3DWindow> GetView()
 	+ float Width()
 	+ float Height()
 }

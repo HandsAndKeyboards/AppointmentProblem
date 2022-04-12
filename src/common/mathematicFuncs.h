@@ -65,4 +65,33 @@ inline QVector3D operator-(QVector3D vec, T length) noexcept
 	return vec * similarityCoef;
 }
 
+/**
+ * @brief решение квадратного уравнения
+ * @param a коэффициент a
+ * @param b коэффициент b
+ * @param c коэффициент c
+ * @return найденные корни x1, x2
+ */
+inline std::pair<double, double> solveQuadratic(double a, double b, double c)
+{
+	double d = b * b - 4 * a * c; // дискриминант
+	double dRoot = qSqrt(d);
+	
+	return {(-b - dRoot) / 2, (-b + dRoot) / 2};
+}
+
+/**
+ * @brief округление числа до N знаков после запятой
+ * @tparam T floating point type
+ * @param num число
+ * @param n число знаков после запятой
+ * @return округленное число
+ */
+template <class T, class=std::enable_if_t<std::is_floating_point<T>::value> >
+inline T round(T num, int n)
+{
+	T powOfTen = pow(10, n);
+	return round(num * powOfTen) / powOfTen;
+}
+
 #endif //APPOINTMENTPROBLEM_MATHEMATICFUNCS_H

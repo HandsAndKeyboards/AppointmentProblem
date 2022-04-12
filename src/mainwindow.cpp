@@ -1,8 +1,5 @@
-#include <memory>
-#include <cmath>
-
-#include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "mainwindow.h"
 
 /** ******************************************** PRIVATE ********************************************* **/
 
@@ -41,20 +38,33 @@ MainWindow::MainWindow(QWidget * parent)
 					ui->meetFromTimeEdit->time(),
 					ui->meetUntilTimeEdit->time()
 			),
-			ui->waitingTimeSpinBox->value(),
+			ui->firstWaitingTimeSpinBox->value(),
+			ui->secondWaitingTimeSpinBox->value(),
 			std::make_shared<Scene>(view),
 			std::make_shared<Scene>(view)
 	
 	);
 	
+	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
+	ui->waitingTimeLine->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixFirstRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixSecondRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabel->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeSpinBox->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabelMinutes->setVisible(!ui->threePersonsRadioButton->isChecked());
+	
 	connect(ui->updateAction, &QAction::triggered, this, &MainWindow::calculateProbability);
 	connect(ui->readReferenceAction, &QAction::triggered, this, &MainWindow::showReference);
+	connect(ui->showExamplesAction, &QAction::triggered, this, &MainWindow::showExamplesLibrary);
 	connect(ui->readAboutProgramAction, &QAction::triggered, this, &MainWindow::showAboutProgram);
 	connect(ui->meetFromTimeEdit, &QTimeEdit::timeChanged, this, &MainWindow::calculateProbability);
 	connect(ui->meetUntilTimeEdit, &QTimeEdit::timeChanged, this, &MainWindow::calculateProbability);
-	connect(ui->waitingTimeSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateProbability);
-	connect(ui->threePersonsCheckBox, &QCheckBox::stateChanged, this, &MainWindow::changeAmountOfPersons);
+	connect(ui->firstWaitingTimeSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateProbability);
+	connect(ui->secondWaitingTimeSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateProbability);
+	connect(ui->twoPersonsRadioButton, &QRadioButton::clicked, this, &MainWindow::changeAmountOfPersons);
+	connect(ui->threePersonsRadioButton, &QRadioButton::clicked, this, &MainWindow::changeAmountOfPersons);
 	connect(ui->probabilityPercentageSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateWaitingTime);
+//	connect(ui->planeDisplayCheckBox, QCheckBox::stateChanged, this, ); // todo связать с чем-то
 	
 	calculateProbability(); // вычисляем вероятность для первоначальных данных
 }
@@ -77,30 +87,30 @@ void MainWindow::calculateProbability()
     if(!ui->threePersonsCheckBox->isChecked())
     {
         // вероятность встречи
-        double probability = graphModel->CalculateProbability(timeDelta, ui->waitingTimeSpinBox->value());
-	
-        /*
-         * блокируем отправку сигналов спинбоксом вероятности для того, чтобы изменение его значения
-         * не приводило к вызову метода calculateWaitingTime()
-         */
-        ui->probabilityPercentageSpinBox->blockSignals(true);
-        ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
-        ui->probabilityPercentageSpinBox->blockSignals(false);
+		double probability = graphModel->CalculateProbability(
+				timeDelta,
+				ui->firstWaitingTimeSpinBox->value(),
+				ui->secondWaitingTimeSpinBox->value()
+		);
+	/*
+	 * блокируем отправку сигналов спинбоксом вероятности для того, чтобы изменение его значения
+	 * не приводило к вызову метода calculateWaitingTime()
+	 */
+	ui->probabilityPercentageSpinBox->blockSignals(true);
+	ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
+	ui->probabilityPercentageSpinBox->blockSignals(false);
 	
         // обновляем график
         graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
     }
     else
     {
-
-        graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
+		// обновляем график
+		graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), ui->secondWaitingTimeSpinBox->value());
     }
 }
 
-/**
- * вычисление времени ожидания на основе вероятности и времени встречи
- * @param probability вероятность (в процентах), на основе которой вычисляется время ожидания
- */
+/// вычисление времени ожидания на основе вероятности и времени встречи
 void MainWindow::calculateWaitingTime()
 {
 	// todo исключение, если время окончания встречи меньше времени начала встречи
@@ -114,14 +124,35 @@ void MainWindow::calculateWaitingTime()
         int waitingTime = graphModel->CalculateWaitingTime(
                 timeDelta, ui->probabilityPercentageSpinBox->value() / 100.0
         );
+		
+	bool fixFirstWaitingTime = ui->fixFirstRadioButton->isChecked(); // зафиксированное первое время ожидания
+	int fixedWaitingTime; // зафиксированное время ожидания в минутах
+	if (fixFirstWaitingTime) { fixedWaitingTime = ui->firstWaitingTimeSpinBox->value(); }
+	else { fixedWaitingTime = ui->secondWaitingTimeSpinBox->value(); }
 	
-        /*
-        * блокируем отправку сигналов спинбоксом времени ожидания для того, чтобы изменение его значения
-        * не приводило к вызову метода calculateProbability()
-        */
-        ui->waitingTimeSpinBox->blockSignals(true);
-        ui->waitingTimeSpinBox->setValue(waitingTime);
-        ui->waitingTimeSpinBox->blockSignals(false);
+	// незафиксированное время ожидания в минутах
+	int unfixedWaitingTime = graphModel->CalculateWaitingTime(
+			timeDelta,
+			ui->probabilityPercentageSpinBox->value() / 100.0,
+			fixedWaitingTime
+	);
+	
+	/*
+	* блокируем отправку сигналов спинбоксом времени ожидания для того, чтобы изменение его значения
+	* не приводило к вызову метода calculateProbability()
+	*/
+	if (fixFirstWaitingTime) // если первое время зафиксировано, то устанавливаем второе
+	{
+		ui->secondWaitingTimeSpinBox->blockSignals(true);
+		ui->secondWaitingTimeSpinBox->setValue(unfixedWaitingTime);
+		ui->secondWaitingTimeSpinBox->blockSignals(false);
+	}
+	else // если зафиксировано второе, устанавливаем первое
+	{
+		ui->firstWaitingTimeSpinBox->blockSignals(true);
+		ui->firstWaitingTimeSpinBox->setValue(unfixedWaitingTime);
+		ui->firstWaitingTimeSpinBox->blockSignals(false);
+	}
 	
         // обновляем график
         graphModel->UpdateGraph(timeDelta, ui->waitingTimeSpinBox->value());
@@ -132,14 +163,18 @@ void MainWindow::calculateWaitingTime()
     }
 }
 
-/**
- * @brief изменение количества персон, участвующих во встрече
- * @detail обмен местами активного и неактивного графиков
- * @param newAmount новое количество персонажей
- */
+/// изменение количества персон, участвующих во встрече
 void MainWindow::changeAmountOfPersons()
 {
 	graphModel->SwapGraphs();
+	
+	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
+	ui->waitingTimeLine->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixFirstRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->fixSecondRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabel->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeSpinBox->setVisible(!ui->threePersonsRadioButton->isChecked());
+	ui->secondWaitingTimeLabelMinutes->setVisible(!ui->threePersonsRadioButton->isChecked());
 }
 
 /// вывод справки
@@ -150,6 +185,12 @@ void MainWindow::showReference()
 
 /// вывод окна "о программе"
 void MainWindow::showAboutProgram()
+{
+
+}
+
+/// вывод библиотеки примеров
+void MainWindow::showExamplesLibrary()
 {
 
 }

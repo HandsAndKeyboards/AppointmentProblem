@@ -1,5 +1,7 @@
 #include "SegmentPoint.h"
 
+/** *************************************************** PUBLIC ***************************************************** **/
+
 /**
  * @brief конструктор класса
  * @param label метка деления
@@ -15,20 +17,20 @@ SegmentPoint::SegmentPoint(
         const QQuaternion & rotation
 )
 {
-    auto * transform = new Qt3DCore::QTransform();
-    transform->setTranslation(pos);
-    transform->setRotation(rotation);
-    line = std::make_unique<Line>(length, transform, Qt::black, 0.3f);
-
-    auto * labelTransform = new Qt3DCore::QTransform();
-    labelTransform->setTranslation(labelPos);
-    this->label = new Qt3DExtras::QText2DEntity();
-    this->label->setWidth(15);
-    this->label->setHeight(5);
-    this->label->setText(label);
-    this->label->setColor(Qt::black);
-    this->label->setFont(QFont("Verdana", 3, QFont::ExtraLight));
-    this->label->addComponent(labelTransform);
+	auto * transform = new Qt3DCore::QTransform();
+	transform->setTranslation(pos);
+	transform->setRotation(rotation);
+	line = std::make_unique<Line>(length, transform);
+	
+	auto * labelTransform = new Qt3DCore::QTransform();
+	labelTransform->setTranslation(labelPos);
+	this->label = new Qt3DExtras::QText2DEntity();
+	this->label->setWidth(15);
+	this->label->setHeight(5);
+	this->label->setText(label);
+	this->label->setColor(Qt::black);
+	this->label->setFont(QFont("Verdana", 3, QFont::ExtraLight));
+	this->label->addComponent(labelTransform);
 }
 
 SegmentPoint::~SegmentPoint()
@@ -42,7 +44,8 @@ void SegmentPoint::Render(Qt3DCore::QEntity * scene)
     label->setParent(scene);
 }
 
-void SegmentPoint::Remove(Qt3DCore::QEntity * scene)
+void SegmentPoint::Remove()
 {
-    label->setParent(static_cast<Qt3DCore::QNode *>(nullptr));
+	line->Remove();
+	label->setParent(static_cast<Qt3DCore::QNode *>(nullptr));
 }
