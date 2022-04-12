@@ -29,30 +29,40 @@ public:
 	GeometricProbabilityModel & operator=(const GeometricProbabilityModel &) = delete;
 	GeometricProbabilityModel & operator=(GeometricProbabilityModel &&) = delete;
 	
-	GeometricProbabilityModel(
-			const QTime & timeDelta,
-			int waitingInterval,
-			std::shared_ptr<Scene> activeScene,
-			std::shared_ptr<Scene> inactiveScene
-	);
+	/**
+	 * @brief конструирование модели
+	 * @param timeDelta интервал встречи
+	 * @param firstWaitingInterval интервал ожидания первой персоны
+	 * @param secondWaitingInterval интервал ожидания второй персоны
+	 * @param activeScene активная сцена
+	 * @param inactiveScene неактивная сцена
+	 */
+	GeometricProbabilityModel(const QTime & timeDelta,
+	                          int firstWaitingInterval,
+	                          int secondWaitingInterval,
+	                          std::shared_ptr<Scene> activeScene,
+	                          std::shared_ptr<Scene> inactiveScene);
 	~GeometricProbabilityModel() = default;
 	
 	/**
 	 * @brief вычисление вероятности встречи
 	 * @param timeDelta интервал времени встречи
-	 * @param waitingInterval интервал ожидания
+	 * @param firstWaitingInterval интервал ожидания первой персоны
+	 * @param secondWaitingInterval интервал ожидания второй персоны
 	 * @return вычисленная вероятность
 	 */
-	static double CalculateProbability(const QTime & timeDelta, int waitingInterval) noexcept;
+	static double
+	CalculateProbability(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval) noexcept;
 	
 	/**
-	 * @brief вычисление вероятности встречи
+	 * @brief вычисление неизвестного времени ожидания в привязке с известным
 	 * @param timeDelta интервал времени встречи
 	 * @param probability вероятность встречи
+	 * @param fixedWaitingInterval известное время ожидания
 	 * @return вычисленное время ожидания
 	 */
-	static int CalculateWaitingTime(const QTime & timeDelta, double probability) noexcept;
-	void UpdateGraph(const QTime & timeDelta, int waitingInterval);
+	static int CalculateWaitingTime(const QTime & timeDelta, double probability, int fixedWaitingInterval) noexcept;
+	void UpdateGraph(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval);
 	
 	/// обмен местами активного и неактивного графиков
 	void SwapGraphs();

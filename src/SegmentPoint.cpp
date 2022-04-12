@@ -1,5 +1,7 @@
 #include "SegmentPoint.h"
 
+/** *************************************************** PUBLIC ***************************************************** **/
+
 /**
  * @brief конструктор класса
  * @param label метка деления
@@ -8,17 +10,17 @@
  * @param rotation поворот деления вокруг своего центра
  */
 SegmentPoint::SegmentPoint(
-		const QString & label,
-		const QVector3D & labelPos,
-		float length,
-		const QVector3D & pos,
-		const QQuaternion & rotation
+        const QString & label,
+        const QVector3D & labelPos,
+        float length,
+        const QVector3D & pos,
+        const QQuaternion & rotation
 )
 {
 	auto * transform = new Qt3DCore::QTransform();
 	transform->setTranslation(pos);
 	transform->setRotation(rotation);
-	line = std::make_unique<Line>(length, transform, Qt::black, 0.3f);
+	line = std::make_unique<Line>(length, transform);
 	
 	auto * labelTransform = new Qt3DCore::QTransform();
 	labelTransform->setTranslation(labelPos);
@@ -33,17 +35,17 @@ SegmentPoint::SegmentPoint(
 
 SegmentPoint::~SegmentPoint()
 {
-	label.clear();
+    label.clear();
 }
 
 void SegmentPoint::Render(Qt3DCore::QEntity * scene)
 {
-	line->Render(scene);
-	label->setParent(scene);
+    line->Render(scene);
+    label->setParent(scene);
 }
 
-void SegmentPoint::Remove(Qt3DCore::QEntity * scene)
+void SegmentPoint::Remove()
 {
-	line->Remove(scene);
+	line->Remove();
 	label->setParent(static_cast<Qt3DCore::QNode *>(nullptr));
 }

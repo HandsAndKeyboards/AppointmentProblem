@@ -6,7 +6,7 @@
 struct IRenderable
 {
 	virtual void Render(Qt3DCore::QEntity * scene) = 0;
-	virtual void Remove(Qt3DCore::QEntity * scene) = 0;
+	virtual void Remove() = 0;
 	
 	virtual ~IRenderable() = default;
 };

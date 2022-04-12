@@ -1,8 +1,8 @@
-QT       += core gui 3dcore 3dextras 3dlogic 3dinput 3drender
+QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++20
+CONFIG += c++11
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -17,9 +17,10 @@ SOURCES += \
     Graph2d.cpp \
     Graph3d.cpp \
     Line.cpp \
-    Polygon.cpp \
     Scene.cpp \
     SegmentPoint.cpp \
+    ColoredPolygon.cpp \
+    UncoloredPolygon.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -31,8 +32,11 @@ HEADERS += \
     GeometricProbabilityModel.h \
     Graph2d.h \
     Graph3d.h \
+    IPolygon.h \
     IGraph.h \
     IRenderable.h \
+    ColoredPolygon.h \
+    UncoloredPolygon.h \
     Line.h \
     Polygon.h \
     Scene.h \

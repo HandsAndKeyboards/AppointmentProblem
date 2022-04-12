@@ -15,7 +15,7 @@ class Graph3d final : public IGraph
     // Создает оси на сцене
     void createAxes(const QTime & timeDelta, int waitingInterval);
 
-    // Создает куб на сцене
+    // Создает куб и внутреннюю фигуру на сцене
     void createItems(const QTime & timeDelta, int waitingInterval);
 
 public:
@@ -29,8 +29,8 @@ public:
     ~Graph3d() final;
 
     void Render(Qt3DCore::QEntity * scene) override;
-    void Remove(Qt3DCore::QEntity * scene) override;
-    void Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEntity *scene) override;
+    void Remove() override;
+	void Update(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, Qt3DCore::QEntity * scene) override;
 };
 
 #endif // GRAPH3D_H

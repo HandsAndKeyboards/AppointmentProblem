@@ -1,6 +1,8 @@
 #include "Axis.h"
 #include "common/mathematicFuncs.h"
 
+/** *************************************************** PUBLIC ***************************************************** **/
+
 /**
  * @brief ось координат
  * @param from начальная координата
@@ -16,7 +18,7 @@ Axis::Axis(
 )
 {
 	line = std::make_unique<Line>(from, to, 0.3f);
-	arrow = std::make_unique<AxisTip>(to, findRotation(from, to), tipLabel, Qt::black);
+	arrow = std::make_unique<AxisTip>(to, findRotation(from, to), tipLabel);
 	
 	ResetSegmentPoints(segmentPoints);
 }
@@ -27,7 +29,7 @@ Axis::Axis(
  */
 void Axis::ResetSegmentPoints(const std::list<std::tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
 {
-	for (auto & point : this->segmentPoints) { point->Remove(nullptr); }
+	for (auto & point : this->segmentPoints) { point->Remove(); }
 	this->segmentPoints.clear();
 	
 	for (auto point: segmentPoints)
@@ -51,9 +53,9 @@ void Axis::Render(Qt3DCore::QEntity * scene)
 	for (auto & point: segmentPoints) { point->Render(scene); }
 }
 
-void Axis::Remove(Qt3DCore::QEntity * scene)
+void Axis::Remove()
 {
-	line->Remove(scene);
-	arrow->Render(scene);
-	for (auto & point: segmentPoints) { point->Remove(scene); }
+	line->Remove();
+	arrow->Remove();
+	for (auto & point: segmentPoints) { point->Remove(); }
 }

@@ -12,7 +12,7 @@ class Cube final : public IRenderable
     QVector<QVector3D> vertices;
 
     // Ребра куба
-    QVector<IRenderable*> edges;
+    std::vector<std::unique_ptr<IRenderable>> edges;
 
 public:
     /* Конструктор класса
@@ -25,7 +25,7 @@ public:
     void Render(Qt3DCore::QEntity *scene) override;
 
     // Удаление объекта со сцены
-    void Remove(Qt3DCore::QEntity *scene) override;
+    void Remove() override;
 };
 
 #endif // CUBE_H

@@ -46,9 +46,9 @@ void Graph3d::createItems(const QTime &timeDelta, int waitingInterval)
     items.push_back(std::make_unique<Cube>(60));
     items.push_back(std::make_unique<Decision>(
                         waitingInterval,
-                        60
+                        timeDelta.hour() * 60 + timeDelta.minute()
                         )
-    );
+    );   
 }
 
 Graph3d::Graph3d(const QTime & timeDelta, int waitingInterval)
@@ -73,22 +73,22 @@ void Graph3d::Render(Qt3DCore::QEntity *scene)
     for (auto & item : items) { item->Render(scene); }
 }
 
-void Graph3d::Remove(Qt3DCore::QEntity *scene)
+void Graph3d::Remove()
 {
     // Удаляем со сцены оси координат
-    xAxis->Remove(scene);
-    yAxis->Remove(scene);
-    zAxis->Remove(scene);
+    xAxis->Remove();
+    yAxis->Remove();
+    zAxis->Remove();
 
     // Удаляем элементы
-    for (auto & item : items) { item->Remove(scene); }
+    for (auto & item : items) { item->Remove(); }
 }
 
-void Graph3d::Update(const QTime &timeDelta, int waitingInterval, Qt3DCore::QEntity *scene)
+void Graph3d::Update(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, Qt3DCore::QEntity * scene)
 {
-    Remove(scene);
+    Remove();
     items.clear();
-    createAxes(timeDelta, waitingInterval);
-    createItems(timeDelta, waitingInterval);
+    createAxes(timeDelta, firstWaitingInterval);
+    createItems(timeDelta, firstWaitingInterval);
     Render(scene);
 }

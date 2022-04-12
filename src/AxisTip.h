@@ -28,7 +28,7 @@ public:
 	AxisTip(const QVector3D & pos,
 			const QQuaternion & rotation,
 			const QString & label,
-			QColor color,
+			QColor color = Qt::black,
 	        float bottomRadius = 1.0f,
 			float length = 2.5f);
 	~AxisTip() final;
@@ -37,7 +37,7 @@ public:
 	void Render(Qt3DCore::QEntity * scene) override;
 	
 	/// удаление объекта со сцены
-	void Remove(Qt3DCore::QEntity * scene) override;
+	void Remove() override;
 
 private:
 	QPointer<Qt3DCore::QEntity> tip; ///< наконечник на 3д сцене
