@@ -12,7 +12,7 @@ class Cube final : public IRenderable
     QVector<QVector3D> vertices;
 
     // Ребра куба
-    QVector<IRenderable*> edges;
+    std::vector<std::unique_ptr<IRenderable>> edges;
 
 public:
     /* Конструктор класса

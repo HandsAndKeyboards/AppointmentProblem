@@ -1,5 +1,6 @@
 #include "ui_mainwindow.h"
 #include "mainwindow.h"
+#include "common/mathematicFuncs.h" // TODO УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
 
 /** ******************************************** PRIVATE ********************************************* **/
 
@@ -106,6 +107,16 @@ void MainWindow::calculateProbability()
 	}
 	else
 	{
+		// todo УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
+		double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
+		double waitingInterval = ui->firstWaitingTimeSpinBox->value() / timeDeltaMinutes;
+		double probability = 3 * pow(waitingInterval, 2) - 2 * pow(waitingInterval, 3);
+		
+		ui->probabilityPercentageSpinBox->blockSignals(true);
+		ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
+		ui->probabilityPercentageSpinBox->blockSignals(false);
+		// todo УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
+		
 		// обновляем график
 		graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), 0);
 	}
@@ -155,6 +166,16 @@ void MainWindow::calculateWaitingTime()
 	}
 	else
 	{
+		// TODO УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
+		int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
+		double probability = ui->probabilityPercentageSpinBox->value() / 100.0;
+		std::array<double, 3> solution = solveCubic(2, -3, 0, probability);
+		
+		ui->firstWaitingTimeSpinBox->blockSignals(true);
+		ui->firstWaitingTimeSpinBox->setValue(round(timeDeltaMinutes * solution[2]));
+		ui->firstWaitingTimeSpinBox->blockSignals(false);
+		// TODO УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
+		
 		// обновляем график
 		graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), 0);
 	}
@@ -164,6 +185,42 @@ void MainWindow::calculateWaitingTime()
 void MainWindow::changeAmountOfPersons()
 {
 	graphModel->SwapGraphs();
+	
+	// todo УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
+	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(), ui->meetUntilTimeEdit->time());
+	if (ui->threePersonsRadioButton->isChecked())
+	{
+		double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
+		double waitingInterval = ui->firstWaitingTimeSpinBox->value() / timeDeltaMinutes;
+		double probability = 3 * pow(waitingInterval, 2) - 2 * pow(waitingInterval, 3);
+		
+		ui->probabilityPercentageSpinBox->blockSignals(true);
+		ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
+		ui->probabilityPercentageSpinBox->blockSignals(false);
+		
+		graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), 0);
+	}
+	else
+	{
+		// вероятность встречи
+		double probability = graphModel->CalculateProbability(
+				timeDelta,
+				ui->firstWaitingTimeSpinBox->value(),
+				ui->secondWaitingTimeSpinBox->value()
+		);
+		
+		/*
+		 * блокируем отправку сигналов спинбоксом вероятности для того, чтобы изменение его значения
+		 * не приводило к вызову метода calculateWaitingTime()
+		 */
+		ui->probabilityPercentageSpinBox->blockSignals(true);
+		ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
+		ui->probabilityPercentageSpinBox->blockSignals(false);
+		
+		// обновляем график
+		graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), ui->secondWaitingTimeSpinBox->value());
+	}
+	// todo УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
 	
 	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
 	ui->waitingTimeLine->setVisible(!ui->threePersonsRadioButton->isChecked());

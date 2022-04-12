@@ -15,7 +15,7 @@ class Graph3d final : public IGraph
     // Создает оси на сцене
     void createAxes(const QTime & timeDelta, int waitingInterval);
 
-    // Создает куб на сцене
+    // Создает куб и внутреннюю фигуру на сцене
     void createItems(const QTime & timeDelta, int waitingInterval);
 
 public:

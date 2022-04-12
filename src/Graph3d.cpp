@@ -46,7 +46,7 @@ void Graph3d::createItems(const QTime &timeDelta, int waitingInterval)
     items.push_back(std::make_unique<Cube>(60));
     items.push_back(std::make_unique<Decision>(
                         waitingInterval,
-                        60 // to do убери это говно
+                        timeDelta.hour() * 60 + timeDelta.minute()
                         )
     );   
 }

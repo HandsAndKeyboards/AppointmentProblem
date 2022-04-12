@@ -1,6 +1,8 @@
 #ifndef DECISION_H
 #define DECISION_H
 
+#include <memory>
+
 #include <QVector>
 #include <Qt3DRender>
 #include <Qt3DExtras>
@@ -11,27 +13,27 @@
 class Decision final : public IRenderable
 {
     // Вершины решения - точки трехмерного графа
-    QVector<QVector3D> vertices;
+    std::vector<QVector3D> vertices;
 
     // Ребра решения
-    QVector<IRenderable*> edges;
+    std::vector<std::unique_ptr<IRenderable>> edges;
 
     // Линии штриховки фигуры
-    QVector<Line*> shading;
+    std::vector<std::unique_ptr<IRenderable>> shading;
 
 public:
-    /* Конструктор класса
-     * Принимает параметр edgeLength - длину ребра куба
-     * Затем инициализирует вершины куба
-     */
+	/**
+	 * @param edgeLength = waitingInterval
+	 * @param cubeEdgeLen = timeDelta
+	 */
     Decision(int edgeLength, int cubeEdgeLen);
-    ~Decision();
+    ~Decision() final = default;
 
     // Отрисовка объекта на сцене
     void Render(Qt3DCore::QEntity *scene) override;
 
     // Закрашивает фигуру в цвет color
-    void Shading(int doubleEdgeLength);
+    void Shading(int edgeLength, int timeDelta);
 
     // Удаление объекта со сцены
     void Remove() override;

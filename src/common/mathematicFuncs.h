@@ -81,6 +81,37 @@ inline std::pair<double, double> solveQuadratic(double a, double b, double c)
 }
 
 /**
+ * @brief решение кубического уравнения вида ax^3 + bx^2 + cx + d = 0
+ * @param a коэффициент a
+ * @param b коэффициент b
+ * @param c коэффициент c
+ * @param c коэффициент d
+ * @return найденные корни x1, x2, x3
+ */
+inline std::array<double, 3> solveCubic(double a, double b, double c, double d)
+{
+	/*
+	 * Метод решения по формуле Виета требует a = 1. Присутствует возможность ввести а != 1,
+	 * в таком случае все коэффициенты будут сокращены на а
+	 *
+	 * https://planetcalc.ru/1122/
+	 */
+	b /= a; c /= a; d /= a; a /= a;
+	double q = (b * b - 3 * c * c * c) / 9;
+	double r = (2 * b * b * b - 9 * b * c + 27 * d) / 54;
+	
+	// todo нормальное исключение
+	if (q * q * q - r * r < 0) { throw "переменная меньше нуля, комплексные числа мы еще не сделали!"; }
+	double t = 1.0 / 3 * qAcos(r / qSqrt(q * q * q));
+	
+	double x1 = -2 * qSqrt(q) * qCos(t) - b / 3;
+	double x2 = -2 * qSqrt(q) * qCos(t + 2.0 / 3 * M_PI) - b / 3;
+	double x3 = -2 * qSqrt(q) * qCos(t - 2.0 / 3 * M_PI) - b / 3;
+	
+	return {x1, x2, x3};
+}
+
+/**
  * @brief округление числа до N знаков после запятой
  * @tparam T floating point type
  * @param num число

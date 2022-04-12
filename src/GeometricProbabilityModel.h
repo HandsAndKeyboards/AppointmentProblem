@@ -18,7 +18,7 @@ class GeometricProbabilityModel final
 	/// настройка сцены для 2д графика
 	void form2dGraphScene();
 	/// настройка сцены для 3д графика
-	void form3dGraphScene(); // todo подбери параметры
+	void form3dGraphScene();
 	/// установка параметров активной камеры
 	void setActiveCameraSettings();
 
