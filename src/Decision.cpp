@@ -78,13 +78,14 @@ void Decision::Shading(int edgeLength)
     QVector<QVector3D> tempVerticesBegin;
     QVector<QVector3D> tempVerticesEnd;
 
-    for (int i = 0; i < edgeLength * 2; i++)
+	int doubleEdgeLength = edgeLength * 2;
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setY(temp.y() + 0.5);
     }
     temp = vertices[5];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setY(temp.y() + 0.5);
@@ -92,39 +93,39 @@ void Decision::Shading(int edgeLength)
 
     // Нижний недокуб
     temp = vertices[0];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setX(temp.x() + 0.5);
     }
     temp = vertices[5];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setX(temp.x() + 0.5);
     }
 
     temp = vertices[0];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setY(temp.y() + 0.5);
     }
     temp = vertices[1];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setY(temp.y() + 0.5);
     }
 
     temp = vertices[0];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setZ(temp.z() + 0.5);
     }
     temp = vertices[1];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setZ(temp.z() + 0.5);
@@ -132,78 +133,78 @@ void Decision::Shading(int edgeLength)
     // -------------------------------------
     // Боковые грани многоугольника
     temp = vertices[5];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setY(temp.y() + 0.5);
     }
     temp = vertices[13];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setY(temp.y() + 0.5);
     }
 
     temp = vertices[5];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setX(temp.x() + 0.5);
     }
     temp = vertices[13];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setX(temp.x() + 0.5);
     }
 
     temp = vertices[1];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setZ(temp.z() + 0.5);
     }
     temp = vertices[11];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setZ(temp.z() + 0.5);
     }
 
     temp = vertices[1];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setY(temp.y() + 0.5);
     }
     temp = vertices[11];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setY(temp.y() + 0.5);
     }
 
     temp = vertices[4];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setZ(temp.z() + 0.5);
     }
     temp = vertices[9];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setZ(temp.z() + 0.5);
     }
 
     temp = vertices[4];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setX(temp.x() + 0.5);
     }
     temp = vertices[9];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setX(temp.x() + 0.5);
@@ -213,52 +214,52 @@ void Decision::Shading(int edgeLength)
     // Верхний недокуб
 
     temp = vertices[7];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setY(temp.y() - 0.5);
     }
     temp = vertices[10];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setY(temp.y() - 0.5);
     }
 
     temp = vertices[7];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setX(temp.x() - 0.5);
     }
     temp = vertices[10];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setX(temp.x() - 0.5);
     }
 
     temp = vertices[7];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setY(temp.y() - 0.5);
     }
     temp = vertices[8];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setY(temp.y() - 0.5);
     }
 
     temp = vertices[7];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesBegin.push_back(temp);
         temp.setZ(temp.z() - 0.5);
     }
     temp = vertices[8];
-    for (int i = 0; i < edgeLength * 2; i++)
+    for (int i = 0; i < doubleEdgeLength; i++)
     {
         tempVerticesEnd.push_back(temp);
         temp.setZ(temp.z() - 0.5);
@@ -271,9 +272,12 @@ void Decision::Shading(int edgeLength)
     }
 }
 
-void Decision::Remove(Qt3DCore::QEntity *scene)
+void Decision::Remove()
 {
     vertices.clear();
     for (int i = 0; i < edges.size(); i++)
-        edges[i]->Remove(scene);
+        edges[i]->Remove();
+	
+	for (int i = 0; i < shading.size(); i++)
+		shading[i]->Remove();
 }

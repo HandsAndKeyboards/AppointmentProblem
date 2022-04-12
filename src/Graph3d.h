@@ -29,8 +29,8 @@ public:
     ~Graph3d() final;
 
     void Render(Qt3DCore::QEntity * scene) override;
-    void Remove(Qt3DCore::QEntity * scene) override;
-    void Update(const QTime & timeDelta, int waitingInterval, Qt3DCore::QEntity *scene) override;
+    void Remove() override;
+	void Update(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, Qt3DCore::QEntity * scene) override;
 };
 
 #endif // GRAPH3D_H

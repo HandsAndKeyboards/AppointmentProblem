@@ -4,6 +4,7 @@
 
 #include "GeometricProbabilityModel.h"
 #include "Graph2d.h"
+#include "Graph3d.h"
 #include "common/mathematicFuncs.h"
 
 /** *************************************************** PRIVATE ***************************************************** **/
@@ -29,7 +30,7 @@ void GeometricProbabilityModel::form3dGraphScene()
             0.1f,
             1000.0f
     );
-	inactiveSceneCameraSettings = std::make_tuple(100.0f, 100.0f, QVector3D{0, 0, 20}, QVector3D{0, 0, 0});
+	inactiveSceneCameraSettings = std::make_tuple(100.0f, 100.0f, QVector3D{30, 30,125}, QVector3D{30, 30, 0});
 }
 
 /// установка параметров активной камеры
@@ -65,9 +66,11 @@ GeometricProbabilityModel::GeometricProbabilityModel(
     form2dGraphScene();
     activeGraph->Render(this->activeScene->GetScene());
 
-    inactiveGraph = std::make_shared<Graph3d>(timeDelta, firstWaitingInterval, 0);
+    inactiveGraph = std::make_shared<Graph3d>(timeDelta, firstWaitingInterval);
     form3dGraphScene();
     inactiveGraph->Render(this->inactiveScene->GetScene());
+	
+	setActiveCameraSettings(); // устанавливаем настройки камеры, соответствующие активной сцене
 }
 
 /**
@@ -108,7 +111,7 @@ int GeometricProbabilityModel::CalculateWaitingTime(
 ) noexcept
 {
 	double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
-
+	
 	double workingAreaSquare = timeDeltaMinutes * timeDeltaMinutes; // площадь квадрата рабочей зоны
 	double hexagonArea = workingAreaSquare * probability; // площадь шестиугольника
 	/*

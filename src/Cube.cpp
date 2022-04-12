@@ -37,9 +37,9 @@ void Cube::Render(Qt3DCore::QEntity *scene)
 }
 
 // Удаление объекта со сцены
-void Cube::Remove(Qt3DCore::QEntity *scene)
+void Cube::Remove()
 {
     vertices.clear();
     for (int i = 0; i < edges.size(); i++)
-        edges[i]->Remove(scene);
+        edges[i]->Remove();
 }

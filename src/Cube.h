@@ -25,7 +25,7 @@ public:
     void Render(Qt3DCore::QEntity *scene) override;
 
     // Удаление объекта со сцены
-    void Remove(Qt3DCore::QEntity *scene) override;
+    void Remove() override;
 };
 
 #endif // CUBE_H

@@ -31,10 +31,10 @@ public:
     void Render(Qt3DCore::QEntity *scene) override;
 
     // Закрашивает фигуру в цвет color
-    void Shading(int edgeLength);
+    void Shading(int doubleEdgeLength);
 
     // Удаление объекта со сцены
-    void Remove(Qt3DCore::QEntity *scene) override;
+    void Remove() override;
 };
 
 #endif // DECISION_H

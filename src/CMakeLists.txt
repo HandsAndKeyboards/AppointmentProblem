@@ -46,6 +46,9 @@ add_executable(
         include/earcut.h
         IPolygon.h
         UncoloredPolygon.cpp UncoloredPolygon.h
+        Graph3d.cpp Graph3d.h
+        Cube.cpp Cube.h
+        Decision.cpp Decision.h
 )
 
 target_link_libraries(AppointmentProblem

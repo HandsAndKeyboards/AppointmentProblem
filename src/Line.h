@@ -3,6 +3,7 @@
 
 #include <QVector3D>
 #include <QPointer>
+#include <QColor>
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QTransform>
 
