@@ -48,8 +48,7 @@ MainWindow::MainWindow(QWidget * parent)
 	);
 	
     // - Создаём задачки
-       Task firstTask(
-                        15, 9, 10, 2,
+       Task firstTask(15, 9, 10, 2,
                         "Два человека договорились  о встрече  между 9  и  10  часами  "
                         "утра.  Пришедший  первым  ждет  второго  в  течение  15  мин,  "
                         "после  чего  уходит   (если  не  встретились).   Найти  "
@@ -64,10 +63,15 @@ MainWindow::MainWindow(QWidget * parent)
             thirdTask(5, 12, 13, 2,
                       "Какова вероятность Вашей встречи с другом, если вы "
                       "договорились встретиться в определенном месте, с 12.00 "
-                      "до 13.00 часов и ждете друг друга в течение 5 минут?");
+                      "до 13.00 часов и ждете друг друга в течение 5 минут?"),
+            fourthTask(10, 7, 8, 3,
+                       "Три человека договорились встретиться в течение определенного "
+                       " часа, тот, кто приходит первым, ждет 10 мин, а потом уходит. "
+                       " Найти вероятность, что встреча состоялась.");
     Tasks.push_back(firstTask);
     Tasks.push_back(secondTask);
     Tasks.push_back(thirdTask);
+    Tasks.push_back(fourthTask);
 
     connect(ui->updateAction, &QAction::triggered, this, &MainWindow::calculateProbability);
     connect(ui->readReferenceAction, &QAction::triggered, this, &MainWindow::showReference);
