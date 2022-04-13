@@ -25,6 +25,7 @@ SOURCES += \
     mainwindow.cpp \
     task.cpp
 
+
 HEADERS += \
     Axis.h \
     AxisTip.h \
@@ -44,6 +45,7 @@ HEADERS += \
     SegmentPoint.h \
     mainwindow.h \
     task.h
+
 
 FORMS += \
     mainwindow.ui

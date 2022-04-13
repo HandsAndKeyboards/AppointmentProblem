@@ -8,6 +8,7 @@
 #include "GeometricProbabilityModel.h"
 #include "task.h"
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -46,7 +47,7 @@ private slots:
 	
 	/// вывод окна "о программе"
 	void showAboutProgram();
-	
+
     // - Вывести задачу
     void showTask();
 

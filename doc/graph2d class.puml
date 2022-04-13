@@ -1,0 +1,281 @@
+@startuml 
+
+'https://plantuml.com/class-diagram
+
+class MainWindow {
+    - Ui::MainWindow * ui
+    - shared_ptr<GeometricProbabilityModel> graphModel
+    - QWidget * container
+
+    + MainWindow(QWidget * parent = nullptr)
+    + ~MainWindow()
+    + void Add3DWindow(Qt3DExtras::Qt3DWindow * window, int row, int column, int rowSpan, int columnSpan)
+
+    - void add3DWindow(Qt3DExtras::Qt3DWindow * window, int row, int column, int rowSpan, int columnSpan)
+    - QTime calculateTimeDelta(const QTime & start, const QTime & finish)
+
+    - void calculateProbability()
+    - void calculateWaitingTime()
+    - void changeAmountOfPersons()
+    - void showReference()
+    - void showAboutProgram()
+    - void showExamplesLibrary()
+}
+QMainWindow <|-- MainWindow
+hide QMainWindow members
+
+
+
+class GeometricProbabilityModel {
+    - shared_ptr<IGraph> activeGraph
+    - shared_ptr<IGraph> inactiveGraph
+
+    - shared_ptr<Scene> activeScene
+    - shared_ptr<Scene> inactiveScene
+
+    - tuple<float, float, QVector3D, QVector3D> activeSceneCameraSettings
+    - tuple<float, float, QVector3D, QVector3D> inactiveSceneCameraSettings
+
+    - void form2dGraphScene()
+    - void form3dGraphScene()
+    - void setActiveCameraSettings()
+
+    + GeometricProbabilityModel(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, shared_ptr<Scene> activeScene, shared_ptr<Scene> inactiveScene)
+    + ~GeometricProbabilityModel()
+
+    + double CalculateProbability(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
+    + int CalculateWaitingTime(const QTime & deltaTime, double probability, int knownWaitingInterval)
+    + void UpdateGraph(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
+    + void SwapGraphs()
+}
+MainWindow "1" *-- "1" GeometricProbabilityModel
+note left of GeometricProbabilityModel::"graph"
+    на этом месте будет стоять либо двухмерный,
+    либо трехмерный график
+end note
+note right of GeometricProbabilityModel
+    GeometricProbabilityModel(const GeometricProbabilityModel &) = delete
+    GeometricProbabilityModel(GeometricProbabilityModel &&) = delete
+    GeometricProbabilityModel() = delete
+    GeometricProbabilityModel & operator= (const GeometricProbabilityModel &) = delete
+    GeometricProbabilityModel & operator= (GeometricProbabilityModel &&) = delete
+end note
+
+
+
+interface IGraph {
+    + virtual void Update(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, Qt3DCore::QEntity * scene) = 0
+    + virtual ~IGraph()
+}
+IRenderable <|-- IGraph : public
+GeometricProbabilityModel "1" *-- "1" IGraph
+note left of IGraph::"mainFigure"
+    основная фигура, характеризующая
+    геометрическую вероятность
+end note
+note left of IGraph::"boundingFigure"
+    фигура, ограничивающая основную
+end note
+
+
+
+class Graph2d {
+    - const int NUMBER_OF_UNITS
+    - unique_ptr<Axis> xAxis
+    - unique_ptr<Axis> yAxis
+    - vector< unique_ptr<IRenderable> > items
+
+	- list<tuple<QString, QVector3D, QVector3D, QQuaternion> > xAxisFormPoints(const QTime & timeDelta, int waitingInterval)
+	- list<tuple<QString, QVector3D, QVector3D, QQuaternion> > yAxisFormPoints(const QTime & timeDelta, int waitingInterval)
+    - void addAxes(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
+
+    + Graph2d(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
+    + virtual ~Graph2d()
+}
+IGraph <|-- Graph2d : public
+note right of Graph2d
+    Graph2d(const Graph2D &) = delete
+    Graph2d(Graph2D &&) = delete
+    Graph2d() = delete
+    Graph2d & operator=(const Graph2D &) = delete
+    Graph2d & operator=(Graph2D &&) = delete
+end note
+
+
+
+class Graph3d #white { /' #white окрашивает объект в белый цвет '/
+    + bla bla bla
+    + bla bla bla ()
+}
+IGraph <|-- Graph3d
+
+
+
+class Axis {
+    - unique_ptr<Line> line
+    - unique_ptr<AxisTip> arrow
+    - vector< unique_ptr<SegmentPoint> > segmentPoints
+
+    + Axis(QVector3D from, QVector3D to, QString tipLabel, const list<tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
+    + virtual ~Axis()
+    + ResetSegmentPoints(const list<tuple<QString, QVector3D, QVector3D, QQuaternion>> & segmentPoints)
+}
+IRenderable <|-- Axis : public
+Graph2d "1" *-- "2" Axis
+note right of Axis
+    Axis(const Axis &) = delete
+    Axis(Axis &&) = delete
+    Axis() = delete
+    Axis & operator=(const Axis &) = delete
+    Axis & operator=(Axis &&) = delete
+end note
+
+
+
+class SegmentPoint {
+    - unique_ptr<Line> line
+    - QPointer<Qt3DExtras::QText2DEntity> label
+
+    + SegmentPoint(const string & label, const QVector3D & labelPos, float length, const QVector3D & pos, const QQuaternion & rotation)
+    + virtual ~SegmentPoint()
+}
+IRenderable <|-- SegmentPoint : public
+Axis "1" *-- "2" SegmentPoint
+note right of SegmentPoint
+    SegmentPoint(const SegmentPoint &) = delete
+    SegmentPoint(SegmentPoint &&) = delete
+    SegmentPoint() = delete
+    SegmentPoint & operator=(const SegmentPoint &) = delete
+    SegmentPoint & operator=(SegmentPoint &&) = delete
+end note
+
+
+interface IPolygon {
+    vector<QVector3D> Triangulate(const vector<QVector3D> & polygon)
+}
+IRenderable <|-- IPolygon : public
+
+
+
+class ColoredPolygon {
+    - vector<Qt3DCore::QEntity> lineEntity
+
+    + ColoredPolygon(const vector<QVector3D> & vertices, QColor color)
+    + virtual ~ColoredPolygon()
+}
+IPolygon <|-- ColoredPolygon : public
+note right of ColoredPolygon
+    ColoredPolygon(const ColoredPolygon &) = delete
+    ColoredPolygon(ColoredPolygon &&) = delete
+    ColoredPolygon() = delete
+    ColoredPolygon & operator=(const ColoredPolygon &) = delete
+    ColoredPolygon & operator=(ColoredPolygon &&) = delete
+end note
+
+
+
+class UncoloredPolygon {
+    - vector< unique_ptr<Line> > borders
+
+    + UncoloredPolygon(const vector<QVector3D> & vertices, float bordersThickness, QColor bordersColor)
+    + virtual ~UncoloredPolygon()
+}
+IPolygon <|-- UncoloredPolygon : public
+note right of UncoloredPolygon
+    UncoloredPolygon(const UncoloredPolygon &) = delete
+    UncoloredPolygon(UncoloredPolygon &&) = delete
+    UncoloredPolygon() = delete
+    UncoloredPolygon & operator=(const UncoloredPolygon &) = delete
+    UncoloredPolygon & operator=(UncoloredPolygon &&) = delete
+end note
+
+
+
+class Polyhedron #white { /' #white окрашивает объект в белый цвет '/
+    + ну да
+    + тут ты снова сам все будешь делать ()
+}
+IRenderable <|- Polyhedron
+
+
+
+interface IRenderable {
+    + virtual void Render(Qt3DCore::QEntity * scene) = 0
+    + virtual void Remove() = 0
+    + virtual ~IRenderable()
+}
+IGraph -[hidden]- IRenderable
+Graph2d "1" *-- "*" IRenderable
+
+
+
+class Line {
+    - QPointer<Qt3DCore::QEntity> cylinder
+    - void construct(float length, Qt3DCore::QTransform * transform, float thickness, QColor color)
+
+    + Line(const QVector3D & from, const QVector3D & to, QColor color, float thickness)
+    + Line(float length, Qt3DCore::QTransform * transform, QColor color, float thickness)
+    + virtual ~Line()
+}
+IRenderable <|-- Line : public
+SegmentPoint "1" *-- "1" Line
+Axis "1" *-- "3" Line
+note right of Line
+    Line(const Line &) = delete
+    Line(Line &&) = delete
+    Line() = delete
+    Line & operator=(const Line &) = delete
+    Line & operator=(Line &&) = delete
+end note
+
+
+
+class AxisTip {
+    - QPointer<Qt3DCore::QEntity> tip
+    - QPointer<Qt3dExtras::QText2DEntity> label
+
+    + AxisTip(const QVector3D & pos, const QQuaternion & rotation, const QString & label, QColor color, float bottomRadius, float length)
+    + virtual ~AxisTip()
+}
+IRenderable <|-- AxisTip : public
+Axis "1" *-- "1" AxisTip
+note right of AxisTip
+    AxisTip(const AxisTip &) = delete
+    AxisTip(AxisTip &&) = delete
+    AxisTip() = delete
+    AxisTip & operator=(const AxisTip &) = delete
+    AxisTip & operator=(AxisTip &&) = delete
+end note
+
+
+
+class Scene {
+	- QPointer<Qt3DExtras::Qt3DWindow> view
+	- Qt3DCore::QEntity * scene
+	- Qt3DRender::QCamera * camera
+	- Qt3DExtras::QOrbitCameraController * cameraController
+
+    + Scene(Qt3DExtras::Qt3DWindow * view)
+    + ~Scene()
+
+	+ void SetCameraPerspectiveProjection(float fieldOfView, float aspect, float nearPlane, float farPlane)
+	+ void SetCameraPosition(const QVector3D & position)
+	+ void SetCameraViewCenter(const QVector3D & viewCenter)
+	+ void SetCameraLookSpeed(float cameraLookSpeed)
+	+ void SetCameraLinearSpeed(float cameraLinearSpeed)
+
+	+ Qt3DCore::QEntity * GetScene()
+	+ QPointer<Qt3DExtras::Qt3DWindow> GetView()
+	+ float Width()
+	+ float Height()
+}
+GeometricProbabilityModel "1" *-left- "2" Scene
+note left of Scene
+    Scene(const Scene &) = delete
+    Scene(Scene &&) = delete
+    Scene() = delete
+    Scene & operator=(const Scene &) = delete
+    Scene & operator=(Scene &&) = delete
+end note
+
+@enduml

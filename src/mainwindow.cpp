@@ -95,6 +95,7 @@ MainWindow::MainWindow(QWidget * parent)
 
     calculateProbability(); // вычисляем вероятность для первоначальных данных
     ui->libraryTask->setText(Tasks[0].Description); // - Вывести первую задачу на экран
+
 }
 
 MainWindow::~MainWindow()
@@ -262,6 +263,7 @@ void MainWindow::changeAmountOfPersons()
 void MainWindow::showReference()
 {
     QDesktopServices::openUrl(QUrl("file:///" + QCoreApplication::applicationDirPath() + "/Helper.html"));
+
 }
 
 /// вывод окна "о программе"
