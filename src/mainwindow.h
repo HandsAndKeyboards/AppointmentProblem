@@ -3,11 +3,8 @@
 
 #include <QMainWindow>
 #include <Qt3DExtras/Qt3DWindow>
-#include <QDesktopServices>
 
 #include "GeometricProbabilityModel.h"
-#include "task.h"
-
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,8 +22,7 @@ private:
 	Ui::MainWindow * ui;
 	std::shared_ptr<GeometricProbabilityModel> graphModel;
 	QWidget * container; ///< является контейнером для окна Qt3DWindow
-    QVector<Task> Tasks; // - Задачи
-
+	
 	QTime calculateTimeDelta(const QTime & start, const QTime & finish);
 	
 	/// добавление 3Д окна на форму
@@ -47,12 +43,9 @@ private slots:
 	
 	/// вывод окна "о программе"
 	void showAboutProgram();
-
-    // - Вывести задачу
-    void showTask();
-
-    // - Изменить параметры по задаче и вычислить
-    void changeToTask();
+	
+	/// вывод библиотеки примеров
+	void showExamplesLibrary();
 };
 
 #endif // MAINWINDOW_H

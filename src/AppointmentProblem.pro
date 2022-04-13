@@ -1,4 +1,4 @@
-QT       += core gui 3dcore 3dextras 3dlogic 3dinput 3drender
+QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,9 +22,7 @@ SOURCES += \
     ColoredPolygon.cpp \
     UncoloredPolygon.cpp \
     main.cpp \
-    mainwindow.cpp \
-    task.cpp
-
+    mainwindow.cpp
 
 HEADERS += \
     Axis.h \
@@ -43,9 +41,7 @@ HEADERS += \
     Polygon.h \
     Scene.h \
     SegmentPoint.h \
-    mainwindow.h \
-    task.h
-
+    mainwindow.h
 
 FORMS += \
     mainwindow.ui
