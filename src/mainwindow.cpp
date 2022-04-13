@@ -286,6 +286,6 @@ void MainWindow::changeToTask()
     ui->meetUntilTimeEdit->setTime(meetingTime2);
     ui->firstWaitingTimeSpinBox->setValue(Tasks[taskNumber].waitingTime);
 
-    if(Tasks[taskNumber].amountOfPeople == 3) { changeAmountOfPersons(); ui->threePersonsRadioButton->setChecked(true); }
-    else if(ui->threePersonsRadioButton->isChecked()) { changeAmountOfPersons(); ui->twoPersonsRadioButton->setChecked(true); }
+    if(Tasks[taskNumber].amountOfPeople == 3 && !ui->threePersonsRadioButton->isChecked()) { ui->threePersonsRadioButton->setChecked(true); changeAmountOfPersons();  }
+    else if(ui->threePersonsRadioButton->isChecked()) { ui->twoPersonsRadioButton->setChecked(true); changeAmountOfPersons();  }
 }
