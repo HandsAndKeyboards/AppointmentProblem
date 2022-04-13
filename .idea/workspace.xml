@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ed91f79f-aecb-4670-aa01-24bf51f2332d" name="Default Changelist" comment="добавил файл с пояснениями к справке">
+      <change beforePath="$PROJECT_DIR$/helper-new/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper-new/helper-new.pro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper-new/helper.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper-new/helper.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper-new/helper.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper-new/main.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper/helper.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper/helper.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper/helper.pro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper/helper.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper/main.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/untitled/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/untitled/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/untitled/helper.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/untitled/helper.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/untitled/helper.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/untitled/main.cpp" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="ProjectId" id="273zETcNkUYm24TyALOYZk9A5Zo" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Markdown" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\BULICHEVA" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ed91f79f-aecb-4670-aa01-24bf51f2332d" name="Default Changelist" comment="" />
+      <created>1648563448550</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1648563448550</updated>
+      <workItem from="1648563463982" duration="3558000" />
+      <workItem from="1648583983162" duration="111000" />
+    </task>
+    <task id="LOCAL-00001" summary="добавил файл с пояснениями к справке">
+      <created>1648566189301</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1648566189302</updated>
+    </task>
+    <task id="LOCAL-00002" summary="добавил файл с пояснениями к справке">
+      <created>1648566723864</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1648566723864</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="добавил файл с пояснениями к справке" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавил файл с пояснениями к справке" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="739" y="300" key="FileChooserDialogImpl" timestamp="1648584088132">
+      <screen x="0" y="40" width="1920" height="1040" />
+    </state>
+    <state x="739" y="300" key="FileChooserDialogImpl/0.40.1920.1040@0.40.1920.1040" timestamp="1648584088132" />
+    <state x="780" y="472" key="VCS.ChangelistChooser" timestamp="1648566839200">
+      <screen x="0" y="40" width="1920" height="1040" />
+    </state>
+    <state x="780" y="472" key="VCS.ChangelistChooser/0.40.1920.1040@0.40.1920.1040" timestamp="1648566839200" />
+    <state x="552" y="291" key="Vcs.Push.Dialog.v2" timestamp="1648564066277">
+      <screen x="0" y="40" width="1920" height="1040" />
+    </state>
+    <state x="552" y="291" key="Vcs.Push.Dialog.v2/0.40.1920.1040@0.40.1920.1040" timestamp="1648564066277" />
+    <state x="769" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1648566728601">
+      <screen x="0" y="40" width="1920" height="1040" />
+    </state>
+    <state x="769" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.40.1920.1040@0.40.1920.1040" timestamp="1648566728601" />
+  </component>
+</project>
