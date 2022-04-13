@@ -46,6 +46,32 @@ MainWindow::MainWindow(QWidget * parent)
 	
 	);
 	
+    // - Создаём задачки
+       Task firstTask(15, 9, 10, 2,
+                        "Два человека договорились  о встрече  между 9  и  10  часами  "
+                        "утра.  Пришедший  первым  ждет  второго  в  течение  15  мин,  "
+                        "после  чего  уходит   (если  не  встретились).   Найти  "
+                        "вероятность  того,  что  встреча  состоится,  если  каждый  "
+                        "наудачу  выбирает момент своего прихода."),
+            secondTask(20, 19, 20, 2,
+                       "Два лица A и B условились встретиться в определенном "
+                       "месте между 7 и 8 часами вечера, причем тот, кто "
+                       "приходит первым, ждет другого 20 минут, после уходит. "
+                       "Чему равна вероятность их встречи, если моменты их "
+                       "прихода случайны и независимы друг от друга?"),
+            thirdTask(5, 12, 13, 2,
+                      "Какова вероятность Вашей встречи с другом, если вы "
+                      "договорились встретиться в определенном месте, с 12.00 "
+                      "до 13.00 часов и ждете друг друга в течение 5 минут?"),
+            fourthTask(10, 7, 8, 3,
+                       "Три человека договорились встретиться в течение определенного "
+                       " часа, тот, кто приходит первым, ждет 10 мин, а потом уходит. "
+                       " Найти вероятность, что встреча состоялась.");
+    Tasks.push_back(firstTask);
+    Tasks.push_back(secondTask);
+    Tasks.push_back(thirdTask);
+    Tasks.push_back(fourthTask);
+
 	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
 	ui->waitingTimeLine->setVisible(!ui->threePersonsRadioButton->isChecked());
 	ui->fixFirstRadioButton->setVisible(!ui->threePersonsRadioButton->isChecked());
@@ -56,7 +82,6 @@ MainWindow::MainWindow(QWidget * parent)
 	
 	connect(ui->updateAction, &QAction::triggered, this, &MainWindow::calculateProbability);
 	connect(ui->readReferenceAction, &QAction::triggered, this, &MainWindow::showReference);
-	connect(ui->showExamplesAction, &QAction::triggered, this, &MainWindow::showExamplesLibrary);
 	connect(ui->readAboutProgramAction, &QAction::triggered, this, &MainWindow::showAboutProgram);
 	connect(ui->meetFromTimeEdit, &QTimeEdit::timeChanged, this, &MainWindow::calculateProbability);
 	connect(ui->meetUntilTimeEdit, &QTimeEdit::timeChanged, this, &MainWindow::calculateProbability);
@@ -65,9 +90,11 @@ MainWindow::MainWindow(QWidget * parent)
 	connect(ui->twoPersonsRadioButton, &QRadioButton::clicked, this, &MainWindow::changeAmountOfPersons);
 	connect(ui->threePersonsRadioButton, &QRadioButton::clicked, this, &MainWindow::changeAmountOfPersons);
 	connect(ui->probabilityPercentageSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateWaitingTime);
-//	connect(ui->planeDisplayCheckBox, QCheckBox::stateChanged, this, ); // todo связать с чем-то
-	
-	calculateProbability(); // вычисляем вероятность для первоначальных данных
+    connect(ui->chooseTask, &QSpinBox::valueChanged, this, &MainWindow::showTask);
+    connect(ui->librarySolve, &QPushButton::pressed, this, &MainWindow::changeToTask);
+
+    calculateProbability(); // вычисляем вероятность для первоначальных данных
+    ui->libraryTask->setText(Tasks[0].Description); // - Вывести первую задачу на экран
 }
 
 MainWindow::~MainWindow()
@@ -234,7 +261,7 @@ void MainWindow::changeAmountOfPersons()
 /// вывод справки
 void MainWindow::showReference()
 {
-
+    QDesktopServices::openUrl(QUrl("file:///" + QCoreApplication::applicationDirPath() + "/Helper.html"));
 }
 
 /// вывод окна "о программе"
@@ -243,8 +270,22 @@ void MainWindow::showAboutProgram()
 
 }
 
-/// вывод библиотеки примеров
-void MainWindow::showExamplesLibrary()
+// - Вывод задачи
+void MainWindow::showTask()
 {
+    int taskNumber = ui->chooseTask->value() - 1;
+    ui->libraryTask->setText(Tasks[taskNumber].Description);
+}
 
+void MainWindow::changeToTask()
+{
+    int taskNumber = ui->chooseTask->value() - 1;
+    QTime meetingTime1(Tasks[taskNumber].meetingTime1, 0), meetingTime2(Tasks[taskNumber].meetingTime2, 0);
+
+    ui->meetFromTimeEdit->setTime(meetingTime1);
+    ui->meetUntilTimeEdit->setTime(meetingTime2);
+    ui->firstWaitingTimeSpinBox->setValue(Tasks[taskNumber].waitingTime);
+
+    if(Tasks[taskNumber].amountOfPeople == 3) { changeAmountOfPersons(); ui->threePersonsRadioButton->setChecked(true); }
+    else if(ui->threePersonsRadioButton->isChecked()) { changeAmountOfPersons(); ui->twoPersonsRadioButton->setChecked(true); }
 }
