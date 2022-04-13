@@ -170,7 +170,7 @@ void MainWindow::changeAmountOfPersons()
 /// вывод справки
 void MainWindow::showReference()
 {
-
+    QDesktopServices::openUrl(QUrl("file:///" + QCoreApplication::applicationDirPath() + "/Helper.html"));
 }
 
 /// вывод окна "о программе"

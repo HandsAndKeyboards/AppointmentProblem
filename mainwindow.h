@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <Qt3DExtras/Qt3DWindow>
+#include <QDesktopServices>
 
 #include "GeometricProbabilityModel.h"
 #include "task.h"
