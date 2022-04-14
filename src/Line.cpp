@@ -1,5 +1,5 @@
 #include <Qt3DExtras/QCylinderMesh>
-#include <Qt3DExtras/QPhongMaterial>
+#include <Qt3DExtras/QMetalRoughMaterial >
 
 #include "Line.h"
 #include "common/mathematicFuncs.h"
@@ -55,7 +55,7 @@ Line::~Line()
 	 * при их создании родителя нет)
 	 */
 	
-	cylinder.clear();
+	delete cylinder;
 }
 
 /// рендер объекта на сцене
@@ -91,9 +91,8 @@ void Line::construct(float length, Qt3DCore::QTransform * transform, float thick
 	cylinderMesh->setSlices(20);
 	
 	// материал цилиндра
-	auto * cylinderMaterial = new Qt3DExtras::QPhongMaterial();
-	cylinderMaterial->setAmbient(color);
-	cylinderMaterial->setShininess(5);
+	auto * cylinderMaterial = new Qt3DExtras::QMetalRoughMaterial ();
+	cylinderMaterial->setBaseColor(color);
 	
 	// формирование самой линии
 	cylinder = new Qt3DCore::QEntity();

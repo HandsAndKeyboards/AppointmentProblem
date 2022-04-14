@@ -14,6 +14,8 @@ class Scene final
 	Qt3DCore::QEntity * scene; ///< корневой объект окна просмотра. выступает в роли сцены
 	Qt3DRender::QCamera * camera; ///< камера
 	Qt3DExtras::QOrbitCameraController * cameraController; ///< контроллер камеры
+	
+	void addLight(const QVector3D & pos);
 
 public:
 	Scene(const Scene &) = delete;
@@ -45,6 +47,9 @@ public:
 	
 	/// установка скорости движения камеры
 	void SetCameraLinearSpeed(float cameraLinearSpeed);
+	
+	/// установка верхнего вектора камеры
+	void SetCameraUpVector(const QVector3D & upVector);
 	
 	Qt3DCore::QEntity * GetScene() { return scene; }
 	QPointer<Qt3DExtras::Qt3DWindow> GetView() { return view; }

@@ -29,17 +29,14 @@ class GeometricProbabilityModel {
     - shared_ptr<IGraph> activeGraph
     - shared_ptr<IGraph> inactiveGraph
 
-    - shared_ptr<Scene> activeScene
-    - shared_ptr<Scene> inactiveScene
+    - shared_ptr<Scene> scene
 
-    - tuple<float, float, QVector3D, QVector3D> activeSceneCameraSettings
-    - tuple<float, float, QVector3D, QVector3D> inactiveSceneCameraSettings
+    - tuple<float, float, QVector3D, QVector3D> activeCameraSettings
+    - tuple<float, float, QVector3D, QVector3D> inactiveCameraSettings
 
-    - void form2dGraphScene()
-    - void form3dGraphScene()
     - void setActiveCameraSettings()
 
-    + GeometricProbabilityModel(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, shared_ptr<Scene> activeScene, shared_ptr<Scene> inactiveScene)
+    + GeometricProbabilityModel(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, shared_ptr<Scene> scene)
     + ~GeometricProbabilityModel()
 
     + double CalculateProbability(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
@@ -262,13 +259,14 @@ class Scene {
 	+ void SetCameraViewCenter(const QVector3D & viewCenter)
 	+ void SetCameraLookSpeed(float cameraLookSpeed)
 	+ void SetCameraLinearSpeed(float cameraLinearSpeed)
+	void SetCameraUpVector(const QVector3D & upVector)
 
 	+ Qt3DCore::QEntity * GetScene()
 	+ QPointer<Qt3DExtras::Qt3DWindow> GetView()
 	+ float Width()
 	+ float Height()
 }
-GeometricProbabilityModel "1" *-left- "2" Scene
+GeometricProbabilityModel "1" *-left- "1" Scene
 note left of Scene
     Scene(const Scene &) = delete
     Scene(Scene &&) = delete

@@ -3,7 +3,7 @@
 
 /** ******************************************** PRIVATE ********************************************* **/
 
-inline QTime MainWindow::calculateTimeDelta(const QTime & start, const QTime & finish)
+QTime MainWindow::calculateTimeDelta(const QTime & start, const QTime & finish)
 {
 	return QTime::fromMSecsSinceStartOfDay(start.msecsTo(finish));
 }
@@ -40,9 +40,7 @@ MainWindow::MainWindow(QWidget * parent)
 			),
 			ui->firstWaitingTimeSpinBox->value(),
 			ui->secondWaitingTimeSpinBox->value(),
-			std::make_shared<Scene>(view),
 			std::make_shared<Scene>(view)
-	
 	);
 	
 	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
@@ -76,6 +74,32 @@ MainWindow::~MainWindow()
 
 /** ****************************************** PRIVATE SLOTS ***************************************** **/
 
+/// обновление модели
+void MainWindow::updateModel()
+{
+	// обновляем модель
+	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(), ui->meetUntilTimeEdit->time());
+	graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), ui->secondWaitingTimeSpinBox->value());
+	
+	// устанавливаем максимум и минимум интервала встречи
+	ui->meetFromTimeEdit->setMaximumTime(ui->meetUntilTimeEdit->time());
+	ui->meetUntilTimeEdit->setMinimumTime(ui->meetFromTimeEdit->time());
+	
+	/*
+	 * Устанавливаем максимум интервала ожидания
+	 *
+	 * Если timeDelta равна нулю, то и на спинбоксы времени ожидания будут установлены нули,
+	 * что приведет к некорректным результатам при вычислении вероятности или интервала ожидания,
+	 *  если нули не убрать. Чтобы нули не убирать ручками, они просто не поступают в спинбоксы
+	 */
+	if (timeDelta.isNull())
+	{
+		int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
+		ui->firstWaitingTimeSpinBox->setMaximum(timeDeltaMinutes);
+		ui->secondWaitingTimeSpinBox->setMaximum(timeDeltaMinutes);
+	}
+}
+
 /// вычисление вероятности встречи на основе времени встречи и времени ожидания
 void MainWindow::calculateProbability()
 {
@@ -99,7 +123,7 @@ void MainWindow::calculateProbability()
 	ui->probabilityPercentageSpinBox->blockSignals(false);
 	
 	// обновляем график
-	graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), ui->secondWaitingTimeSpinBox->value());
+	updateModel();
 }
 
 /// вычисление времени ожидания на основе вероятности и времени встречи
@@ -140,7 +164,7 @@ void MainWindow::calculateWaitingTime()
 	}
 	
 	// обновляем график
-	graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), ui->secondWaitingTimeSpinBox->value());
+	updateModel();
 }
 
 /// изменение количества персон, участвующих во встрече

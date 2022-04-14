@@ -9,40 +9,14 @@
 
 /** *************************************************** PRIVATE ***************************************************** **/
 
-/// настройка сцены для 2д графика
-void GeometricProbabilityModel::form2dGraphScene()
-{
-	activeScene->SetCameraPerspectiveProjection(
-			90,
-			activeScene->Width() / activeScene->Height(),
-			0.1f,
-			1000.0f
-	);
-	activeSceneCameraSettings = std::make_tuple(100.0f, 0.0f, QVector3D{30, 30, 75}, QVector3D{30, 30, 0});
-}
-
-/// настройка сцены для 3д графика
-void GeometricProbabilityModel::form3dGraphScene()
-{
-	/*
-	 * todo тут сам подгони параметры
-	 */
-	inactiveScene->SetCameraPerspectiveProjection(
-			90,
-			inactiveScene->Width() / inactiveScene->Height(),
-			0.1f,
-			100.0f
-	);
-	inactiveSceneCameraSettings = std::make_tuple(100.0f, 100.0f, QVector3D{0, 0, 20}, QVector3D{0, 0, 0});
-}
-
 /// установка параметров активной камеры
 void GeometricProbabilityModel::setActiveCameraSettings()
 {
-	activeScene->SetCameraLinearSpeed(std::get<0>(activeSceneCameraSettings));
-	activeScene->SetCameraLookSpeed(std::get<1>(activeSceneCameraSettings));
-	activeScene->SetCameraPosition(std::get<2>(activeSceneCameraSettings));
-	activeScene->SetCameraViewCenter(std::get<3>(activeSceneCameraSettings));
+	scene->SetCameraLinearSpeed(std::get<0>(activeCameraSettings));
+	scene->SetCameraLookSpeed(std::get<1>(activeCameraSettings));
+	scene->SetCameraPosition(std::get<2>(activeCameraSettings));
+	scene->SetCameraViewCenter(std::get<3>(activeCameraSettings));
+	scene->SetCameraUpVector({0, 1, 0});
 }
 
 /** *************************************************** PUBLIC ***************************************************** **/
@@ -52,26 +26,32 @@ void GeometricProbabilityModel::setActiveCameraSettings()
  * @param timeDelta интервал встречи
  * @param firstWaitingInterval интервал ожидания первой персоны
  * @param secondWaitingInterval интервал ожидания второй персоны
- * @param activeScene активная сцена
+ * @param scene активная сцена
  * @param inactiveScene неактивная сцена
  */
 GeometricProbabilityModel::GeometricProbabilityModel(
 		const QTime & timeDelta,
 		int firstWaitingInterval,
 		int secondWaitingInterval,
-		std::shared_ptr<Scene> activeScene,
-		std::shared_ptr<Scene> inactiveScene
-) :
-		activeScene{activeScene},
-		inactiveScene{inactiveScene}
+		std::shared_ptr<Scene> scene
+) : scene{scene}
 {
 	activeGraph = std::make_shared<Graph2d>(timeDelta, firstWaitingInterval, secondWaitingInterval);
-	form2dGraphScene();
-	activeGraph->Render(this->activeScene->GetScene());
+	activeGraph->Render(this->scene->GetScene());
 	
-//	inactiveGraph = std::make_shared<Graph3d>() // todo тут тоже не бахнуть формирование графика и сцены
-//	form3dGraphScene();
-
+	inactiveGraph = std::make_shared<Graph2d>(timeDelta, 35, 17); // todo изменить для 3д графика
+	
+	activeCameraSettings = std::make_tuple(100.0f, 0.0f, QVector3D{30, 30, 75}, QVector3D{30, 30, 0});
+	inactiveCameraSettings = std::make_tuple(100.0f, 100.0f, QVector3D{0, 0, 20}, QVector3D{0, 0, 0});
+	
+	// выполняется один раз, нет нужны выносить в метод setActiveCameraSettings
+	scene->SetCameraPerspectiveProjection(
+			90,
+			scene->Width() / scene->Height(),
+			0.1f,
+			1000.0f
+	);
+	
 	setActiveCameraSettings(); // устанавливаем настройки камеры, соответствующие активной сцене
 }
 
@@ -134,14 +114,16 @@ void GeometricProbabilityModel::UpdateGraph(
 		int secondWaitingInterval
 )
 {
-	activeGraph->Update(timeDelta, firstWaitingInterval, secondWaitingInterval, activeScene->GetScene());
+	activeGraph->Update(timeDelta, firstWaitingInterval, secondWaitingInterval, scene->GetScene());
 }
 
 void GeometricProbabilityModel::SwapGraphs()
 {
-	std::swap(activeGraph, inactiveGraph);
-	std::swap(activeScene, inactiveScene);
-	std::swap(activeSceneCameraSettings, inactiveSceneCameraSettings);
+	std::swap(activeGraph, inactiveGraph); // заменяем активный график на неактивный
+	inactiveGraph->Remove(); // удаляем уже неактивный график со сцены
+	activeGraph->Render(scene->GetScene()); // рендерим активный график
+	
+	std::swap(activeCameraSettings, inactiveCameraSettings);
 	setActiveCameraSettings();
-	activeScene->GetView()->setRootEntity(activeScene->GetScene());
+	scene->GetView()->setRootEntity(scene->GetScene());
 }

@@ -6,7 +6,8 @@
 
 UncoloredPolygon::UncoloredPolygon(const std::vector<QVector3D> & vertices, float bordersThickness, QColor bordersColor)
 {
-	for (size_t i = 0, size = vertices.size(); i < size; ++i)
+	// связываем первые три вершины
+	for (size_t i = 0, size = vertices.size() - 1; i < size; ++i)
 	{
 		borders.emplace_back(
 				std::make_unique<Line>(
@@ -17,6 +18,7 @@ UncoloredPolygon::UncoloredPolygon(const std::vector<QVector3D> & vertices, floa
 				)
 		);
 	}
+	// связываем последнюю и первую вершины
 	borders.emplace_back(std::make_unique<Line>(vertices.back(), vertices.front(), bordersColor, bordersThickness));
 }
 
