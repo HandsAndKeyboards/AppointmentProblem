@@ -32,8 +32,11 @@ public:
     // Отрисовка объекта на сцене
     void Render(Qt3DCore::QEntity *scene) override;
 
-    // Закрашивает фигуру в цвет color
-    void Shading(int edgeLength, int timeDelta);
+    // Закрашивает фигуру
+    void Shading();
+
+    // Создает плоскасти вместо фигуры
+    void Planing(int edgeLength, int timeDelta);
 
     // Удаление объекта со сцены
     void Remove() override;

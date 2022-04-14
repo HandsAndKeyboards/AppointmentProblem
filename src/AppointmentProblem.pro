@@ -1,8 +1,8 @@
-QT       += core gui
+QT       += core gui 3dcore 3dextras 3dlogic 3dinput 3drender
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++20
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -22,7 +22,8 @@ SOURCES += \
     ColoredPolygon.cpp \
     UncoloredPolygon.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    task.cpp
 
 HEADERS += \
     Axis.h \
@@ -41,7 +42,8 @@ HEADERS += \
     Polygon.h \
     Scene.h \
     SegmentPoint.h \
-    mainwindow.h
+    mainwindow.h \
+    task.h
 
 FORMS += \
     mainwindow.ui

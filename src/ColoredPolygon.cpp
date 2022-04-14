@@ -24,7 +24,7 @@ ColoredPolygon::ColoredPolygon(const std::vector<QVector3D> & vertices, QColor c
 	{
 		*positions++ = static_cast<float>(point.x());
 		*positions++ = static_cast<float>(point.y());
-		*positions++ = static_cast<float>(0);
+        *positions++ = static_cast<float>(point.z());
 	}
 	
 	auto * buf = new Qt3DCore::QBuffer(geometry);
