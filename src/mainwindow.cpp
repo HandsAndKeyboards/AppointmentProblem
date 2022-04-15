@@ -62,9 +62,10 @@ MainWindow::MainWindow(QWidget * parent)
                       "договорились встретиться в определенном месте, с 12.00 "
                       "до 13.00 часов и ждете друг друга в течение 5 минут?"),
             fourthTask(10, 7, 8, 3,
-                       "Три человека договорились встретиться в течение определенного "
-                       " часа, тот, кто приходит первым, ждет 10 мин, а потом уходит. "
-                       " Найти вероятность, что встреча состоялась.");
+					   "Три человека договорились встретиться в промежутке от 7 до 12 часов "
+					   "на следующем условии: все они выбирают время в рамках данного промежутка, "
+					   "пришедший на место ждет не более 10 минут, после чего уходит. Найти "
+					   "вероятность того, что встреча состоится.");
     Tasks.push_back(firstTask);
     Tasks.push_back(secondTask);
     Tasks.push_back(thirdTask);
@@ -310,4 +311,9 @@ void MainWindow::changeToTask()
 
     if(Tasks[taskNumber].amountOfPeople == 3 && !ui->threePersonsRadioButton->isChecked()) { ui->threePersonsRadioButton->setChecked(true); changeAmountOfPersons();  }
     else if(ui->threePersonsRadioButton->isChecked()) { ui->twoPersonsRadioButton->setChecked(true); changeAmountOfPersons();  }
+}
+
+void MainWindow::drawPlane()
+{
+
 }

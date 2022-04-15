@@ -3,8 +3,10 @@
 
 #include <QMainWindow>
 #include <Qt3DExtras/Qt3DWindow>
+#include <QDesktopServices>
 
 #include "GeometricProbabilityModel.h"
+#include "task.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

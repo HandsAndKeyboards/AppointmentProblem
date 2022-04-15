@@ -42,7 +42,7 @@ GeometricProbabilityModel::GeometricProbabilityModel(
 	inactiveGraph = std::make_shared<Graph3d>(timeDelta, firstWaitingInterval);
 
 	activeCameraSettings = std::make_tuple(100.0f, 0.0f, QVector3D{30, 30, 75}, QVector3D{30, 30, 0});
-	inactiveCameraSettings = std::make_tuple(100.0f, 100.0f, QVector3D{0, 0, 20}, QVector3D{0, 0, 0});
+	inactiveCameraSettings = std::make_tuple(100.0f, 100.0f, QVector3D{30, 30, 125}, QVector3D{30, 30, 0});
 
 	// выполняется один раз, нет нужны выносить в метод setActiveCameraSettings
 	scene->SetCameraPerspectiveProjection(
