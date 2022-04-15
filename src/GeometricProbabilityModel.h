@@ -6,19 +6,14 @@
 
 class GeometricProbabilityModel final
 {
-	std::shared_ptr<Scene> activeScene; ///< активная сцена, находится на экране
-	std::shared_ptr<Scene> inactiveScene; ///< неактивная сцена
+	std::shared_ptr<Scene> scene; ///< 3д сцена
 	
 	std::shared_ptr<IGraph> activeGraph; ///< активный график, находящийся на активной сцене
 	std::shared_ptr<IGraph> inactiveGraph; ///< неактивный график, находится на неактивной сцене
 	
-	std::tuple<float, float, QVector3D, QVector3D> activeSceneCameraSettings; ///< параметры камеры активной сцены: cameraLinearSpeed, cameraLookSpeed, cameraPosition, cameraViewCenter
-	std::tuple<float, float, QVector3D, QVector3D> inactiveSceneCameraSettings; ///< параметры камеры неактивной сцены: cameraLinearSpeed, cameraLookSpeed, cameraPosition, cameraViewCenter
-	
-	/// настройка сцены для 2д графика
-	void form2dGraphScene();
-	/// настройка сцены для 3д графика
-	void form3dGraphScene();
+	std::tuple<float, float, QVector3D, QVector3D> activeCameraSettings; ///< параметры камеры активной сцены: cameraLinearSpeed, cameraLookSpeed, cameraPosition, cameraViewCenter
+	std::tuple<float, float, QVector3D, QVector3D> inactiveCameraSettings; ///< параметры камеры неактивной сцены: cameraLinearSpeed, cameraLookSpeed, cameraPosition, cameraViewCenter
+
 	/// установка параметров активной камеры
 	void setActiveCameraSettings();
 
@@ -34,14 +29,13 @@ public:
 	 * @param timeDelta интервал встречи
 	 * @param firstWaitingInterval интервал ожидания первой персоны
 	 * @param secondWaitingInterval интервал ожидания второй персоны
-	 * @param activeScene активная сцена
+	 * @param scene активная сцена
 	 * @param inactiveScene неактивная сцена
 	 */
 	GeometricProbabilityModel(const QTime & timeDelta,
 	                          int firstWaitingInterval,
 	                          int secondWaitingInterval,
-	                          std::shared_ptr<Scene> activeScene,
-	                          std::shared_ptr<Scene> inactiveScene);
+	                          std::shared_ptr<Scene> scene);
 	~GeometricProbabilityModel() = default;
 	
 	/**

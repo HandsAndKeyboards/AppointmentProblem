@@ -176,7 +176,7 @@ Graph2d::Update(const QTime & timeDelta, int firstWaitingInterval, int secondWai
 	
 	auto xAxisSegmentPoints = xAxisFormPoints(timeDelta, firstWaitingInterval, secondWaitingInterval);
 	xAxis->ResetSegmentPoints(xAxisSegmentPoints);
-	
+
 	auto yAxisSegmentPoints = yAxisFormPoints(timeDelta, firstWaitingInterval, secondWaitingInterval);
 	yAxis->ResetSegmentPoints(yAxisSegmentPoints);
 	
@@ -192,7 +192,7 @@ Graph2d::Update(const QTime & timeDelta, int firstWaitingInterval, int secondWai
 			QVector3D(firstWaitingInterval / minutesPerUnit, 0, 0),
 	};
 	items.emplace_back(std::make_unique<ColoredPolygon>(ColoredPolygon::Triangulate(hexagonVertices)));
-	
+
 	/*
 	 * изменение границы рабочей области
 	 */
@@ -202,7 +202,7 @@ Graph2d::Update(const QTime & timeDelta, int firstWaitingInterval, int secondWai
 			QVector3D(NUMBER_OF_UNITS, NUMBER_OF_UNITS, 0),
 			QVector3D(0, NUMBER_OF_UNITS, 0)
 	};
-	items.emplace_back(std::make_unique<UncoloredPolygon>(polygon, 0.3f));
+	items.emplace_back(std::make_unique<UncoloredPolygon>(polygon));
 	
 	// выводим на сцену измененные объекты
 	Render(scene);

@@ -26,12 +26,15 @@ private:
 	QWidget * container; ///< является контейнером для окна Qt3DWindow
     QVector<Task> Tasks; // - Задачи
 
-	QTime calculateTimeDelta(const QTime & start, const QTime & finish);
+	static QTime calculateTimeDelta(const QTime & start, const QTime & finish);
 	
 	/// добавление 3Д окна на форму
 	void add3DWindow(Qt3DExtras::Qt3DWindow * window, int row = 0, int column = 2, int rowSpan = 5, int columnSpan = 1);
 
 private slots:
+	/// обновление модели
+	void updateModel();
+
 	/// вычисление вероятности встречи на основе времени встречи и времени ожидания
 	void calculateProbability();
 

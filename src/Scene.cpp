@@ -1,4 +1,18 @@
+#include <Qt3DRender//QPointLight>
+
 #include "Scene.h"
+
+void Scene::addLight(const QVector3D & pos)
+{
+	auto * lightEntity = new Qt3DCore::QEntity(scene);
+	auto * pointLight = new Qt3DRender::QPointLight(lightEntity);
+	auto * lightTransform = new Qt3DCore::QTransform(scene);
+	lightTransform->setTranslation(pos);
+	
+	lightEntity->addComponent(pointLight);
+	lightEntity->addComponent(lightTransform);
+}
+
 
 /** *************************************************** PUBLIC ***************************************************** **/
 
@@ -10,6 +24,13 @@ Scene::Scene(Qt3DExtras::Qt3DWindow * view) :
 {
 	cameraController->setCamera(camera);
 	view->setRootEntity(scene);
+	
+	addLight({50, 50, 100}); // передний
+	addLight({-50, 50, -100}); // задний
+	addLight({50, 100, 50}); // верхний
+	addLight({50, -50, -100}); // нижний
+	addLight({-100, 50, 50}); // левый
+	addLight({100, 50, 50}); // правый
 }
 
 Scene::~Scene()
@@ -57,4 +78,10 @@ void Scene::SetCameraLookSpeed(float cameraLookSpeed)
 void Scene::SetCameraLinearSpeed(float cameraLinearSpeed)
 {
 	cameraController->setLinearSpeed(cameraLinearSpeed);
+}
+
+/// установка верхнего вектора камеры
+void Scene::SetCameraUpVector(const QVector3D & upVector)
+{
+	camera->setUpVector(upVector);
 }
