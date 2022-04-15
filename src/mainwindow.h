@@ -3,10 +3,8 @@
 
 #include <QMainWindow>
 #include <Qt3DExtras/Qt3DWindow>
-#include <QDesktopServices>
 
 #include "GeometricProbabilityModel.h"
-#include "task.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -55,6 +53,9 @@ private slots:
 
     // - Изменить параметры по задаче и вычислить
     void changeToTask();
+	
+	// - Отрисовывает плоскости, вместо фигуры внутри куба в 3д режиме
+	void drawPlane();
 };
 
 #endif // MAINWINDOW_H
