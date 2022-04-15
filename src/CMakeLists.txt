@@ -49,6 +49,7 @@ add_executable(
         Graph3d.cpp Graph3d.h
         Cube.cpp Cube.h
         Decision.cpp Decision.h
+        task.cpp task.h
 )
 
 target_link_libraries(AppointmentProblem

@@ -80,7 +80,6 @@ MainWindow::MainWindow(QWidget * parent)
 	
 	connect(ui->updateAction, &QAction::triggered, this, &MainWindow::calculateProbability);
 	connect(ui->readReferenceAction, &QAction::triggered, this, &MainWindow::showReference);
-	connect(ui->showExamplesAction, &QAction::triggered, this, &MainWindow::showExamplesLibrary);
 	connect(ui->readAboutProgramAction, &QAction::triggered, this, &MainWindow::showAboutProgram);
 	connect(ui->meetFromTimeEdit, &QTimeEdit::timeChanged, this, &MainWindow::calculateProbability);
 	connect(ui->meetUntilTimeEdit, &QTimeEdit::timeChanged, this, &MainWindow::calculateProbability);

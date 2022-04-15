@@ -5,6 +5,7 @@
 
 #include "GeometricProbabilityModel.h"
 #include "Graph2d.h"
+#include "Graph3d.h"
 #include "common/mathematicFuncs.h"
 
 /** *************************************************** PRIVATE ***************************************************** **/
