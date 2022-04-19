@@ -40,22 +40,23 @@ public:
 	
 	/**
 	 * @brief вычисление вероятности встречи
-	 * @param timeDelta интервал времени встречи
-	 * @param firstWaitingInterval интервал ожидания первой персоны
-	 * @param secondWaitingInterval интервал ожидания второй персоны
+	 * @param timeDelta длина интервала встречи в минутах
+	 * @param waitingIntervals массив интервалов ожидания каждой персоны в минутах
 	 * @return вычисленная вероятность
 	 */
-	static double
-	CalculateProbability(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval) noexcept;
+	static double CalculateProbability(double timeDelta, const std::vector<int> & waitingIntervals) noexcept;
 	
 	/**
-	 * @brief вычисление неизвестного времени ожидания в привязке с известным
-	 * @param timeDelta интервал времени встречи
+	 * @brief вычисление неизвестного времени ожидания
 	 * @param probability вероятность встречи
-	 * @param fixedWaitingInterval известное время ожидания
-	 * @return вычисленное время ожидания
+	 * @param timeDelta интервал ожидания в минутах
+	 * @param knownWaitingInterval известный интервал ожидания в минутах
+	 * (не используется для вычисления времени ожидания трех)
+	 * @return вычисленное время ожидания в минутах
 	 */
-	static int CalculateWaitingTime(const QTime & timeDelta, double probability, int fixedWaitingInterval) noexcept;
+	static int
+	CalculateWaitingTime(double probability, double timeDelta, int knownWaitingInterval = -1);
+	
 	void UpdateGraph(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval);
 	
 	/// обмен местами активного и неактивного графиков

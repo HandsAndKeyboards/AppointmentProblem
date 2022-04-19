@@ -67,13 +67,15 @@ inline QVector3D operator-(QVector3D vec, T length) noexcept
 
 /**
  * @brief решение квадратного уравнения
- * @param a коэффициент a
+ * @param a коэффициент a, a != 0
  * @param b коэффициент b
  * @param c коэффициент c
  * @return найденные корни x1, x2
  */
-inline std::pair<double, double> solveQuadratic(double a, double b, double c)
+inline std::array<double, 2> solveQuadratic(double a, double b, double c)
 {
+	if (a == 0) { throw "коэффициент a квадратного уравнения не может быть равен 0"; }
+	
 	double d = b * b - 4 * a * c; // дискриминант
 	double dRoot = qSqrt(d);
 	
@@ -82,7 +84,7 @@ inline std::pair<double, double> solveQuadratic(double a, double b, double c)
 
 /**
  * @brief решение кубического уравнения вида ax^3 + bx^2 + cx + d = 0
- * @param a коэффициент a
+ * @param a коэффициент a, a != 0
  * @param b коэффициент b
  * @param c коэффициент c
  * @param c коэффициент d
@@ -96,6 +98,9 @@ inline std::array<double, 3> solveCubic(double a, double b, double c, double d)
 	 *
 	 * https://planetcalc.ru/1122/
 	 */
+	
+	if (a == 0) { throw "коэффициент a кубического уравнения не может быть равен 0"; }
+	
 	b /= a; c /= a; d /= a; a /= a;
 	double q = (b * b - 3 * c * c * c) / 9;
 	double r = (2 * b * b * b - 9 * b * c + 27 * d) / 54;

@@ -47,9 +47,6 @@ private slots:
 	/// вывод справки
 	void showReference();
 	
-	/// вывод окна "о программе"
-	void showAboutProgram();
-	
     // - Вывести задачу
     void showTask();
 

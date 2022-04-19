@@ -40,8 +40,8 @@ class GeometricProbabilityModel {
     + GeometricProbabilityModel(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, shared_ptr<Scene> scene)
     + ~GeometricProbabilityModel()
 
-    + double CalculateProbability(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
-    + int CalculateWaitingTime(const QTime & deltaTime, double probability, int knownWaitingInterval)
+	+ double CalculateProbability(double timeDelta, const vector<int> & waitingIntervals)
+    + int CalculateWaitingTime(double probability, double timeDelta, int knownWaitingInterval)
     + void UpdateGraph(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval)
     + void SwapGraphs()
 }
