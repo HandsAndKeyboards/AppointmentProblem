@@ -66,6 +66,9 @@ public:
 	
 	/// обмен местами активного и неактивного графиков
 	void SwapGraphs();
+
+    // Меняет режим отображения в 3д режиме
+    void ChangeModeDecision(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, bool mode);
 };
 
 #endif //SRC_GEOMETRICPROBABILITYMODEL_H

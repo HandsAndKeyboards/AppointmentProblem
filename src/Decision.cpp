@@ -8,8 +8,10 @@
  * @param edgeLength = waitingInterval
  * @param cubeEdgeLen = timeDelta
  */
-Decision::Decision(int edgeLength, int cubeEdgeLen)
+Decision::Decision(int edgeLength, int cubeEdgeLen, bool mode)
 {
+    this->mode = mode;
+
 	// добавляем вершины
 	float minutes_per_unit = cubeEdgeLen / 60.0; // количество минут в единице координат
 	
@@ -59,15 +61,24 @@ Decision::Decision(int edgeLength, int cubeEdgeLen)
 	edges.emplace_back(std::make_unique<Line>(vertices[6], vertices[8], QColor()));
 	
     Shading();
+    Planing();
 }
 
 void Decision::Render(Qt3DCore::QEntity *scene)
 {
-     for (auto & edge : edges)
-         edge->Render(scene);
-
-     for (auto & i : shading)
+     for (auto & i : edges)
          i->Render(scene);
+
+     if (mode)
+     {
+         for (auto & i : planing)
+             i->Render(scene);
+     }
+     else
+     {
+         for (auto & i : shading)
+             i->Render(scene);
+     }
 }
 
 void Decision::Shading()
@@ -186,9 +197,196 @@ void Decision::Shading()
     shading.push_back(std::make_unique<ColoredPolygon> (edge12, Qt::red));
 }
 
-void Decision::Planing(int edgeLength, int timeDelta)
+void Decision::Planing()
 {
+    QVector3D temp1; // Для хранения копии вершины
+    QVector3D temp2; // Для хранения копии вершины
 
+    // Нижний недокуб
+    std::vector<QVector3D> plane1 {
+        vertices[3],
+        vertices[1],
+        vertices[0],
+        vertices[4],
+        vertices[3],
+        vertices[0],
+    };
+    std::vector<QVector3D> plane2 {
+        vertices[0],
+        vertices[1],
+        vertices[5],
+        vertices[5],
+        vertices[1],
+        vertices[2],
+    };
+    std::vector<QVector3D> plane3 {
+        vertices[0],
+        vertices[5],
+        vertices[4],
+        vertices[4],
+        vertices[5],
+        vertices[6],
+    };
+
+    // Основные плоскости
+    temp1 = vertices[1]; temp1.setZ(60);
+    temp2 = vertices[12]; temp2.setZ(0);
+    std::vector<QVector3D> plane4 {
+        vertices[1],
+        temp1,
+        vertices[12],
+        vertices[12],
+        vertices[1],
+        temp2,
+    };
+    std::vector<QVector3D> plane5 {
+        vertices[12],
+        temp1,
+        vertices[1],
+        temp2,
+        vertices[1],
+        vertices[12],
+    };
+
+    temp1 = vertices[1]; temp1.setY(60);
+    temp2 = vertices[10]; temp2.setY(0);
+    std::vector<QVector3D> plane6 {
+        vertices[1],
+        temp1,
+        vertices[10],
+        temp2,
+        vertices[10],
+        vertices[1],
+    };
+    std::vector<QVector3D> plane7 {
+        vertices[10],
+        temp1,
+        vertices[1],
+        temp2,
+        vertices[1],
+        vertices[10],
+    };
+
+    temp1 = vertices[4]; temp1.setX(60);
+    temp2 = vertices[10]; temp2.setX(0);
+    std::vector<QVector3D> plane8 {
+        vertices[4],
+        temp1,
+        vertices[10],
+        temp2,
+        vertices[10],
+        vertices[4],
+    };
+    std::vector<QVector3D> plane9 {
+        vertices[10],
+        temp1,
+        vertices[4],
+        temp2,
+        vertices[4],
+        vertices[10],
+    };
+
+    temp1 = vertices[4]; temp1.setZ(60);
+    temp2 = vertices[8]; temp2.setZ(0);
+    std::vector<QVector3D> plane10 {
+        vertices[4],
+        temp1,
+        vertices[8],
+        temp2,
+        vertices[8],
+        vertices[4],
+    };
+    std::vector<QVector3D> plane11 {
+        vertices[8],
+        temp1,
+        vertices[4],
+        temp2,
+        vertices[4],
+        vertices[8],
+    };
+
+    temp1 = vertices[5]; temp1.setY(60);
+    temp2 = vertices[8]; temp2.setY(0);
+    std::vector<QVector3D> plane12 {
+        vertices[5],
+        temp1,
+        vertices[8],
+        temp2,
+        vertices[8],
+        vertices[5],
+    };
+    std::vector<QVector3D> plane13 {
+        vertices[8],
+        temp1,
+        vertices[5],
+        temp2,
+        vertices[5],
+        vertices[8],
+    };
+
+    temp1 = vertices[5]; temp1.setX(60);
+    temp2 = vertices[12]; temp2.setX(0);
+    std::vector<QVector3D> plane14 {
+        vertices[5],
+        temp1,
+        vertices[12],
+        temp2,
+        vertices[12],
+        vertices[5],
+    };
+    std::vector<QVector3D> plane15 {
+        vertices[12],
+        temp1,
+        vertices[5],
+        temp2,
+        vertices[5],
+        vertices[12],
+    };
+
+    // Верхний недокуб
+    std::vector<QVector3D> plane16 {
+        vertices[7],
+        vertices[8],
+        vertices[13],
+        vertices[12],
+        vertices[7],
+        vertices[13],
+    };
+    std::vector<QVector3D> plane17 {
+        vertices[12],
+        vertices[10],
+        vertices[7],
+        vertices[11],
+        vertices[10],
+        vertices[12],
+    };
+    std::vector<QVector3D> plane18 {
+        vertices[10],
+        vertices[8],
+        vertices[7],
+        vertices[9],
+        vertices[8],
+        vertices[10],
+    };
+
+    planing.push_back(std::make_unique<ColoredPolygon> (plane1, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane2, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane3, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane4, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane5, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane6, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane7, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane8, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane9, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane10, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane11, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane12, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane13, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane14, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane15, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane16, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane17, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane18, Qt::red));
 }
 
 void Decision::Remove()
@@ -198,5 +396,8 @@ void Decision::Remove()
     }
 	
     for (auto & i : shading) {
+        i->Remove(); }
+
+    for (auto & i : planing) {
         i->Remove(); }
 }

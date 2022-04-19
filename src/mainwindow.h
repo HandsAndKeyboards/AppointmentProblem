@@ -54,7 +54,7 @@ private slots:
     void changeToTask();
 
     // - Отрисовывает плоскости, вместо фигуры внутри куба в 3д режиме
-    void drawPlane();
+    void changeModeDecision(int mode);
 };
 
 #endif // MAINWINDOW_H

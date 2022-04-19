@@ -141,5 +141,11 @@ void GeometricProbabilityModel::SwapGraphs()
 	std::swap(activeScene, inactiveScene);
 	std::swap(activeSceneCameraSettings, inactiveSceneCameraSettings);
 	setActiveCameraSettings();
-	activeScene->GetView()->setRootEntity(activeScene->GetScene());
+    activeScene->GetView()->setRootEntity(activeScene->GetScene());
+}
+
+void GeometricProbabilityModel::ChangeModeDecision(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, bool mode)
+{
+    std::reinterpret_pointer_cast<Graph3d>(activeGraph)->ChangeModeDecision(mode);
+    UpdateGraph(timeDelta, firstWaitingInterval, secondWaitingInterval);
 }

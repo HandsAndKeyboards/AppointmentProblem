@@ -92,7 +92,7 @@ MainWindow::MainWindow(QWidget * parent)
 	connect(ui->probabilityPercentageSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateWaitingTime);
     connect(ui->chooseTask, &QSpinBox::valueChanged, this, &MainWindow::showTask);
     connect(ui->librarySolve, &QPushButton::pressed, this, &MainWindow::changeToTask);
-    connect(ui->planeDisplayCheckBox, &QCheckBox::stateChanged, this, &MainWindow::drawPlane);
+    connect(ui->planeDisplayCheckBox, &QCheckBox::stateChanged, this, &MainWindow::changeModeDecision);
 
     calculateProbability(); // вычисляем вероятность для первоначальных данных
     ui->libraryTask->setText(Tasks[0].Description); // - Вывести первую задачу на экран
@@ -291,7 +291,12 @@ void MainWindow::changeToTask()
     else if(ui->threePersonsRadioButton->isChecked()) { ui->twoPersonsRadioButton->setChecked(true); changeAmountOfPersons();  }
 }
 
-void MainWindow::drawPlane()
+void MainWindow::changeModeDecision(int mode)
 {
-
+    graphModel->ChangeModeDecision(
+                calculateTimeDelta(ui->meetFromTimeEdit->time(), ui->meetUntilTimeEdit->time()),
+                ui->firstWaitingTimeSpinBox->value(),
+                0, // в 3д режиме пока нет второго чела
+                mode
+                );
 }
