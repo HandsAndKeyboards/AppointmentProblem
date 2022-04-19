@@ -183,50 +183,24 @@ void Decision::Shading()
         vertices[10],
     };
 
-    shading.push_back(std::make_unique<ColoredPolygon> (edge1, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge2, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge3, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge4, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge5, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge6, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge7, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge8, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge9, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge10, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge11, Qt::red));
-    shading.push_back(std::make_unique<ColoredPolygon> (edge12, Qt::red));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge1, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge2, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge3, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge4, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge5, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge6, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge7, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge8, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge9, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge10, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge11, QColor(170, 0, 0)));
+    shading.push_back(std::make_unique<ColoredPolygon> (edge12, QColor(170, 0, 0)));
 }
 
 void Decision::Planing()
 {
     QVector3D temp1; // Для хранения копии вершины
     QVector3D temp2; // Для хранения копии вершины
-
-    // Нижний недокуб
-    std::vector<QVector3D> plane1 {
-        vertices[3],
-        vertices[1],
-        vertices[0],
-        vertices[4],
-        vertices[3],
-        vertices[0],
-    };
-    std::vector<QVector3D> plane2 {
-        vertices[0],
-        vertices[1],
-        vertices[5],
-        vertices[5],
-        vertices[1],
-        vertices[2],
-    };
-    std::vector<QVector3D> plane3 {
-        vertices[0],
-        vertices[5],
-        vertices[4],
-        vertices[4],
-        vertices[5],
-        vertices[6],
-    };
 
     // Основные плоскости
     temp1 = vertices[1]; temp1.setZ(60);
@@ -343,57 +317,29 @@ void Decision::Planing()
         vertices[12],
     };
 
-    // Верхний недокуб
-    std::vector<QVector3D> plane16 {
-        vertices[7],
-        vertices[8],
-        vertices[13],
-        vertices[12],
-        vertices[7],
-        vertices[13],
-    };
-    std::vector<QVector3D> plane17 {
-        vertices[12],
-        vertices[10],
-        vertices[7],
-        vertices[11],
-        vertices[10],
-        vertices[12],
-    };
-    std::vector<QVector3D> plane18 {
-        vertices[10],
-        vertices[8],
-        vertices[7],
-        vertices[9],
-        vertices[8],
-        vertices[10],
-    };
+    planing.push_back(std::make_unique<ColoredPolygon> (plane4, QColor(255, 255, 102)));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane5, QColor(255, 255, 102)));
 
-    planing.push_back(std::make_unique<ColoredPolygon> (plane1, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane2, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane3, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane4, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane5, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane6, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane7, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane8, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane9, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane10, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane11, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane12, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane13, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane14, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane15, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane16, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane17, Qt::red));
-    planing.push_back(std::make_unique<ColoredPolygon> (plane18, Qt::red));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane6, QColor(153, 255, 102)));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane7, QColor(153, 255, 102)));
+
+    planing.push_back(std::make_unique<ColoredPolygon> (plane8, QColor(153, 204, 255)));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane9, QColor(153, 204, 255)));
+
+    planing.push_back(std::make_unique<ColoredPolygon> (plane10, QColor(255, 255, 102)));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane11, QColor(255, 255, 102)));
+
+    planing.push_back(std::make_unique<ColoredPolygon> (plane12, QColor(153, 255, 102)));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane13, QColor(153, 255, 102)));
+
+    planing.push_back(std::make_unique<ColoredPolygon> (plane14, QColor(153, 204, 255)));
+    planing.push_back(std::make_unique<ColoredPolygon> (plane15, QColor(153, 204, 255)));
 }
 
 void Decision::Remove()
 {
     for (auto & edge : edges) {
-        edge->Remove();
-    }
+        edge->Remove(); }
 	
     for (auto & i : shading) {
         i->Remove(); }
