@@ -46,13 +46,15 @@ void Graph3d::createItems(const QTime &timeDelta, int waitingInterval)
     items.push_back(std::make_unique<Cube>(60));
     items.push_back(std::make_unique<Decision>(
                         waitingInterval,
-                        timeDelta.hour() * 60 + timeDelta.minute()
+                        timeDelta.hour() * 60 + timeDelta.minute(),
+                        modeDecision
                         )
     );   
 }
 
 Graph3d::Graph3d(const QTime & timeDelta, int waitingInterval)
 {
+    modeDecision = false;
     createAxes(timeDelta, waitingInterval);
     createItems(timeDelta, waitingInterval);
 }
@@ -91,4 +93,9 @@ void Graph3d::Update(const QTime & timeDelta, int firstWaitingInterval, int seco
     createAxes(timeDelta, firstWaitingInterval);
     createItems(timeDelta, firstWaitingInterval);
     Render(scene);
+}
+
+void Graph3d::ChangeModeDecision(bool mode)
+{
+    modeDecision = mode;
 }

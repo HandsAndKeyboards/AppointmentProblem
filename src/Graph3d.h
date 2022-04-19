@@ -18,6 +18,12 @@ class Graph3d final : public IGraph
     // Создает куб и внутреннюю фигуру на сцене
     void createItems(const QTime & timeDelta, int waitingInterval);
 
+    /* Режим отображения
+     * true - плоскости
+     * false - закраска
+     */
+    bool modeDecision;
+
 public:
     Graph3d() = delete;
     Graph3d(const Graph3d &) = delete;
@@ -31,6 +37,9 @@ public:
     void Render(Qt3DCore::QEntity * scene) override;
     void Remove() override;
 	void Update(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, Qt3DCore::QEntity * scene) override;
+
+    // Меняет режим отображения решения
+    void ChangeModeDecision(bool mode);
 };
 
 #endif // GRAPH3D_H

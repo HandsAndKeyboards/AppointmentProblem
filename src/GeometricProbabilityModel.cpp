@@ -119,11 +119,17 @@ void GeometricProbabilityModel::UpdateGraph(
 
 void GeometricProbabilityModel::SwapGraphs()
 {
-	std::swap(activeGraph, inactiveGraph); // заменяем активный график на неактивный
-	inactiveGraph->Remove(); // удаляем уже неактивный график со сцены
-	activeGraph->Render(scene->GetScene()); // рендерим активный график
+    std::swap(activeGraph, inactiveGraph); // заменяем активный график на неактивный
+    inactiveGraph->Remove(); // удаляем уже неактивный график со сцены
+    activeGraph->Render(scene->GetScene()); // рендерим активный график
 
-	std::swap(activeCameraSettings, inactiveCameraSettings);
-	setActiveCameraSettings();
-	scene->GetView()->setRootEntity(scene->GetScene());
+    std::swap(activeCameraSettings, inactiveCameraSettings);
+    setActiveCameraSettings();
+    scene->GetView()->setRootEntity(scene->GetScene());
+}
+
+void GeometricProbabilityModel::ChangeModeDecision(const QTime & timeDelta, int firstWaitingInterval, int secondWaitingInterval, bool mode)
+{
+    std::reinterpret_pointer_cast<Graph3d>(activeGraph)->ChangeModeDecision(mode);
+    UpdateGraph(timeDelta, firstWaitingInterval, secondWaitingInterval);
 }

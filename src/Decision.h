@@ -21,12 +21,22 @@ class Decision final : public IRenderable
     // Линии штриховки фигуры
     std::vector<std::unique_ptr<IRenderable>> shading;
 
+    // Плоскости
+    std::vector<std::unique_ptr<IRenderable>> planing;
+
+    /* Режим отображения
+     * true - плоскости
+     * false - закраска
+     */
+    bool mode;
+
 public:
 	/**
 	 * @param edgeLength = waitingInterval
 	 * @param cubeEdgeLen = timeDelta
+     * @param mode - режим отображения
 	 */
-    Decision(int edgeLength, int cubeEdgeLen);
+    Decision(int edgeLength, int cubeEdgeLen, bool mode);
     ~Decision() final = default;
 
     // Отрисовка объекта на сцене
@@ -36,7 +46,7 @@ public:
     void Shading();
 
     // Создает плоскасти вместо фигуры
-    void Planing(int edgeLength, int timeDelta);
+    void Planing();
 
     // Удаление объекта со сцены
     void Remove() override;
