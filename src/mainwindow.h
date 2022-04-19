@@ -24,12 +24,15 @@ private:
 	Ui::MainWindow * ui;
 	std::shared_ptr<GeometricProbabilityModel> graphModel;
 	QWidget * container; ///< является контейнером для окна Qt3DWindow
-    QVector<Task> Tasks; // - Задачи
+    QVector<Task> tasks; ///< Задачи
 
 	static QTime calculateTimeDelta(const QTime & start, const QTime & finish);
 	
 	/// добавление 3Д окна на форму
 	void add3DWindow(Qt3DExtras::Qt3DWindow * window, int row = 0, int column = 2, int rowSpan = 5, int columnSpan = 1);
+	
+	/// добавление заданий
+	void addTasks();
 
 private slots:
 	/// обновление модели
@@ -47,13 +50,13 @@ private slots:
 	/// вывод справки
 	void showReference();
 	
-    // - Вывести задачу
+    /// Вывести задачу
     void showTask();
 
-    // - Изменить параметры по задаче и вычислить
+    /// Изменить параметры по задаче и вычислить
     void changeToTask();
 	
-	// - Отрисовывает плоскости, вместо фигуры внутри куба в 3д режиме
+	/// Отрисовывает плоскости, вместо фигуры внутри куба в 3д режиме
 	void drawPlane();
 };
 

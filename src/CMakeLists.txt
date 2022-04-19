@@ -50,6 +50,8 @@ add_executable(
         Cube.cpp Cube.h
         Decision.cpp Decision.h
         task.cpp task.h
+        common/json.h
+        common/constants.h
 )
 
 target_link_libraries(AppointmentProblem
