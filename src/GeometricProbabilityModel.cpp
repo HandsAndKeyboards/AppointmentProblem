@@ -57,55 +57,77 @@ GeometricProbabilityModel::GeometricProbabilityModel(
 
 /**
  * @brief вычисление вероятности встречи
- * @param timeDelta интервал времени встречи
- * @param firstWaitingInterval интервал ожидания первой персоны
- * @param secondWaitingInterval интервал ожидания второй персоны
+ * @param timeDelta длина интервала встречи в минутах
+ * @param waitingIntervals массив интервалов ожидания каждой персоны в минутах
  * @return вычисленная вероятность
  */
 double GeometricProbabilityModel::CalculateProbability(
-		const QTime & timeDelta,
-		int firstWaitingInterval,
-		int secondWaitingInterval
+		double timeDelta,
+		const std::vector<int> & waitingIntervals
 ) noexcept
 {
-	double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
-	double workingAreaSquare = timeDeltaMinutes * timeDeltaMinutes; // площадь квадрата рабочей зоны
+	/*
+	 * формула для вычисления вероятности: p = n * h^(n - 1) - (n - 1) * h^n, где:
+	 * h - отношение времени ожидания к длине интервала встречи,
+	 * n - количество персон
+	 */
 	
-	// прибавляем первую трапецию
-	double hexagonArea = workingAreaSquare / 2 - pow(timeDeltaMinutes - firstWaitingInterval, 2) / 2;
-	// прибавляем вторую трапецию
-	hexagonArea += workingAreaSquare / 2 - pow(timeDeltaMinutes - secondWaitingInterval, 2) / 2;
+	double numberOfPersons = waitingIntervals.size();
+	double probability = 0;
+	for (int i = 0; i < numberOfPersons; ++i)
+	{
+		probability += (numberOfPersons * pow(waitingIntervals[i] / timeDelta, numberOfPersons - 1) -
+				        (numberOfPersons - 1) * pow(waitingIntervals[i] / timeDelta, numberOfPersons));
+	}
+	probability /= numberOfPersons;
 	
-	return hexagonArea / workingAreaSquare;
+	return probability;
 }
 
 /**
- * @brief вычисление неизвестного времени ожидания в привязке с известным
- * @param timeDelta интервал времени встречи
+ * @brief вычисление неизвестного времени ожидания
  * @param probability вероятность встречи
- * @param fixedWaitingInterval известное время ожидания
- * @return вычисленное время ожидания
+ * @param timeDelta интервал ожидания в минутах
+ * @param knownWaitingInterval известный интервал ожидания в минутах
+ * (не используется для вычисления времени ожидания трех)
+ * @return вычисленное время ожидания в минутах
  */
 int GeometricProbabilityModel::CalculateWaitingTime(
-		const QTime & timeDelta,
 		double probability,
-		int fixedWaitingInterval
-) noexcept
+		double timeDelta,
+		int knownWaitingInterval
+)
 {
-	double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
-
-	double workingAreaSquare = timeDeltaMinutes * timeDeltaMinutes; // площадь квадрата рабочей зоны
-	double hexagonArea = workingAreaSquare * probability; // площадь шестиугольника
-	/*
-	 * площадь трапеции с зафиксированной боковой стороной
-	 * pow() для красоты
-	 */
-	double fixedTrapezeArea = workingAreaSquare / 2 - pow(timeDeltaMinutes - fixedWaitingInterval, 2) / 2;
-	double unfixedTrapezeArea = hexagonArea - fixedTrapezeArea; // площадь трапеции с незафиксированной боковой стороной
-	// решаем получившееся квадратное уравнение
-	std::pair<double, double> solution = solveQuadratic(1, -2 * timeDeltaMinutes, 2 * unfixedTrapezeArea);
-	
-	return round(solution.first); // нас интересует первый корень полученного решения, округляем его для удаления погрешности
+	if (knownWaitingInterval != -1) // время ожидания для двух персон
+	{
+		/*
+		 * при вычислении неизвестного времени h1 решается квадратное уравнение
+		 * 2 * p = 2 * h1 - h1^2 + 2 * h2 - h2^2, где:
+		 * p = probability
+		 * h1 - отношение искомого время ожидания к интервалу встречи
+		 * h2 - отношение неизвестного времени ожидания к интервалу встречи
+		 *
+		 * приведенное уравнение сводится к уравнению h1^2 - 2 * h1 + 2 * p - 2 * h2 + h2^2 = 0
+		 */
+		double h = knownWaitingInterval / timeDelta;
+		std::array<double, 2> solution = solveQuadratic(1, -2, 2 * probability - 2 * h + h * h);
+		// из-за особенностей работы solveQuadratic нас интересует только первый корень
+		return round(solution[0] * timeDelta);
+	}
+	else // время ожидания для трех персон
+	{
+		/*
+		 * при вычислении решается кубическое уравнение
+		 * p = 3 * h ^ 2 - 2 * h ^ 3, где:
+		 * p = probability
+		 * h = отношение искомого времени ожидания к интервалу встречи
+		 *
+		 * уравнение сводится к 2 * h^3 - 3 * h^2 + p
+		 */
+		std::array<double, 3> solution = solveCubic(2, -3, 0, probability);
+		// из-за особенностей работы solveCubic нас интересует только третий корень
+		return round(solution[2] * timeDelta);
+	}
 }
 
 void GeometricProbabilityModel::UpdateGraph(

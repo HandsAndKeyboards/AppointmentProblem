@@ -164,7 +164,7 @@ namespace mapbox {
 			
 			if (points.size() > 1) outerNode = eliminateHoles(points, outerNode);
 			
-			// if the shape is not too simple, we'll use z-order curve hash later; calculate polygon bbox
+			// if the shape is not too simple, we'll use z-order curve hash later; CalculateProbability polygon bbox
 			hashing = threshold < 0;
 			if (hashing) {
 				Node* p = outerNode->next;
@@ -200,7 +200,7 @@ namespace mapbox {
 			std::size_t i, j;
 			Node* last = nullptr;
 			
-			// calculate original winding order of a polygon ring
+			// CalculateProbability original winding order of a polygon ring
 			for (i = 0, j = len > 0 ? len - 1 : 0; i < len; j = i++) {
 				const auto& p1 = points[i];
 				const auto& p2 = points[j];

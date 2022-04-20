@@ -1,6 +1,7 @@
 #include "ui_mainwindow.h"
 #include "mainwindow.h"
-#include "common/mathematicFuncs.h" // TODO УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
+#include "common/constants.h"
+#include "common/json.h"
 
 /** ******************************************** PRIVATE ********************************************* **/
 
@@ -24,6 +25,19 @@ void MainWindow::add3DWindow(Qt3DExtras::Qt3DWindow * window, int row, int colum
 	container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 }
 
+/// добавление заданий
+void MainWindow::addTasks()
+{
+	/*
+	 * видимо, из-за того, что функция readJson inline, не удается нормально
+	 * присвоить возвращаемое значение переменной tasks при объявлении,
+	 * из-за чего объявление и присваивание разделены
+	 */
+	QJsonObject tasks;
+	tasks = readJson(TasksPath);
+	for (const auto & task : tasks) { MainWindow::tasks.emplace_back(task.toObject()); }
+}
+
 /** ********************************************* PUBLIC ********************************************* **/
 
 MainWindow::MainWindow(QWidget * parent)
@@ -43,33 +57,6 @@ MainWindow::MainWindow(QWidget * parent)
 			ui->secondWaitingTimeSpinBox->value(),
 			std::make_shared<Scene>(view)
 	);
-	
-    // - Создаём задачки
-       Task firstTask(15, 9, 10, 2,
-                        "Два человека договорились  о встрече  между 9  и  10  часами  "
-                        "утра.  Пришедший  первым  ждет  второго  в  течение  15  мин,  "
-                        "после  чего  уходит   (если  не  встретились).   Найти  "
-                        "вероятность  того,  что  встреча  состоится,  если  каждый  "
-                        "наудачу  выбирает момент своего прихода."),
-            secondTask(20, 19, 20, 2,
-                       "Два лица A и B условились встретиться в определенном "
-                       "месте между 7 и 8 часами вечера, причем тот, кто "
-                       "приходит первым, ждет другого 20 минут, после уходит. "
-                       "Чему равна вероятность их встречи, если моменты их "
-                       "прихода случайны и независимы друг от друга?"),
-            thirdTask(5, 12, 13, 2,
-                      "Какова вероятность Вашей встречи с другом, если вы "
-                      "договорились встретиться в определенном месте, с 12.00 "
-                      "до 13.00 часов и ждете друг друга в течение 5 минут?"),
-            fourthTask(10, 7, 8, 3,
-					   "Три человека договорились встретиться в промежутке от 7 до 12 часов "
-					   "на следующем условии: все они выбирают время в рамках данного промежутка, "
-					   "пришедший на место ждет не более 10 минут, после чего уходит. Найти "
-					   "вероятность того, что встреча состоится.");
-    Tasks.push_back(firstTask);
-    Tasks.push_back(secondTask);
-    Tasks.push_back(thirdTask);
-    Tasks.push_back(fourthTask);
 
 	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
 	ui->waitingTimeLine->setVisible(!ui->threePersonsRadioButton->isChecked());
@@ -81,7 +68,6 @@ MainWindow::MainWindow(QWidget * parent)
 	
 	connect(ui->updateAction, &QAction::triggered, this, &MainWindow::calculateProbability);
 	connect(ui->readReferenceAction, &QAction::triggered, this, &MainWindow::showReference);
-	connect(ui->readAboutProgramAction, &QAction::triggered, this, &MainWindow::showAboutProgram);
 	connect(ui->meetFromTimeEdit, &QTimeEdit::timeChanged, this, &MainWindow::calculateProbability);
 	connect(ui->meetUntilTimeEdit, &QTimeEdit::timeChanged, this, &MainWindow::calculateProbability);
 	connect(ui->firstWaitingTimeSpinBox, &QSpinBox::valueChanged, this, &MainWindow::calculateProbability);
@@ -94,7 +80,10 @@ MainWindow::MainWindow(QWidget * parent)
     connect(ui->planeDisplayCheckBox, &QCheckBox::stateChanged, this, &MainWindow::changeModeDecision);
 
     calculateProbability(); // вычисляем вероятность для первоначальных данных
-    ui->libraryTask->setText(Tasks[0].Description); // - Вывести первую задачу на экран
+	
+	addTasks();
+	ui->chooseTask->setMaximum(tasks.size());
+    ui->libraryTask->setText(tasks[0].task); // - Вывести первую задачу на экран
 }
 
 MainWindow::~MainWindow()
@@ -115,6 +104,11 @@ void MainWindow::updateModel()
 	ui->meetFromTimeEdit->setMaximumTime(ui->meetUntilTimeEdit->time());
 	ui->meetUntilTimeEdit->setMinimumTime(ui->meetFromTimeEdit->time());
 
+    // устанавливаем максимумы спинбоксов интервалов ожидания
+    int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
+    ui->firstWaitingTimeSpinBox->setMaximum(timeDeltaMinutes);
+    if (ui->twoPersonsRadioButton->isChecked()) { ui->secondWaitingTimeSpinBox->setMaximum(timeDeltaMinutes); }
+
 	/*
 	 * Устанавливаем максимум интервала ожидания
 	 *
@@ -124,7 +118,6 @@ void MainWindow::updateModel()
 	 */
 	if (timeDelta.isNull())
 	{
-		int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
 		ui->firstWaitingTimeSpinBox->setMaximum(timeDeltaMinutes);
 		ui->secondWaitingTimeSpinBox->setMaximum(timeDeltaMinutes);
 	}
@@ -137,42 +130,29 @@ void MainWindow::calculateProbability()
 	
 	// разница времен начала и окончания встречи
 	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(), ui->meetUntilTimeEdit->time());
-
+	double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
+	
+	std::vector<int> waitingIntervals; // массив с интервалами ожидания для каждого участника
 	if (!ui->threePersonsRadioButton->isChecked())
 	{
-		// вероятность встречи
-		double probability = graphModel->CalculateProbability(
-				timeDelta,
-				ui->firstWaitingTimeSpinBox->value(),
-				ui->secondWaitingTimeSpinBox->value()
-		);
-
-		/*
-		 * блокируем отправку сигналов спинбоксом вероятности для того, чтобы изменение его значения
-		 * не приводило к вызову метода calculateWaitingTime()
-		 */
-		ui->probabilityPercentageSpinBox->blockSignals(true);
-		ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
-		ui->probabilityPercentageSpinBox->blockSignals(false);
-
-		// обновляем график
-        updateModel();
+		// для двоих персон помещаем в массив их интервалы ожидания
+		waitingIntervals.emplace_back(ui->firstWaitingTimeSpinBox->value());
+		waitingIntervals.emplace_back(ui->secondWaitingTimeSpinBox->value());
 	}
 	else
 	{
-		// todo УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
-		double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
-		double waitingInterval = ui->firstWaitingTimeSpinBox->value() / timeDeltaMinutes;
-		double probability = 3 * pow(waitingInterval, 2) - 2 * pow(waitingInterval, 3);
-
-		ui->probabilityPercentageSpinBox->blockSignals(true);
-		ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
-		ui->probabilityPercentageSpinBox->blockSignals(false);
-		// todo УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
-
-		// обновляем график
-		graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), 0);
+		// так как все трое ждут одно время, заполняем массив тремя одинаковыми значениями
+		for (int i = 0; i < 3; ++i) { waitingIntervals.emplace_back(ui->firstWaitingTimeSpinBox->value()); }
 	}
+	
+	double probability = graphModel->CalculateProbability(timeDeltaMinutes, waitingIntervals);
+	
+	// блокируем отправку сигналов для того, чтобы сигналы не были приняты другими методами
+	ui->probabilityPercentageSpinBox->blockSignals(true);
+	ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
+	ui->probabilityPercentageSpinBox->blockSignals(false);
+	
+	updateModel();
 }
 
 /// вычисление времени ожидания на основе вероятности и времени встречи
@@ -182,50 +162,51 @@ void MainWindow::calculateWaitingTime()
 	
 	// разница времен начала и окончания встречи
 	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(), ui->meetUntilTimeEdit->time());
+	int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
 	
-	if (!ui->threePersonsRadioButton->isChecked())
+	double probability = ui->probabilityPercentageSpinBox->value() / 100.0; // вероятность встречи
+	
+	int unfixedWaitingTime; // незафиксированное время ожидания в минутах
+	bool fixFirstWaitingTime; // зафиксировано ли первое время ожидания
+	if (!ui->threePersonsRadioButton->isChecked()) // если на экране 2д режим
 	{
-		bool fixFirstWaitingTime = ui->fixFirstRadioButton->isChecked(); // зафиксированное первое время ожидания
+		fixFirstWaitingTime = ui->fixFirstRadioButton->isChecked();
 		int fixedWaitingTime; // зафиксированное время ожидания в минутах
 		if (fixFirstWaitingTime) { fixedWaitingTime = ui->firstWaitingTimeSpinBox->value(); }
 		else { fixedWaitingTime = ui->secondWaitingTimeSpinBox->value(); }
-
-		// незафиксированное время ожидания в минутах
-		int unfixedWaitingTime = graphModel->CalculateWaitingTime(
-				timeDelta,
-				ui->probabilityPercentageSpinBox->value() / 100.0,
+		
+		unfixedWaitingTime = graphModel->CalculateWaitingTime(
+				probability,
+				timeDeltaMinutes,
 				fixedWaitingTime
 		);
-
-		/*
-		* блокируем отправку сигналов спинбоксом времени ожидания для того, чтобы изменение его значения
-		* не приводило к вызову метода calculateProbability()
-		*/
-		if (fixFirstWaitingTime) // если первое время зафиксировано, то устанавливаем второе
-		{
-			ui->secondWaitingTimeSpinBox->blockSignals(true);
-			ui->secondWaitingTimeSpinBox->setValue(unfixedWaitingTime);
-			ui->secondWaitingTimeSpinBox->blockSignals(false);
-		}
-		else // если зафиксировано второе, устанавливаем первое
-		{
-			ui->firstWaitingTimeSpinBox->blockSignals(true);
-			ui->firstWaitingTimeSpinBox->setValue(unfixedWaitingTime);
-			ui->firstWaitingTimeSpinBox->blockSignals(false);
-		}
 	}
-	else
+	else // если на экране 3д режим
 	{
-		// TODO УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
-		int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
-		double probability = ui->probabilityPercentageSpinBox->value() / 100.0;
-		std::array<double, 3> solution = solveCubic(2, -3, 0, probability);
-
-		ui->firstWaitingTimeSpinBox->blockSignals(true);
-		ui->firstWaitingTimeSpinBox->setValue(round(timeDeltaMinutes * solution[2]));
-		ui->firstWaitingTimeSpinBox->blockSignals(false);
-		// TODO УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
+		fixFirstWaitingTime = false; // в 3д режиме доступно изменение только первого спинбокса интервала ожидания
+		unfixedWaitingTime = graphModel->CalculateWaitingTime(
+				probability,
+				timeDeltaMinutes
+		);
     }
+	
+	/*
+	* блокируем отправку сигналов спинбоксом времени ожидания для того, чтобы изменение его значения
+	* не приводило к вызову метода calculateProbability()
+	*/
+	if (fixFirstWaitingTime) // если первое время зафиксировано, то устанавливаем второе
+	{
+		ui->secondWaitingTimeSpinBox->blockSignals(true);
+		ui->secondWaitingTimeSpinBox->setValue(unfixedWaitingTime);
+		ui->secondWaitingTimeSpinBox->blockSignals(false);
+	}
+	else // если зафиксировано второе, устанавливаем первое
+	{
+		ui->firstWaitingTimeSpinBox->blockSignals(true);
+		ui->firstWaitingTimeSpinBox->setValue(unfixedWaitingTime);
+		ui->firstWaitingTimeSpinBox->blockSignals(false);
+	}
+	
     // обновляем график
     updateModel();
 }
@@ -234,43 +215,7 @@ void MainWindow::calculateWaitingTime()
 void MainWindow::changeAmountOfPersons()
 {
 	graphModel->SwapGraphs();
-	
-	// todo УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
-	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(), ui->meetUntilTimeEdit->time());
-	if (ui->threePersonsRadioButton->isChecked())
-	{
-		double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
-		double waitingInterval = ui->firstWaitingTimeSpinBox->value() / timeDeltaMinutes;
-		double probability = 3 * pow(waitingInterval, 2) - 2 * pow(waitingInterval, 3);
-
-		ui->probabilityPercentageSpinBox->blockSignals(true);
-		ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
-		ui->probabilityPercentageSpinBox->blockSignals(false);
-
-//		graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), 0);
-	}
-	else
-	{
-		// вероятность встречи
-		double probability = graphModel->CalculateProbability(
-				timeDelta,
-				ui->firstWaitingTimeSpinBox->value(),
-				ui->secondWaitingTimeSpinBox->value()
-		);
-
-		/*
-		 * блокируем отправку сигналов спинбоксом вероятности для того, чтобы изменение его значения
-		 * не приводило к вызову метода calculateWaitingTime()
-		 */
-		ui->probabilityPercentageSpinBox->blockSignals(true);
-		ui->probabilityPercentageSpinBox->setValue(round(probability * 100));
-		ui->probabilityPercentageSpinBox->blockSignals(false);
-
-		// обновляем график
-//		graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), ui->secondWaitingTimeSpinBox->value());
-	}
-    updateModel();
-	// todo УДАЛИТЬ КОСТЫЛЬ А ТО ПО ЖОПЕ
+	calculateProbability();
 
 	ui->planeDisplayGroupBox->setVisible(ui->threePersonsRadioButton->isChecked());
 	ui->waitingTimeLine->setVisible(!ui->threePersonsRadioButton->isChecked());
@@ -284,35 +229,46 @@ void MainWindow::changeAmountOfPersons()
 /// вывод справки
 void MainWindow::showReference()
 {
-    QDesktopServices::openUrl(QUrl("file:///" + QCoreApplication::applicationDirPath() + "/Helper.html"));
+    QDesktopServices::openUrl(ReferencePath);
 }
 
-/// вывод окна "о программе"
-void MainWindow::showAboutProgram()
-{
-
-}
-
-// - Вывод задачи
+/// Вывести задачу
 void MainWindow::showTask()
 {
     int taskNumber = ui->chooseTask->value() - 1;
-    ui->libraryTask->setText(Tasks[taskNumber].Description);
+    ui->libraryTask->setHtml(tasks[taskNumber].task);
 }
 
+/// Изменить параметры по задаче и вычислить
 void MainWindow::changeToTask()
 {
     int taskNumber = ui->chooseTask->value() - 1;
-    QTime meetingTime1(Tasks[taskNumber].meetingTime1, 0), meetingTime2(Tasks[taskNumber].meetingTime2, 0);
 
-    ui->meetFromTimeEdit->setTime(meetingTime1);
-    ui->meetUntilTimeEdit->setTime(meetingTime2);
-    ui->firstWaitingTimeSpinBox->setValue(Tasks[taskNumber].waitingTime);
-
-    if(Tasks[taskNumber].amountOfPeople == 3 && !ui->threePersonsRadioButton->isChecked()) { ui->threePersonsRadioButton->setChecked(true); changeAmountOfPersons();  }
-    else if(ui->threePersonsRadioButton->isChecked()) { ui->twoPersonsRadioButton->setChecked(true); changeAmountOfPersons();  }
+    ui->meetFromTimeEdit->setTime(tasks[taskNumber].meetFrom);
+    ui->meetUntilTimeEdit->setTime(tasks[taskNumber].meetUntil);
+    ui->firstWaitingTimeSpinBox->setValue(tasks[taskNumber].waitingIntervals[0]);
+	
+	// если в примере три человека и активен режим 2д, переключаемся на 3д
+    if(tasks[taskNumber].amountOfPeople == 3 && ui->twoPersonsRadioButton->isChecked())
+	{
+		ui->threePersonsRadioButton->setChecked(true);
+		changeAmountOfPersons();
+	}
+    else if(tasks[taskNumber].amountOfPeople == 2)  // если в примере два человека
+	{
+		// выставляем второй интервал ожидания
+		ui->secondWaitingTimeSpinBox->setValue(tasks[taskNumber].waitingIntervals[1]);
+		
+		// и если находимся в 3д режиме, переключаемся в 2д режим
+		if (ui->threePersonsRadioButton->isChecked())
+		{
+			ui->twoPersonsRadioButton->setChecked(true);
+			changeAmountOfPersons();
+		}
+	}
 }
 
+/// Отрисовывает плоскости, вместо фигуры внутри куба в 3д режиме
 void MainWindow::changeModeDecision(int mode)
 {
     graphModel->ChangeModeDecision(
