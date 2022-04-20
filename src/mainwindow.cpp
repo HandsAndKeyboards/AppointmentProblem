@@ -81,9 +81,9 @@ MainWindow::MainWindow(QWidget * parent)
 
     calculateProbability(); // вычисляем вероятность для первоначальных данных
 	
-	addTasks();
-	ui->chooseTask->setMaximum(tasks.size());
-    ui->libraryTask->setText(tasks[0].task); // - Вывести первую задачу на экран
+//	addTasks();
+//	ui->chooseTask->setMaximum(tasks.size());
+//    ui->libraryTask->setText(tasks[0].task); // - Вывести первую задачу на экран
 }
 
 MainWindow::~MainWindow()
@@ -104,6 +104,11 @@ void MainWindow::updateModel()
 	ui->meetFromTimeEdit->setMaximumTime(ui->meetUntilTimeEdit->time());
 	ui->meetUntilTimeEdit->setMinimumTime(ui->meetFromTimeEdit->time());
 
+    // устанавливаем максимумы спинбоксов интервалов ожидания
+    int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
+    ui->firstWaitingTimeSpinBox->setMaximum(timeDeltaMinutes);
+    if (ui->twoPersonsRadioButton->isChecked()) { ui->secondWaitingTimeSpinBox->setMaximum(timeDeltaMinutes); }
+
 	/*
 	 * Устанавливаем максимум интервала ожидания
 	 *
@@ -113,7 +118,6 @@ void MainWindow::updateModel()
 	 */
 	if (timeDelta.isNull())
 	{
-		int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
 		ui->firstWaitingTimeSpinBox->setMaximum(timeDeltaMinutes);
 		ui->secondWaitingTimeSpinBox->setMaximum(timeDeltaMinutes);
 	}
