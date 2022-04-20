@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "common/constants.h"
 #include "common/json.h"
+#include "webView/WebView.h"
 
 /** ******************************************** PRIVATE ********************************************* **/
 
@@ -38,6 +39,7 @@ MainWindow::MainWindow(QWidget * parent)
 		: QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
+	setWindowTitle("Задача о встрече");
 	
 	auto * view = new Qt3DExtras::Qt3DWindow(); // создаем 3д окно, на которое будут выводиться графики
 	add3DWindow(view); // добавляем окно на форму
@@ -225,7 +227,8 @@ void MainWindow::changeAmountOfPersons()
 /// вывод справки
 void MainWindow::showReference()
 {
-    QDesktopServices::openUrl(ReferencePath);
+    WebView * webView = new WebView(this);
+    webView->show();
 }
 
 /// Вывести задачу

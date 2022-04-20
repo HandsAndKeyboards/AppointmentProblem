@@ -1,4 +1,4 @@
-QT       += core gui 3dcore 3dextras 3dlogic 3dinput 3drender
+QT       += core gui 3dcore 3dextras 3dlogic 3dinput 3drender positioning webenginewidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -23,7 +23,8 @@ SOURCES += \
     UncoloredPolygon.cpp \
     main.cpp \
     mainwindow.cpp \
-    task.cpp
+    task.cpp \
+    webView/webView.cpp
 
 HEADERS += \
     Axis.h \
@@ -39,14 +40,19 @@ HEADERS += \
     ColoredPolygon.h \
     UncoloredPolygon.h \
     Line.h \
-    Polygon.h \
     Scene.h \
     SegmentPoint.h \
+    common/constants.h \
+    common/json.h \
+    common/mathematicFuncs.h \
+    "include/earcut.h" \
     mainwindow.h \
-    task.h
+    task.h \
+    webView/webView.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    webView/webView.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

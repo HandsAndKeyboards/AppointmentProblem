@@ -7,7 +7,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 if (WIN32)
-    set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.2.4/mingw_64")
+#    set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.2.4/mingw_64")
+    set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.2.4/msvc2019_64")
 else ()
     #todo разобраться с qt на линухе
     set(CMAKE_PREFIX_PATH "/home/vany/Qt/6.2.4/gcc_64/lib/cmake")
@@ -52,6 +53,7 @@ add_executable(
         task.cpp task.h
         common/json.h
         common/constants.h
+        webView/WebView.cpp webView/WebView.h webView/WebView.ui
 )
 
 target_link_libraries(AppointmentProblem

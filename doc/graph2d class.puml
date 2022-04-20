@@ -276,4 +276,20 @@ note left of Scene
     Scene & operator=(Scene &&) = delete
 end note
 
+
+
+class WebView {
+    + WebView(QWidget * parent)
+    + ~WebView()
+
+    - Ui::WebView * ui
+    
+    - void displaySource()
+    - void on_prevPageButton_clicked()
+    - void on_nextPageButton_clicked()
+    - void urlChanged()
+}
+QMainWindow <|-- WebView
+WebView "1" - "1" MainWindow
+
 @enduml
