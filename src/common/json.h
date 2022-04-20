@@ -12,6 +12,7 @@
 inline QJsonObject readJson(const QString & filename)
 {
 	QFile file(filename);
+	file.open(QIODevice::ReadOnly | QIODevice::Text);
 //	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 //	{
 //		throw FileError("не удалось прочитать файл " + filename.toStdString());

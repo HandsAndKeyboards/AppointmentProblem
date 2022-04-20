@@ -28,13 +28,7 @@ void MainWindow::add3DWindow(Qt3DExtras::Qt3DWindow * window, int row, int colum
 /// добавление заданий
 void MainWindow::addTasks()
 {
-	/*
-	 * видимо, из-за того, что функция readJson inline, не удается нормально
-	 * присвоить возвращаемое значение переменной tasks при объявлении,
-	 * из-за чего объявление и присваивание разделены
-	 */
-	QJsonObject tasks;
-	tasks = readJson(TasksPath);
+	QJsonObject tasks = readJson(TasksPath);
 	for (const auto & task : tasks) { MainWindow::tasks.emplace_back(task.toObject()); }
 }
 
@@ -82,7 +76,9 @@ MainWindow::MainWindow(QWidget * parent)
     calculateProbability(); // вычисляем вероятность для первоначальных данных
 	
 	addTasks();
+	ui->chooseTask->blockSignals(true);
 	ui->chooseTask->setMaximum(tasks.size());
+	ui->chooseTask->blockSignals(true);
     ui->libraryTask->setText(tasks[0].task); // - Вывести первую задачу на экран
 }
 
