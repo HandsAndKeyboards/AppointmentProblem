@@ -51,6 +51,9 @@
        </item>
        <item row="3" column="1">
         <widget class="QSpinBox" name="secondWaitingTimeSpinBox">
+         <property name="minimum">
+          <number>1</number>
+         </property>
          <property name="maximum">
           <number>999</number>
          </property>
@@ -86,6 +89,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="minimum">
+          <number>1</number>
          </property>
          <property name="maximum">
           <number>999</number>
@@ -422,7 +428,6 @@
      <string>Действия</string>
     </property>
     <addaction name="updateAction"/>
-    <addaction name="showExamplesAction"/>
    </widget>
    <addaction name="userActionsMenu"/>
    <addaction name="helpMenu"/>

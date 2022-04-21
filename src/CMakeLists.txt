@@ -6,18 +6,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-if (WIN32)
-#    set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.2.4/mingw_64")
-    set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.2.4/msvc2019_64")
-else ()
-    #todo разобраться с qt на линухе
-    set(CMAKE_PREFIX_PATH "/home/vany/Qt/6.2.4/gcc_64/lib/cmake")
-#    set(CMAKE_PREFIX_PATH "/home/vany/Qt/6.2.4/gcc_64/lib/cmake/Qt63DCore/Qt63DCoreConfig.cmake")
-
-#    set(Qt6Core_DIR "/home/vany/Qt/6.2.4/gcc_64/lib/cmake/Qt6Core/")
-#    set(Qt6_DIR "/home/vany/Qt/6.2.4/gcc_64/lib/cmake/Qt6/")
-#    set(QT_MAKE_EXECUTABLE "/home/vany/Qt/6.2.4/gcc_64/bin/qmake")
-endif ()
+set(CMAKE_PREFIX_PATH "D:/Programs/Qt/6.2.4/mingw_64")
 
 find_package(Qt6 COMPONENTS
         Core
@@ -28,6 +17,7 @@ find_package(Qt6 COMPONENTS
         3DExtras
         3DInput
         3DRender
+        Positioning
         REQUIRED)
 
 add_executable(
@@ -65,6 +55,7 @@ target_link_libraries(AppointmentProblem
         Qt::3DExtras
         Qt::3DInput
         Qt::3DRender
+        Qt::Positioning
         )
 
 if (WIN32)
@@ -108,6 +99,7 @@ if (WIN32)
             Network
             Concurrent
             OpenGL
+            Positioning
             )
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy

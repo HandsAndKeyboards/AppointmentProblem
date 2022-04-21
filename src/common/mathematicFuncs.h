@@ -105,7 +105,6 @@ inline std::array<double, 3> solveCubic(double a, double b, double c, double d)
 	double q = (b * b - 3 * c * c * c) / 9;
 	double r = (2 * b * b * b - 9 * b * c + 27 * d) / 54;
 	
-	// todo нормальное исключение
 	if (q * q * q - r * r < 0) { throw "переменная меньше нуля, комплексные числа мы еще не сделали!"; }
 	double t = 1.0 / 3 * qAcos(r / qSqrt(q * q * q));
 	

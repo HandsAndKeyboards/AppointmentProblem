@@ -41,7 +41,6 @@ public:
 
 private:
 	QPointer<Qt3DCore::QEntity> tip; ///< наконечник на 3д сцене
-	// todo ОБЯЗАТЕЛЬНО вращение текста за камерой. Для этого текст вынести в отдельный класс
 	QPointer<Qt3DExtras::QText2DEntity> label; ///< метка наконечника
 };
 

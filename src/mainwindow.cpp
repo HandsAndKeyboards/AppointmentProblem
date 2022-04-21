@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 #include "common/constants.h"
 #include "common/json.h"
-#include "webView/WebView.h"
+#include "webView/webView.h"
 
 /** ******************************************** PRIVATE ********************************************* **/
 
@@ -80,8 +80,8 @@ MainWindow::MainWindow(QWidget * parent)
 	addTasks();
 	ui->chooseTask->blockSignals(true);
 	ui->chooseTask->setMaximum(tasks.size());
-	ui->chooseTask->blockSignals(true);
-    ui->libraryTask->setText(tasks[0].task); // - Вывести первую задачу на экран
+    ui->chooseTask->blockSignals(false);
+    showTask();
 }
 
 MainWindow::~MainWindow()
@@ -99,13 +99,13 @@ void MainWindow::updateModel()
 	graphModel->UpdateGraph(timeDelta, ui->firstWaitingTimeSpinBox->value(), ui->secondWaitingTimeSpinBox->value());
 
 	// устанавливаем максимум и минимум интервала встречи
-	ui->meetFromTimeEdit->setMaximumTime(ui->meetUntilTimeEdit->time());
-	ui->meetUntilTimeEdit->setMinimumTime(ui->meetFromTimeEdit->time());
+//    ui->meetFromTimeEdit->setMaximumTime(ui->meetUntilTimeEdit->time());
+//    ui->meetUntilTimeEdit->setMinimumTime(ui->meetFromTimeEdit->time());
 
     // устанавливаем максимумы спинбоксов интервалов ожидания
     int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
-    ui->firstWaitingTimeSpinBox->setMaximum(timeDeltaMinutes);
-    if (ui->twoPersonsRadioButton->isChecked()) { ui->secondWaitingTimeSpinBox->setMaximum(timeDeltaMinutes); }
+    ui->firstWaitingTimeSpinBox->setMaximum((timeDeltaMinutes > 0) ? timeDeltaMinutes : 1);
+    if (ui->twoPersonsRadioButton->isChecked()) { ui->secondWaitingTimeSpinBox->setMaximum((timeDeltaMinutes > 0) ? timeDeltaMinutes : 1); }
 
 	/*
 	 * Устанавливаем максимум интервала ожидания
@@ -124,8 +124,6 @@ void MainWindow::updateModel()
 /// вычисление вероятности встречи на основе времени встречи и времени ожидания
 void MainWindow::calculateProbability()
 {
-	// todo исключение, если время окончания встречи меньше времени начала встречи
-	
 	// разница времен начала и окончания встречи
 	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(), ui->meetUntilTimeEdit->time());
 	double timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
@@ -156,8 +154,6 @@ void MainWindow::calculateProbability()
 /// вычисление времени ожидания на основе вероятности и времени встречи
 void MainWindow::calculateWaitingTime()
 {
-	// todo исключение, если время окончания встречи меньше времени начала встречи
-	
 	// разница времен начала и окончания встречи
 	QTime timeDelta = calculateTimeDelta(ui->meetFromTimeEdit->time(), ui->meetUntilTimeEdit->time());
 	int timeDeltaMinutes = timeDelta.hour() * 60 + timeDelta.minute();
